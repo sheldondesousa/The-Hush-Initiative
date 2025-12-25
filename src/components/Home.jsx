@@ -18,30 +18,6 @@ export default function Home() {
     <div className="min-h-screen bg-gray-50 flex items-center justify-center p-4">
       {/* Mobile Container with Border - iPhone 16 Pro Max dimensions */}
       <div className="relative w-full max-w-md bg-white border border-gray-300 rounded-2xl shadow-sm overflow-hidden flex flex-col py-8" style={{ maxWidth: '430px', minHeight: '932px' }}>
-      {/* Status Bar - For visual reference only, won't be functional */}
-      <div className="px-6 pb-2 flex justify-between items-center text-sm">
-        <span className="font-semibold">9:41</span>
-        <div className="flex items-center gap-1">
-          {/* Signal icon */}
-          <svg className="w-4 h-4" viewBox="0 0 24 24" fill="currentColor">
-            <rect x="18" y="8" width="2" height="8" />
-            <rect x="14" y="6" width="2" height="10" />
-            <rect x="10" y="10" width="2" height="6" />
-            <rect x="6" y="12" width="2" height="4" />
-          </svg>
-          {/* WiFi icon */}
-          <svg className="w-4 h-4" viewBox="0 0 24 24" fill="currentColor">
-            <path d="M1 9l2 2c4.97-4.97 13.03-4.97 18 0l2-2C16.93 2.93 7.08 2.93 1 9zm8 8l3 3 3-3c-1.65-1.66-4.34-1.66-6 0zm-4-4l2 2c2.76-2.76 7.24-2.76 10 0l2-2C15.14 9.14 8.87 9.14 5 13z"/>
-          </svg>
-          {/* Battery icon */}
-          <div className="flex items-center">
-            <div className="border border-black rounded-sm w-6 h-3 flex items-center px-0.5">
-              <div className="bg-black h-full w-4/5 rounded-sm"></div>
-            </div>
-            <div className="w-0.5 h-1.5 bg-black ml-0.5"></div>
-          </div>
-        </div>
-      </div>
 
       {/* Header */}
       <div className="px-6 py-3 flex justify-between items-center">
