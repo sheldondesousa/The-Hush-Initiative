@@ -16,7 +16,7 @@ export default function Login() {
 
         {/* HUM Logo - Striped/Barcode Style */}
         <div className="flex justify-center mb-12 mt-8">
-          <svg width="200" height="80" viewBox="0 0 200 80" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <svg width="200" height="80" viewBox="0 0 200 80" fill="none" xmlns="http://www.w3.org/2000/svg" style={{ shapeRendering: 'crispEdges' }}>
             {/* H */}
             <rect x="0" y="10" width="6" height="60" fill="black"/>
             <rect x="10" y="10" width="6" height="60" fill="black"/>
