@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../contexts/AuthContext';
 import Loader from './Loader';
@@ -10,7 +10,14 @@ export default function Login() {
   const [loading, setLoading] = useState(false);
 
   const navigate = useNavigate();
-  const { signInWithGoogle } = useAuth();
+  const { signInWithGoogle, currentUser } = useAuth();
+
+  // Redirect if already logged in
+  useEffect(() => {
+    if (currentUser) {
+      navigate('/home', { replace: true });
+    }
+  }, [currentUser, navigate]);
 
   const handleSubmit = (e) => {
     e.preventDefault();
@@ -23,7 +30,7 @@ export default function Login() {
       setError('');
       setLoading(true);
       await signInWithGoogle();
-      navigate('/home');
+      // Navigation will happen automatically via useEffect when currentUser updates
     } catch (error) {
       setError('Failed to sign in with Google. Please try again.');
       console.error(error);
