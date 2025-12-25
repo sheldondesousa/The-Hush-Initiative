@@ -156,7 +156,7 @@ export default function Home() {
       </div>
 
       {/* Bottom Menu */}
-      <div className="absolute bottom-0 left-0 right-0 flex justify-center pb-0">
+      <div className="mt-auto pt-8 flex justify-center">
         <button className="flex flex-col items-center gap-1 text-black hover:opacity-70 transition-opacity">
           <svg className="w-6 h-6" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
             <path strokeLinecap="round" strokeLinejoin="round" d="M5 15l7-7 7 7"/>
