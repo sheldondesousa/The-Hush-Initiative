@@ -14,6 +14,13 @@ export default function Login() {
       {/* Mobile Container with Border */}
       <div className="w-full max-w-md bg-white border border-gray-300 rounded-2xl shadow-sm p-8">
 
+        {/* Logo Placeholder */}
+        <div className="flex justify-center mb-12 mt-8">
+          <div className="w-64 h-20 border-2 border-dashed border-gray-300 rounded-lg flex items-center justify-center bg-gray-50">
+            <span className="text-gray-400 text-sm font-medium">LOGO</span>
+          </div>
+        </div>
+
         {/* Heading */}
         <h1 className="text-3xl font-semibold text-center mb-8 text-black">
           Let's get started
