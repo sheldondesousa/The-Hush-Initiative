@@ -21,25 +21,25 @@ export default function Home() {
       <div className="flex min-h-screen flex-col lg:flex-row">
         {/* Sidebar - Desktop */}
         <aside className="hidden lg:flex w-64 border-r border-gray-300 p-8 flex-col">
-          <nav className="space-y-6">
-            <div className="pb-4 border-b border-gray-300">
+          <nav className="space-y-0">
+            <div className="pb-6 border-b border-gray-300">
               <h2 className="text-lg font-semibold text-black">Menu</h2>
             </div>
-            <button className="text-left text-base text-black hover:opacity-70 transition-opacity">
+            <button className="block w-full text-left text-base text-black hover:opacity-70 transition-opacity py-6 border-b border-gray-300">
               About Hum
             </button>
-            <button className="text-left text-base text-black hover:opacity-70 transition-opacity">
+            <button className="block w-full text-left text-base text-black hover:opacity-70 transition-opacity py-6 border-b border-gray-300">
               Support the app
             </button>
-            <button className="text-left text-base text-black hover:opacity-70 transition-opacity">
+            <button className="block w-full text-left text-base text-black hover:opacity-70 transition-opacity py-6 border-b border-gray-300">
               FAQs
             </button>
-            <button className="text-left text-base text-black hover:opacity-70 transition-opacity">
+            <button className="block w-full text-left text-base text-black hover:opacity-70 transition-opacity py-6 border-b border-gray-300">
               Terms & Conditions
             </button>
             <button
               onClick={handleLogout}
-              className="text-left text-base text-black hover:opacity-70 transition-opacity"
+              className="block w-full text-left text-base text-black hover:opacity-70 transition-opacity pt-6"
             >
               Logout
             </button>
@@ -66,25 +66,25 @@ export default function Home() {
         {menuOpen && (
           <div className="lg:hidden fixed inset-0 bg-black bg-opacity-50 z-40" onClick={() => setMenuOpen(false)}>
             <div className="bg-white w-64 h-full p-8" onClick={(e) => e.stopPropagation()}>
-              <nav className="space-y-6 mt-16">
-                <div className="pb-4 border-b border-gray-300">
+              <nav className="space-y-0 mt-16">
+                <div className="pb-6 border-b border-gray-300">
                   <h2 className="text-lg font-semibold text-black">Menu</h2>
                 </div>
-                <button className="text-left text-base text-black hover:opacity-70 transition-opacity w-full">
+                <button className="block w-full text-left text-base text-black hover:opacity-70 transition-opacity py-6 border-b border-gray-300">
                   About Hum
                 </button>
-                <button className="text-left text-base text-black hover:opacity-70 transition-opacity w-full">
+                <button className="block w-full text-left text-base text-black hover:opacity-70 transition-opacity py-6 border-b border-gray-300">
                   Support the app
                 </button>
-                <button className="text-left text-base text-black hover:opacity-70 transition-opacity w-full">
+                <button className="block w-full text-left text-base text-black hover:opacity-70 transition-opacity py-6 border-b border-gray-300">
                   FAQs
                 </button>
-                <button className="text-left text-base text-black hover:opacity-70 transition-opacity w-full">
+                <button className="block w-full text-left text-base text-black hover:opacity-70 transition-opacity py-6 border-b border-gray-300">
                   Terms & Conditions
                 </button>
                 <button
                   onClick={handleLogout}
-                  className="text-left text-base text-black hover:opacity-70 transition-opacity w-full"
+                  className="block w-full text-left text-base text-black hover:opacity-70 transition-opacity pt-6"
                 >
                   Logout
                 </button>
