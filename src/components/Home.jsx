@@ -6,6 +6,7 @@ export default function Home() {
   const { logout } = useAuth();
   const navigate = useNavigate();
   const [menuOpen, setMenuOpen] = useState(false);
+  const [selectedOption, setSelectedOption] = useState(null);
 
   const handleLogout = async () => {
     try {
@@ -201,34 +202,67 @@ export default function Home() {
               <div className="border-t border-gray-300 mb-0"></div>
 
               {/* Focus Option */}
-              <button className="w-full py-6 lg:py-8 flex items-center justify-between border-b border-gray-300 hover:scale-105 transition-transform group">
+              <button
+                onClick={() => setSelectedOption('focus')}
+                className={`w-full py-6 lg:py-8 flex items-center justify-between border-b border-gray-300 hover:scale-105 transition-all group ${
+                  selectedOption === 'focus' ? 'bg-black' : ''
+                }`}
+              >
                 <div className="flex-1 text-left pl-4">
-                  <h2 className="text-2xl lg:text-3xl font-semibold text-black mb-1">Focus</h2>
-                  <p className="text-base lg:text-lg text-gray-700">Enhance concentration</p>
+                  <h2 className={`text-2xl lg:text-3xl font-semibold mb-1 ${
+                    selectedOption === 'focus' ? 'text-white' : 'text-black'
+                  }`}>Focus</h2>
+                  <p className={`text-base lg:text-lg ${
+                    selectedOption === 'focus' ? 'text-gray-300' : 'text-gray-700'
+                  }`}>Enhance concentration</p>
                 </div>
-                <svg className="w-5 h-5 lg:w-6 lg:h-6 text-black transition-transform group-hover:translate-x-2 flex-shrink-0 pr-4" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
+                <svg className={`w-8 h-8 lg:w-9 lg:h-9 transition-transform group-hover:translate-x-2 flex-shrink-0 pr-4 ${
+                  selectedOption === 'focus' ? 'text-white' : 'text-black'
+                }`} fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" d="M9 5l7 7-7 7"/>
                 </svg>
               </button>
 
               {/* Calm Option */}
-              <button className="w-full py-6 lg:py-8 flex items-center justify-between border-b border-gray-300 hover:scale-105 transition-transform group">
+              <button
+                onClick={() => setSelectedOption('calm')}
+                className={`w-full py-6 lg:py-8 flex items-center justify-between border-b border-gray-300 hover:scale-105 transition-all group ${
+                  selectedOption === 'calm' ? 'bg-black' : ''
+                }`}
+              >
                 <div className="flex-1 text-left pl-4">
-                  <h2 className="text-2xl lg:text-3xl font-semibold text-black mb-1">Calm</h2>
-                  <p className="text-base lg:text-lg text-gray-700">Relax and rejuvenate</p>
+                  <h2 className={`text-2xl lg:text-3xl font-semibold mb-1 ${
+                    selectedOption === 'calm' ? 'text-white' : 'text-black'
+                  }`}>Calm</h2>
+                  <p className={`text-base lg:text-lg ${
+                    selectedOption === 'calm' ? 'text-gray-300' : 'text-gray-700'
+                  }`}>Relax and rejuvenate</p>
                 </div>
-                <svg className="w-5 h-5 lg:w-6 lg:h-6 text-black transition-transform group-hover:translate-x-2 flex-shrink-0 pr-4" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
+                <svg className={`w-8 h-8 lg:w-9 lg:h-9 transition-transform group-hover:translate-x-2 flex-shrink-0 pr-4 ${
+                  selectedOption === 'calm' ? 'text-white' : 'text-black'
+                }`} fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" d="M9 5l7 7-7 7"/>
                 </svg>
               </button>
 
               {/* Breathe Option */}
-              <button className="w-full py-6 lg:py-8 flex items-center justify-between border-b border-gray-300 hover:scale-105 transition-transform group">
+              <button
+                onClick={() => setSelectedOption('breathe')}
+                className={`w-full py-6 lg:py-8 flex items-center justify-between border-b border-gray-300 hover:scale-105 transition-all group ${
+                  selectedOption === 'breathe' ? 'bg-black' : ''
+                }`}
+              >
                 <div className="flex-1 text-left pl-4">
-                  <h2 className="text-2xl lg:text-3xl font-semibold text-black mb-1">Breathe</h2>
-                  <p className="text-base lg:text-lg text-gray-700">Reset your rhythm</p>
+                  <h2 className={`text-2xl lg:text-3xl font-semibold mb-1 ${
+                    selectedOption === 'breathe' ? 'text-white' : 'text-black'
+                  }`}>Breathe</h2>
+                  <p className={`text-base lg:text-lg ${
+                    selectedOption === 'breathe' ? 'text-gray-300' : 'text-gray-700'
+                  }`}>Reset your rhythm</p>
                 </div>
-                <svg className="w-5 h-5 lg:w-6 lg:h-6 text-black transition-transform group-hover:translate-x-2 flex-shrink-0 pr-4" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
+                <svg className={`w-8 h-8 lg:w-9 lg:h-9 transition-transform group-hover:translate-x-2 flex-shrink-0 pr-4 ${
+                  selectedOption === 'breathe' ? 'text-white' : 'text-black'
+                }`} fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" d="M9 5l7 7-7 7"/>
                 </svg>
               </button>
