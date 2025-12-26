@@ -32,9 +32,6 @@ export default function Home() {
               Support the app
             </button>
             <button className="text-left text-base text-black hover:opacity-70 transition-opacity">
-              How you can help
-            </button>
-            <button className="text-left text-base text-black hover:opacity-70 transition-opacity">
               FAQs
             </button>
             <button className="text-left text-base text-black hover:opacity-70 transition-opacity">
@@ -78,9 +75,6 @@ export default function Home() {
                 </button>
                 <button className="text-left text-base text-black hover:opacity-70 transition-opacity w-full">
                   Support the app
-                </button>
-                <button className="text-left text-base text-black hover:opacity-70 transition-opacity w-full">
-                  How you can help
                 </button>
                 <button className="text-left text-base text-black hover:opacity-70 transition-opacity w-full">
                   FAQs
