@@ -95,21 +95,11 @@ export default function Home() {
         )}
 
         {/* Main Content */}
-        <main className="flex-1 flex flex-col lg:flex-row">
-          {/* Left Half - Image Placeholder (50% of horizontal space on desktop, full width on mobile) */}
-          <div className="w-full lg:w-1/2 flex items-center justify-center bg-gray-100 border-t border-b border-gray-300">
-            <div className="text-center">
-              <svg className="w-32 h-32 mx-auto text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1} d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" />
-              </svg>
-              <p className="mt-4 text-gray-500">Image placeholder</p>
-            </div>
-          </div>
-
-          {/* Right Half - Music Player + Cards Container (50% of horizontal space on desktop, full width on mobile) */}
-          <div className="w-full lg:w-1/2 flex flex-col lg:flex-row gap-6 px-4 lg:px-8 py-8 lg:py-12 border-t border-b border-gray-300 items-center justify-start">
-            {/* Music Player - Responsive on mobile, iPhone 17 Pro Max Size on desktop */}
-            <div className="bg-white border-2 border-gray-300 rounded-2xl p-6 flex flex-col w-full" style={{ maxWidth: '100%' }}>
+        <main className="flex-1 flex items-center justify-center p-8 lg:p-16">
+          {/* Centered Container - Music Player + Cards */}
+          <div className="flex flex-col lg:flex-row gap-6 lg:gap-8 items-center justify-center max-w-7xl">
+            {/* Music Player */}
+            <div className="bg-white border-2 border-gray-300 rounded-2xl p-6 flex flex-col w-full lg:w-auto" style={{ maxWidth: '430px' }}>
               {/* Album Art & Info */}
               <div className="mb-6">
                 <div className="w-full aspect-square bg-gray-200 rounded-lg mb-4 flex items-center justify-center">
@@ -193,8 +183,8 @@ export default function Home() {
               </div>
             </div>
 
-            {/* Cards Container - Right Side */}
-            <div className="flex flex-col justify-center w-full lg:w-auto px-4 lg:px-12">
+            {/* Cards Container */}
+            <div className="flex flex-col justify-center w-full lg:w-auto" style={{ minWidth: '400px', maxWidth: '580px' }}>
               {/* Header */}
               <h1 className="text-4xl lg:text-5xl font-bold text-black mb-8 whitespace-nowrap">Choose your path</h1>
 
