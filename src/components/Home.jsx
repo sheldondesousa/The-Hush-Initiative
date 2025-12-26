@@ -98,11 +98,21 @@ export default function Home() {
           {/* Top Border - Desktop only */}
           <div className="hidden lg:block border-t border-gray-300"></div>
 
-          {/* Cards Container */}
-          <div className="flex-1 flex items-center justify-center px-4 lg:px-12 py-8 lg:py-16">
-            <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 lg:gap-8 max-w-6xl w-full">
+          {/* Top Half - Image Placeholder */}
+          <div className="flex-1 flex items-center justify-center bg-gray-100">
+            <div className="text-center">
+              <svg className="w-32 h-32 mx-auto text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1} d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" />
+              </svg>
+              <p className="mt-4 text-gray-500">Image placeholder</p>
+            </div>
+          </div>
+
+          {/* Bottom Half - Cards Container */}
+          <div className="flex-1 flex items-end justify-center px-4 lg:px-12 pb-8 lg:pb-12">
+            <div className="grid grid-cols-1 lg:grid-cols-3 gap-4 lg:gap-6 max-w-4xl w-full">
               {/* Focus Card */}
-              <button className="relative aspect-[3/4] rounded-3xl overflow-hidden transition-transform hover:scale-[1.02] group" style={{ background: 'linear-gradient(135deg, #FF6B9D 0%, #FFA06B 50%, #FFD700 100%)' }}>
+              <button className="relative aspect-[3/4] max-h-64 rounded-2xl overflow-hidden transition-transform hover:scale-[1.02] group" style={{ background: 'linear-gradient(135deg, #FF6B9D 0%, #FFA06B 50%, #FFD700 100%)' }}>
                 {/* Geometric Shapes Background */}
                 <div className="absolute inset-0 opacity-20">
                   <svg className="absolute w-full h-full" viewBox="0 0 400 600" preserveAspectRatio="xMidYMid slice">
@@ -113,20 +123,20 @@ export default function Home() {
                   </svg>
                 </div>
 
-                <div className="relative z-10 h-full flex flex-col items-center justify-center p-8">
-                  <div className="mb-8">
-                    <svg className="w-24 lg:w-32 h-24 lg:h-32" viewBox="0 0 80 80" fill="black">
+                <div className="relative z-10 h-full flex flex-col items-center justify-center p-6">
+                  <div className="mb-4">
+                    <svg className="w-16 lg:w-20 h-16 lg:h-20" viewBox="0 0 80 80" fill="black">
                       <circle cx="40" cy="40" r="12" fill="black"/>
                       <path d="M40 8 C40 8, 25 25, 25 40 C25 55, 40 72, 40 72 C40 72, 55 55, 55 40 C55 25, 40 8, 40 8" fill="none" stroke="black" strokeWidth="3"/>
                     </svg>
                   </div>
-                  <h2 className="text-3xl lg:text-4xl font-semibold text-black mb-2" style={{ fontFamily: 'Roboto Serif, serif' }}>Focus</h2>
-                  <p className="text-base lg:text-lg text-black">Enhance concentration</p>
+                  <h2 className="text-2xl lg:text-3xl font-semibold text-black mb-1" style={{ fontFamily: 'Roboto Serif, serif' }}>Focus</h2>
+                  <p className="text-sm lg:text-base text-black">Enhance concentration</p>
                 </div>
               </button>
 
               {/* Calm Card */}
-              <button className="relative aspect-[3/4] rounded-3xl overflow-hidden transition-transform hover:scale-[1.02] group" style={{ background: 'linear-gradient(135deg, #4FACFE 0%, #00F2FE 50%, #43E97B 100%)' }}>
+              <button className="relative aspect-[3/4] max-h-64 rounded-2xl overflow-hidden transition-transform hover:scale-[1.02] group" style={{ background: 'linear-gradient(135deg, #4FACFE 0%, #00F2FE 50%, #43E97B 100%)' }}>
                 {/* Geometric Shapes Background */}
                 <div className="absolute inset-0 opacity-20">
                   <svg className="absolute w-full h-full" viewBox="0 0 400 600" preserveAspectRatio="xMidYMid slice">
@@ -137,21 +147,21 @@ export default function Home() {
                   </svg>
                 </div>
 
-                <div className="relative z-10 h-full flex flex-col items-center justify-center p-8">
-                  <div className="mb-8">
-                    <svg className="w-24 lg:w-32 h-24 lg:h-32" viewBox="0 0 80 80" fill="black">
+                <div className="relative z-10 h-full flex flex-col items-center justify-center p-6">
+                  <div className="mb-4">
+                    <svg className="w-16 lg:w-20 h-16 lg:h-20" viewBox="0 0 80 80" fill="black">
                       <path d="M20 50 Q20 30, 30 25 Q35 22, 40 30 Q45 22, 50 25 Q60 30, 60 50" fill="black"/>
                       <path d="M25 60 Q25 45, 32 42 Q36 40, 40 46 Q44 40, 48 42 Q55 45, 55 60" fill="black"/>
                       <path d="M30 70 Q30 58, 36 56 Q39 55, 40 59 Q41 55, 44 56 Q50 58, 50 70" fill="black"/>
                     </svg>
                   </div>
-                  <h2 className="text-3xl lg:text-4xl font-semibold text-black mb-2" style={{ fontFamily: 'Roboto Serif, serif' }}>Calm</h2>
-                  <p className="text-base lg:text-lg text-black">Relax and rejuvenate</p>
+                  <h2 className="text-2xl lg:text-3xl font-semibold text-black mb-1" style={{ fontFamily: 'Roboto Serif, serif' }}>Calm</h2>
+                  <p className="text-sm lg:text-base text-black">Relax and rejuvenate</p>
                 </div>
               </button>
 
               {/* Breathe Card */}
-              <button className="relative aspect-[3/4] rounded-3xl overflow-hidden transition-transform hover:scale-[1.02] group" style={{ background: 'linear-gradient(135deg, #A855F7 0%, #7C3AED 50%, #4C1D95 100%)' }}>
+              <button className="relative aspect-[3/4] max-h-64 rounded-2xl overflow-hidden transition-transform hover:scale-[1.02] group" style={{ background: 'linear-gradient(135deg, #A855F7 0%, #7C3AED 50%, #4C1D95 100%)' }}>
                 {/* Geometric Shapes Background */}
                 <div className="absolute inset-0 opacity-20">
                   <svg className="absolute w-full h-full" viewBox="0 0 400 600" preserveAspectRatio="xMidYMid slice">
@@ -162,9 +172,9 @@ export default function Home() {
                   </svg>
                 </div>
 
-                <div className="relative z-10 h-full flex flex-col items-center justify-center p-8">
-                  <div className="mb-8">
-                    <svg className="w-24 lg:w-32 h-24 lg:h-32" viewBox="0 0 80 80" fill="black">
+                <div className="relative z-10 h-full flex flex-col items-center justify-center p-6">
+                  <div className="mb-4">
+                    <svg className="w-16 lg:w-20 h-16 lg:h-20" viewBox="0 0 80 80" fill="black">
                       <circle cx="40" cy="40" r="3" fill="black"/>
                       {/* Radiating lines */}
                       <line x1="40" y1="10" x2="40" y2="25" stroke="black" strokeWidth="2.5"/>
@@ -181,8 +191,8 @@ export default function Home() {
                       <line x1="65" y1="40" x2="60" y2="40" stroke="black" strokeWidth="2"/>
                     </svg>
                   </div>
-                  <h2 className="text-3xl lg:text-4xl font-semibold text-black mb-2" style={{ fontFamily: 'Roboto Serif, serif' }}>Breathe</h2>
-                  <p className="text-base lg:text-lg text-black">Build a rhythm</p>
+                  <h2 className="text-2xl lg:text-3xl font-semibold text-black mb-1" style={{ fontFamily: 'Roboto Serif, serif' }}>Breathe</h2>
+                  <p className="text-sm lg:text-base text-black">Build a rhythm</p>
                 </div>
               </button>
             </div>
