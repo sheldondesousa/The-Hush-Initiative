@@ -20,17 +20,7 @@ export default function Home() {
       <div className="relative w-full max-w-md bg-white border border-gray-300 rounded-2xl shadow-sm overflow-hidden flex flex-col py-8" style={{ maxWidth: '430px', minHeight: '932px' }}>
 
       {/* Header */}
-      <div className="px-6 py-3 flex justify-between items-center">
-        <button
-          onClick={handleLogout}
-          className="flex items-center gap-2 text-black hover:opacity-70 transition-opacity"
-        >
-          <svg className="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-            <path strokeLinecap="round" strokeLinejoin="round" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1" />
-          </svg>
-          <span className="font-medium text-base">Logout</span>
-        </button>
-
+      <div className="px-6 py-3 flex justify-end items-center">
         <button className="flex items-center gap-2 border-2 border-black rounded-full px-4 py-1.5 hover:bg-gray-50 transition-colors">
           <div className="w-5 h-5 bg-black rounded-full"></div>
           <span className="font-medium text-base">Light</span>
@@ -127,6 +117,19 @@ export default function Home() {
             <svg className="w-5 h-5 text-black group-hover:translate-x-1 transition-transform" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
               <path strokeLinecap="round" strokeLinejoin="round" d="M9 5l7 7-7 7"/>
             </svg>
+          </button>
+        </div>
+
+        {/* Logout Button */}
+        <div className="mt-6 px-0">
+          <button
+            onClick={handleLogout}
+            className="flex items-center gap-2 text-black hover:opacity-70 transition-opacity"
+          >
+            <svg className="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+              <path strokeLinecap="round" strokeLinejoin="round" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1" />
+            </svg>
+            <span className="font-medium text-sm">Logout</span>
           </button>
         </div>
       </div>
