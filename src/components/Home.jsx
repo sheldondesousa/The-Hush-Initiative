@@ -106,7 +106,7 @@ export default function Home() {
           </div>
 
           {/* Right Half - Music Player + Cards Container (50% of horizontal space) */}
-          <div className="w-1/2 flex flex-row gap-6 px-4 lg:px-8 py-8 lg:py-12 border-t border-b border-gray-300 items-center justify-center">
+          <div className="w-1/2 flex flex-row gap-6 px-4 lg:px-8 py-8 lg:py-12 border-t border-b border-gray-300 items-center justify-start">
             {/* Music Player - iPhone 17 Pro Max Size */}
             <div className="bg-white border-2 border-gray-300 rounded-2xl p-6 flex flex-col" style={{ width: '430px', height: '932px' }}>
               {/* Album Art & Info */}
@@ -121,9 +121,9 @@ export default function Home() {
               </div>
 
               {/* Track List */}
-              <div className="flex-1 space-y-2 mb-6">
+              <div className="flex-1 space-y-0 mb-6">
                 {/* Track 1 */}
-                <button className="w-full flex items-center justify-between p-3 hover:bg-gray-50 rounded-lg transition-colors group">
+                <button className="w-full flex items-center justify-between py-4 border-b border-gray-200 hover:bg-gray-50 transition-colors group">
                   <div className="flex items-center gap-3">
                     <span className="text-sm text-gray-500 w-6">1</span>
                     <div className="text-left">
@@ -134,7 +134,7 @@ export default function Home() {
                 </button>
 
                 {/* Track 2 - Currently Playing */}
-                <button className="w-full flex items-center justify-between p-3 bg-gray-100 rounded-lg transition-colors group">
+                <button className="w-full flex items-center justify-between py-4 border-b border-gray-200 bg-gray-50 transition-colors group">
                   <div className="flex items-center gap-3">
                     <svg className="w-4 h-4 text-black" fill="currentColor" viewBox="0 0 24 24">
                       <path d="M8 5v14l11-7z"/>
@@ -147,7 +147,7 @@ export default function Home() {
                 </button>
 
                 {/* Track 3 */}
-                <button className="w-full flex items-center justify-between p-3 hover:bg-gray-50 rounded-lg transition-colors group">
+                <button className="w-full flex items-center justify-between py-4 border-b border-gray-200 hover:bg-gray-50 transition-colors group">
                   <div className="flex items-center gap-3">
                     <span className="text-sm text-gray-500 w-6">3</span>
                     <div className="text-left">
