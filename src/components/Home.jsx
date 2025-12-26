@@ -106,54 +106,94 @@ export default function Home() {
           </div>
 
           {/* Right Half - Music Player + Cards Container (50% of horizontal space) */}
-          <div className="w-1/2 flex flex-col justify-end px-4 lg:px-12 py-8 lg:py-12 border-t border-b border-gray-300 gap-6">
-            {/* Music Player Placeholder */}
-            <div className="bg-white border-2 border-gray-300 rounded-2xl p-6">
-              <div className="flex items-center gap-4 mb-4">
-                <div className="w-20 h-20 bg-gray-200 rounded-lg flex items-center justify-center">
-                  <svg className="w-8 h-8 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 19V6l12-3v13M9 19c0 1.105-1.343 2-3 2s-3-.895-3-2 1.343-2 3-2 3 .895 3 2zm12-3c0 1.105-1.343 2-3 2s-3-.895-3-2 1.343-2 3-2 3 .895 3 2zM9 10l12-3" />
+          <div className="w-1/2 flex flex-row gap-6 px-4 lg:px-8 py-8 lg:py-12 border-t border-b border-gray-300">
+            {/* Music Player - Left Side */}
+            <div className="flex-1 bg-white border-2 border-gray-300 rounded-2xl p-6 flex flex-col">
+              {/* Album Art & Info */}
+              <div className="mb-6">
+                <div className="w-full aspect-square bg-gray-200 rounded-lg mb-4 flex items-center justify-center">
+                  <svg className="w-20 h-20 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M9 19V6l12-3v13M9 19c0 1.105-1.343 2-3 2s-3-.895-3-2 1.343-2 3-2 3 .895 3 2zm12-3c0 1.105-1.343 2-3 2s-3-.895-3-2 1.343-2 3-2 3 .895 3 2zM9 10l12-3" />
                   </svg>
                 </div>
-                <div className="flex-1">
-                  <h3 className="font-semibold text-lg text-black">Track Title</h3>
-                  <p className="text-sm text-gray-600">Artist Name</p>
-                </div>
+                <h3 className="font-semibold text-xl text-black mb-1">Album Title</h3>
+                <p className="text-sm text-gray-600">Artist Name</p>
               </div>
 
-              {/* Progress Bar */}
-              <div className="mb-4">
-                <div className="w-full bg-gray-200 rounded-full h-2">
-                  <div className="bg-black h-2 rounded-full" style={{ width: '40%' }}></div>
-                </div>
-                <div className="flex justify-between text-xs text-gray-500 mt-1">
-                  <span>1:23</span>
-                  <span>3:45</span>
-                </div>
+              {/* Track List */}
+              <div className="flex-1 space-y-2 mb-6">
+                {/* Track 1 */}
+                <button className="w-full flex items-center justify-between p-3 hover:bg-gray-50 rounded-lg transition-colors group">
+                  <div className="flex items-center gap-3">
+                    <span className="text-sm text-gray-500 w-6">1</span>
+                    <div className="text-left">
+                      <p className="text-sm font-medium text-black">Track Name One</p>
+                    </div>
+                  </div>
+                  <span className="text-sm text-gray-500">3:24</span>
+                </button>
+
+                {/* Track 2 - Currently Playing */}
+                <button className="w-full flex items-center justify-between p-3 bg-gray-100 rounded-lg transition-colors group">
+                  <div className="flex items-center gap-3">
+                    <svg className="w-4 h-4 text-black" fill="currentColor" viewBox="0 0 24 24">
+                      <path d="M8 5v14l11-7z"/>
+                    </svg>
+                    <div className="text-left">
+                      <p className="text-sm font-medium text-black">Track Name Two</p>
+                    </div>
+                  </div>
+                  <span className="text-sm text-black font-medium">2:51</span>
+                </button>
+
+                {/* Track 3 */}
+                <button className="w-full flex items-center justify-between p-3 hover:bg-gray-50 rounded-lg transition-colors group">
+                  <div className="flex items-center gap-3">
+                    <span className="text-sm text-gray-500 w-6">3</span>
+                    <div className="text-left">
+                      <p className="text-sm font-medium text-black">Track Name Three</p>
+                    </div>
+                  </div>
+                  <span className="text-sm text-gray-500">4:12</span>
+                </button>
               </div>
 
               {/* Player Controls */}
-              <div className="flex items-center justify-center gap-4">
-                <button className="p-2 hover:opacity-70 transition-opacity">
-                  <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
-                    <path d="M6 6h2v12H6zm3.5 6l8.5 6V6z"/>
-                  </svg>
-                </button>
-                <button className="p-3 bg-black text-white rounded-full hover:opacity-90 transition-opacity">
-                  <svg className="w-6 h-6" fill="currentColor" viewBox="0 0 24 24">
-                    <path d="M8 5v14l11-7z"/>
-                  </svg>
-                </button>
-                <button className="p-2 hover:opacity-70 transition-opacity">
-                  <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
-                    <path d="M16 18h2V6h-2zm-11 0l8.5-6L5 6z"/>
-                  </svg>
-                </button>
+              <div className="border-t border-gray-200 pt-4">
+                {/* Progress Bar */}
+                <div className="mb-3">
+                  <div className="w-full bg-gray-200 rounded-full h-1.5">
+                    <div className="bg-black h-1.5 rounded-full" style={{ width: '45%' }}></div>
+                  </div>
+                  <div className="flex justify-between text-xs text-gray-500 mt-1">
+                    <span>1:16</span>
+                    <span>2:51</span>
+                  </div>
+                </div>
+
+                {/* Control Buttons */}
+                <div className="flex items-center justify-center gap-4">
+                  <button className="p-2 hover:opacity-70 transition-opacity">
+                    <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
+                      <path d="M6 6h2v12H6zm3.5 6l8.5 6V6z"/>
+                    </svg>
+                  </button>
+                  <button className="p-3 bg-black text-white rounded-full hover:opacity-90 transition-opacity">
+                    <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
+                      <path d="M6 4h4v16H6V4zm8 0h4v16h-4V4z"/>
+                    </svg>
+                  </button>
+                  <button className="p-2 hover:opacity-70 transition-opacity">
+                    <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
+                      <path d="M16 18h2V6h-2zm-11 0l8.5-6L5 6z"/>
+                    </svg>
+                  </button>
+                </div>
               </div>
             </div>
 
-            {/* Cards Container */}
-            <div className="grid grid-cols-1 gap-4 max-w-sm w-full">
+            {/* Cards Container - Right Side */}
+            <div className="w-64 flex flex-col justify-end gap-3">
               {/* Focus Card */}
               <button className="relative aspect-[3/4] max-h-64 rounded-2xl overflow-hidden transition-transform hover:scale-[1.02] group" style={{ background: 'linear-gradient(135deg, #FF6B9D 0%, #FFA06B 50%, #FFD700 100%)' }}>
                 {/* Geometric Shapes Background */}
