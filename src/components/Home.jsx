@@ -15,164 +15,297 @@ export default function Home() {
   };
 
   return (
-    <div className="min-h-screen bg-gray-50 flex items-center justify-center p-4">
-      {/* Mobile Container with Border - iPhone 16 Pro Max dimensions */}
-      <div className="relative w-full max-w-md bg-white border border-gray-300 rounded-2xl shadow-sm overflow-hidden flex flex-col py-8" style={{ maxWidth: '430px', minHeight: '932px' }}>
+    <div className="min-h-screen bg-white">
+      {/* Desktop Layout */}
+      <div className="hidden lg:flex min-h-screen">
+        {/* Sidebar */}
+        <aside className="w-64 border-r border-gray-300 p-8 flex flex-col">
+          <nav className="space-y-6">
+            <div className="pb-4 border-b border-gray-300">
+              <h2 className="text-lg font-semibold text-black">Menu</h2>
+            </div>
+            <button className="text-left text-base text-black hover:opacity-70 transition-opacity">
+              About Hum
+            </button>
+            <button className="text-left text-base text-black hover:opacity-70 transition-opacity">
+              Support the app
+            </button>
+            <button className="text-left text-base text-black hover:opacity-70 transition-opacity">
+              How you can help
+            </button>
+            <button className="text-left text-base text-black hover:opacity-70 transition-opacity">
+              FAQs
+            </button>
+            <button className="text-left text-base text-black hover:opacity-70 transition-opacity">
+              Terms & Conditions
+            </button>
+            <button
+              onClick={handleLogout}
+              className="text-left text-base text-black hover:opacity-70 transition-opacity"
+            >
+              Logout
+            </button>
+          </nav>
+        </aside>
 
-      {/* Header */}
-      <div className="px-6 py-3 flex justify-end items-center">
-        <button className="flex items-center gap-2 border-2 border-black rounded-full px-4 py-1.5 hover:bg-gray-50 transition-colors">
-          <div className="w-5 h-5 bg-black rounded-full"></div>
-          <span className="font-medium text-base">Light</span>
-        </button>
+        {/* Main Content */}
+        <main className="flex-1 flex flex-col">
+          {/* Top Border */}
+          <div className="border-t border-gray-300"></div>
+
+          {/* Cards Container */}
+          <div className="flex-1 flex items-center justify-center px-12 py-16">
+            <div className="grid grid-cols-3 gap-8 max-w-6xl w-full">
+              {/* Focus Card */}
+              <button className="relative aspect-[3/4] rounded-3xl overflow-hidden transition-transform hover:scale-[1.02] group" style={{ background: 'linear-gradient(135deg, #FF6B9D 0%, #FFA06B 50%, #FFD700 100%)' }}>
+                {/* Geometric Shapes Background */}
+                <div className="absolute inset-0 opacity-20">
+                  <svg className="absolute w-full h-full" viewBox="0 0 400 600" preserveAspectRatio="xMidYMid slice">
+                    <rect x="0" y="0" width="150" height="150" fill="white" opacity="0.3"/>
+                    <rect x="250" y="50" width="120" height="120" fill="white" opacity="0.2"/>
+                    <circle cx="200" cy="400" r="100" fill="white" opacity="0.25"/>
+                    <rect x="150" y="200" width="130" height="130" fill="white" opacity="0.15" transform="rotate(45 215 265)"/>
+                  </svg>
+                </div>
+
+                <div className="relative z-10 h-full flex flex-col items-center justify-center p-8">
+                  <div className="mb-8">
+                    <svg className="w-32 h-32" viewBox="0 0 80 80" fill="black">
+                      <circle cx="40" cy="40" r="12" fill="black"/>
+                      <path d="M40 8 C40 8, 25 25, 25 40 C25 55, 40 72, 40 72 C40 72, 55 55, 55 40 C55 25, 40 8, 40 8" fill="none" stroke="black" strokeWidth="3"/>
+                    </svg>
+                  </div>
+                  <h2 className="text-4xl font-semibold text-black mb-2" style={{ fontFamily: 'Roboto Serif, serif' }}>Focus</h2>
+                  <p className="text-lg text-black">Enhance concentration</p>
+                </div>
+              </button>
+
+              {/* Calm Card */}
+              <button className="relative aspect-[3/4] rounded-3xl overflow-hidden transition-transform hover:scale-[1.02] group" style={{ background: 'linear-gradient(135deg, #4FACFE 0%, #00F2FE 50%, #43E97B 100%)' }}>
+                {/* Geometric Shapes Background */}
+                <div className="absolute inset-0 opacity-20">
+                  <svg className="absolute w-full h-full" viewBox="0 0 400 600" preserveAspectRatio="xMidYMid slice">
+                    <rect x="30" y="80" width="140" height="140" fill="white" opacity="0.25"/>
+                    <rect x="230" y="30" width="110" height="110" fill="white" opacity="0.3"/>
+                    <circle cx="100" cy="450" r="90" fill="white" opacity="0.2"/>
+                    <rect x="180" y="250" width="120" height="120" fill="white" opacity="0.15" transform="rotate(30 240 310)"/>
+                  </svg>
+                </div>
+
+                <div className="relative z-10 h-full flex flex-col items-center justify-center p-8">
+                  <div className="mb-8">
+                    <svg className="w-32 h-32" viewBox="0 0 80 80" fill="black">
+                      <path d="M20 50 Q20 30, 30 25 Q35 22, 40 30 Q45 22, 50 25 Q60 30, 60 50" fill="black"/>
+                      <path d="M25 60 Q25 45, 32 42 Q36 40, 40 46 Q44 40, 48 42 Q55 45, 55 60" fill="black"/>
+                      <path d="M30 70 Q30 58, 36 56 Q39 55, 40 59 Q41 55, 44 56 Q50 58, 50 70" fill="black"/>
+                    </svg>
+                  </div>
+                  <h2 className="text-4xl font-semibold text-black mb-2" style={{ fontFamily: 'Roboto Serif, serif' }}>Calm</h2>
+                  <p className="text-lg text-black">Relax and rejuvenate</p>
+                </div>
+              </button>
+
+              {/* Breathe Card */}
+              <button className="relative aspect-[3/4] rounded-3xl overflow-hidden transition-transform hover:scale-[1.02] group" style={{ background: 'linear-gradient(135deg, #A855F7 0%, #7C3AED 50%, #4C1D95 100%)' }}>
+                {/* Geometric Shapes Background */}
+                <div className="absolute inset-0 opacity-20">
+                  <svg className="absolute w-full h-full" viewBox="0 0 400 600" preserveAspectRatio="xMidYMid slice">
+                    <rect x="50" y="50" width="140" height="140" fill="white" opacity="0.25"/>
+                    <rect x="240" y="100" width="100" height="100" fill="white" opacity="0.3"/>
+                    <circle cx="300" cy="400" r="95" fill="white" opacity="0.2"/>
+                    <rect x="160" y="280" width="115" height="115" fill="white" opacity="0.15" transform="rotate(20 217 337)"/>
+                  </svg>
+                </div>
+
+                <div className="relative z-10 h-full flex flex-col items-center justify-center p-8">
+                  <div className="mb-8">
+                    <svg className="w-32 h-32" viewBox="0 0 80 80" fill="black">
+                      <circle cx="40" cy="40" r="3" fill="black"/>
+                      {/* Radiating lines */}
+                      <line x1="40" y1="10" x2="40" y2="25" stroke="black" strokeWidth="2.5"/>
+                      <line x1="40" y1="70" x2="40" y2="55" stroke="black" strokeWidth="2.5"/>
+                      <line x1="10" y1="40" x2="25" y2="40" stroke="black" strokeWidth="2.5"/>
+                      <line x1="70" y1="40" x2="55" y2="40" stroke="black" strokeWidth="2.5"/>
+                      <line x1="18" y1="18" x2="28" y2="28" stroke="black" strokeWidth="2.5"/>
+                      <line x1="62" y1="62" x2="52" y2="52" stroke="black" strokeWidth="2.5"/>
+                      <line x1="62" y1="18" x2="52" y2="28" stroke="black" strokeWidth="2.5"/>
+                      <line x1="18" y1="62" x2="28" y2="52" stroke="black" strokeWidth="2.5"/>
+                      <line x1="40" y1="15" x2="40" y2="20" stroke="black" strokeWidth="2"/>
+                      <line x1="40" y1="65" x2="40" y2="60" stroke="black" strokeWidth="2"/>
+                      <line x1="15" y1="40" x2="20" y2="40" stroke="black" strokeWidth="2"/>
+                      <line x1="65" y1="40" x2="60" y2="40" stroke="black" strokeWidth="2"/>
+                    </svg>
+                  </div>
+                  <h2 className="text-4xl font-semibold text-black mb-2" style={{ fontFamily: 'Roboto Serif, serif' }}>Breathe</h2>
+                  <p className="text-lg text-black">Build a rhythm</p>
+                </div>
+              </button>
+            </div>
+          </div>
+
+          {/* Bottom Border */}
+          <div className="border-b border-gray-300"></div>
+        </main>
       </div>
 
-      {/* Main Content */}
-      <div className="px-6 pt-8 pb-8">
-        <h1 className="text-5xl font-semibold text-black mb-8">
-          Choose your path
-        </h1>
+      {/* Mobile Layout */}
+      <div className="lg:hidden min-h-screen bg-gray-50 flex items-center justify-center p-4">
+        <div className="relative w-full max-w-md bg-white border border-gray-300 rounded-2xl shadow-sm overflow-hidden flex flex-col py-8" style={{ maxWidth: '430px', minHeight: '932px' }}>
+          {/* Header */}
+          <div className="px-6 py-3 flex justify-end items-center">
+            <button className="flex items-center gap-2 border-2 border-black rounded-full px-4 py-1.5 hover:bg-gray-50 transition-colors">
+              <div className="w-5 h-5 bg-black rounded-full"></div>
+              <span className="font-medium text-base">Light</span>
+            </button>
+          </div>
 
-        {/* Divider */}
-        <div className="border-t border-gray-300 mb-0"></div>
+          {/* Main Content */}
+          <div className="px-6 pt-8 pb-8">
+            <h1 className="text-5xl font-semibold text-black mb-8">
+              Choose your path
+            </h1>
 
-        {/* Options List */}
-        <div className="space-y-4 mt-4">
-          {/* Focus */}
-          <button className="relative w-full py-8 px-6 flex items-center gap-4 rounded-2xl overflow-hidden transition-transform hover:scale-[1.02] group" style={{ background: 'linear-gradient(135deg, #FF6B9D 0%, #FFA06B 50%, #FFD700 100%)' }}>
-            {/* Geometric Shapes Background */}
-            <div className="absolute inset-0 opacity-20">
-              <svg className="absolute w-full h-full" viewBox="0 0 400 200" preserveAspectRatio="xMidYMid slice">
-                <rect x="0" y="0" width="120" height="120" fill="white" opacity="0.3"/>
-                <rect x="280" y="0" width="120" height="60" fill="white" opacity="0.2"/>
-                <circle cx="350" cy="150" r="80" fill="white" opacity="0.25"/>
-                <rect x="150" y="80" width="100" height="100" fill="white" opacity="0.15" transform="rotate(45 200 130)"/>
+            {/* Divider */}
+            <div className="border-t border-gray-300 mb-0"></div>
+
+            {/* Options List */}
+            <div className="space-y-4 mt-4">
+              {/* Focus */}
+              <button className="relative w-full py-8 px-6 flex items-center gap-4 rounded-2xl overflow-hidden transition-transform hover:scale-[1.02] group" style={{ background: 'linear-gradient(135deg, #FF6B9D 0%, #FFA06B 50%, #FFD700 100%)' }}>
+                {/* Geometric Shapes Background */}
+                <div className="absolute inset-0 opacity-20">
+                  <svg className="absolute w-full h-full" viewBox="0 0 400 200" preserveAspectRatio="xMidYMid slice">
+                    <rect x="0" y="0" width="120" height="120" fill="white" opacity="0.3"/>
+                    <rect x="280" y="0" width="120" height="60" fill="white" opacity="0.2"/>
+                    <circle cx="350" cy="150" r="80" fill="white" opacity="0.25"/>
+                    <rect x="150" y="80" width="100" height="100" fill="white" opacity="0.15" transform="rotate(45 200 130)"/>
+                  </svg>
+                </div>
+
+                <div className="relative z-10 w-14 h-14 flex-shrink-0 flex items-center justify-center">
+                  <svg className="w-12 h-12" viewBox="0 0 80 80" fill="white">
+                    <circle cx="40" cy="40" r="12" fill="white"/>
+                    <path d="M40 8 C40 8, 25 25, 25 40 C25 55, 40 72, 40 72 C40 72, 55 55, 55 40 C55 25, 40 8, 40 8" fill="none" stroke="white" strokeWidth="3"/>
+                  </svg>
+                </div>
+                <div className="relative z-10 flex-1 text-left">
+                  <h2 className="text-4xl font-semibold text-white mb-0.5" style={{ fontFamily: 'Roboto Serif, serif' }}>Focus</h2>
+                  <p className="text-xl text-white opacity-90">Enhance concentration</p>
+                </div>
+                <svg className="relative z-10 w-5 h-5 text-white group-hover:translate-x-1 transition-transform" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" d="M9 5l7 7-7 7"/>
+                </svg>
+              </button>
+
+              {/* Calm */}
+              <button className="relative w-full py-8 px-6 flex items-center gap-4 rounded-2xl overflow-hidden transition-transform hover:scale-[1.02] group" style={{ background: 'linear-gradient(135deg, #4FACFE 0%, #00F2FE 50%, #43E97B 100%)' }}>
+                {/* Geometric Shapes Background */}
+                <div className="absolute inset-0 opacity-20">
+                  <svg className="absolute w-full h-full" viewBox="0 0 400 200" preserveAspectRatio="xMidYMid slice">
+                    <rect x="20" y="20" width="100" height="100" fill="white" opacity="0.25"/>
+                    <rect x="250" y="30" width="80" height="80" fill="white" opacity="0.3"/>
+                    <circle cx="80" cy="160" r="70" fill="white" opacity="0.2"/>
+                    <rect x="200" y="100" width="90" height="90" fill="white" opacity="0.15" transform="rotate(30 245 145)"/>
+                  </svg>
+                </div>
+
+                <div className="relative z-10 w-14 h-14 flex-shrink-0 flex items-center justify-center">
+                  <svg className="w-12 h-12" viewBox="0 0 80 80" fill="white">
+                    <path d="M20 50 Q20 30, 30 25 Q35 22, 40 30 Q45 22, 50 25 Q60 30, 60 50" fill="white"/>
+                    <path d="M25 60 Q25 45, 32 42 Q36 40, 40 46 Q44 40, 48 42 Q55 45, 55 60" fill="white"/>
+                    <path d="M30 70 Q30 58, 36 56 Q39 55, 40 59 Q41 55, 44 56 Q50 58, 50 70" fill="white"/>
+                  </svg>
+                </div>
+                <div className="relative z-10 flex-1 text-left">
+                  <h2 className="text-4xl font-semibold text-white mb-0.5" style={{ fontFamily: 'Roboto Serif, serif' }}>Calm</h2>
+                  <p className="text-xl text-white opacity-90">Relax and rejuvenate</p>
+                </div>
+                <svg className="relative z-10 w-5 h-5 text-white group-hover:translate-x-1 transition-transform" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" d="M9 5l7 7-7 7"/>
+                </svg>
+              </button>
+
+              {/* Breathe */}
+              <button className="relative w-full py-8 px-6 flex items-center gap-4 rounded-2xl overflow-hidden transition-transform hover:scale-[1.02] group" style={{ background: 'linear-gradient(135deg, #A855F7 0%, #7C3AED 50%, #4C1D95 100%)' }}>
+                {/* Geometric Shapes Background */}
+                <div className="absolute inset-0 opacity-20">
+                  <svg className="absolute w-full h-full" viewBox="0 0 400 200" preserveAspectRatio="xMidYMid slice">
+                    <rect x="30" y="10" width="110" height="110" fill="white" opacity="0.25"/>
+                    <rect x="270" y="50" width="70" height="70" fill="white" opacity="0.3"/>
+                    <circle cx="320" cy="30" r="60" fill="white" opacity="0.2"/>
+                    <rect x="180" y="90" width="85" height="85" fill="white" opacity="0.15" transform="rotate(20 222 132)"/>
+                  </svg>
+                </div>
+
+                <div className="relative z-10 w-14 h-14 flex-shrink-0 flex items-center justify-center">
+                  <svg className="w-12 h-12" viewBox="0 0 80 80" fill="white">
+                    <circle cx="40" cy="40" r="3" fill="white"/>
+                    {/* Radiating lines */}
+                    <line x1="40" y1="10" x2="40" y2="25" stroke="white" strokeWidth="2.5"/>
+                    <line x1="40" y1="70" x2="40" y2="55" stroke="white" strokeWidth="2.5"/>
+                    <line x1="10" y1="40" x2="25" y2="40" stroke="white" strokeWidth="2.5"/>
+                    <line x1="70" y1="40" x2="55" y2="40" stroke="white" strokeWidth="2.5"/>
+                    <line x1="18" y1="18" x2="28" y2="28" stroke="white" strokeWidth="2.5"/>
+                    <line x1="62" y1="62" x2="52" y2="52" stroke="white" strokeWidth="2.5"/>
+                    <line x1="62" y1="18" x2="52" y2="28" stroke="white" strokeWidth="2.5"/>
+                    <line x1="18" y1="62" x2="28" y2="52" stroke="white" strokeWidth="2.5"/>
+                    <line x1="40" y1="15" x2="40" y2="20" stroke="white" strokeWidth="2"/>
+                    <line x1="40" y1="65" x2="40" y2="60" stroke="white" strokeWidth="2"/>
+                    <line x1="15" y1="40" x2="20" y2="40" stroke="white" strokeWidth="2"/>
+                    <line x1="65" y1="40" x2="60" y2="40" stroke="white" strokeWidth="2"/>
+                  </svg>
+                </div>
+                <div className="relative z-10 flex-1 text-left">
+                  <h2 className="text-4xl font-semibold text-white mb-0.5" style={{ fontFamily: 'Roboto Serif, serif' }}>Breathe</h2>
+                  <p className="text-xl text-white opacity-90">Build a rhythm</p>
+                </div>
+                <svg className="relative z-10 w-5 h-5 text-white group-hover:translate-x-1 transition-transform" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" d="M9 5l7 7-7 7"/>
+                </svg>
+              </button>
+
+              {/* Meditate */}
+              <button className="w-full py-5 flex items-center gap-3 hover:bg-gray-50 transition-colors group">
+                <div className="w-14 h-14 flex-shrink-0 flex items-center justify-center">
+                  <svg className="w-12 h-12" viewBox="0 0 80 80" fill="black">
+                    <path d="M30 20 L50 20 L50 35 L30 35 Z" fill="black"/>
+                    <path d="M30 45 L50 45 L50 60 L30 60 Z" fill="black"/>
+                  </svg>
+                </div>
+                <div className="flex-1 text-left">
+                  <h2 className="text-4xl font-semibold text-black mb-0.5" style={{ fontFamily: 'Roboto Serif, serif' }}>Meditate</h2>
+                  <p className="text-xl text-black">Find inner peace</p>
+                </div>
+                <svg className="w-5 h-5 text-black group-hover:translate-x-1 transition-transform" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" d="M9 5l7 7-7 7"/>
+                </svg>
+              </button>
+            </div>
+
+            {/* Logout Button */}
+            <div className="mt-6 px-0">
+              <button
+                onClick={handleLogout}
+                className="flex items-center gap-2 text-black hover:opacity-70 transition-opacity"
+              >
+                <svg className="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                  <path strokeLinecap="round" strokeLinejoin="round" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1" />
+                </svg>
+                <span className="font-medium text-sm">Logout</span>
+              </button>
+            </div>
+          </div>
+
+          {/* Bottom Menu */}
+          <div className="mt-auto pt-8 flex justify-center">
+            <button className="flex flex-col items-center gap-1 text-black hover:opacity-70 transition-opacity">
+              <svg className="w-6 h-6" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                <path strokeLinecap="round" strokeLinejoin="round" d="M5 15l7-7 7 7"/>
               </svg>
-            </div>
-
-            <div className="relative z-10 w-14 h-14 flex-shrink-0 flex items-center justify-center">
-              <svg className="w-12 h-12" viewBox="0 0 80 80" fill="white">
-                <circle cx="40" cy="40" r="12" fill="white"/>
-                <path d="M40 8 C40 8, 25 25, 25 40 C25 55, 40 72, 40 72 C40 72, 55 55, 55 40 C55 25, 40 8, 40 8" fill="none" stroke="white" strokeWidth="3"/>
-              </svg>
-            </div>
-            <div className="relative z-10 flex-1 text-left">
-              <h2 className="text-4xl font-semibold text-white mb-0.5" style={{ fontFamily: 'Roboto Serif, serif' }}>Focus</h2>
-              <p className="text-xl text-white opacity-90">Enhance concentration</p>
-            </div>
-            <svg className="relative z-10 w-5 h-5 text-white group-hover:translate-x-1 transition-transform" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
-              <path strokeLinecap="round" strokeLinejoin="round" d="M9 5l7 7-7 7"/>
-            </svg>
-          </button>
-
-          {/* Calm */}
-          <button className="relative w-full py-8 px-6 flex items-center gap-4 rounded-2xl overflow-hidden transition-transform hover:scale-[1.02] group" style={{ background: 'linear-gradient(135deg, #4FACFE 0%, #00F2FE 50%, #43E97B 100%)' }}>
-            {/* Geometric Shapes Background */}
-            <div className="absolute inset-0 opacity-20">
-              <svg className="absolute w-full h-full" viewBox="0 0 400 200" preserveAspectRatio="xMidYMid slice">
-                <rect x="20" y="20" width="100" height="100" fill="white" opacity="0.25"/>
-                <rect x="250" y="30" width="80" height="80" fill="white" opacity="0.3"/>
-                <circle cx="80" cy="160" r="70" fill="white" opacity="0.2"/>
-                <rect x="200" y="100" width="90" height="90" fill="white" opacity="0.15" transform="rotate(30 245 145)"/>
-              </svg>
-            </div>
-
-            <div className="relative z-10 w-14 h-14 flex-shrink-0 flex items-center justify-center">
-              <svg className="w-12 h-12" viewBox="0 0 80 80" fill="white">
-                <path d="M20 50 Q20 30, 30 25 Q35 22, 40 30 Q45 22, 50 25 Q60 30, 60 50" fill="white"/>
-                <path d="M25 60 Q25 45, 32 42 Q36 40, 40 46 Q44 40, 48 42 Q55 45, 55 60" fill="white"/>
-                <path d="M30 70 Q30 58, 36 56 Q39 55, 40 59 Q41 55, 44 56 Q50 58, 50 70" fill="white"/>
-              </svg>
-            </div>
-            <div className="relative z-10 flex-1 text-left">
-              <h2 className="text-4xl font-semibold text-white mb-0.5" style={{ fontFamily: 'Roboto Serif, serif' }}>Calm</h2>
-              <p className="text-xl text-white opacity-90">Relax and rejuvenate</p>
-            </div>
-            <svg className="relative z-10 w-5 h-5 text-white group-hover:translate-x-1 transition-transform" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
-              <path strokeLinecap="round" strokeLinejoin="round" d="M9 5l7 7-7 7"/>
-            </svg>
-          </button>
-
-          {/* Breathe */}
-          <button className="relative w-full py-8 px-6 flex items-center gap-4 rounded-2xl overflow-hidden transition-transform hover:scale-[1.02] group" style={{ background: 'linear-gradient(135deg, #A855F7 0%, #7C3AED 50%, #4C1D95 100%)' }}>
-            {/* Geometric Shapes Background */}
-            <div className="absolute inset-0 opacity-20">
-              <svg className="absolute w-full h-full" viewBox="0 0 400 200" preserveAspectRatio="xMidYMid slice">
-                <rect x="30" y="10" width="110" height="110" fill="white" opacity="0.25"/>
-                <rect x="270" y="50" width="70" height="70" fill="white" opacity="0.3"/>
-                <circle cx="320" cy="30" r="60" fill="white" opacity="0.2"/>
-                <rect x="180" y="90" width="85" height="85" fill="white" opacity="0.15" transform="rotate(20 222 132)"/>
-              </svg>
-            </div>
-
-            <div className="relative z-10 w-14 h-14 flex-shrink-0 flex items-center justify-center">
-              <svg className="w-12 h-12" viewBox="0 0 80 80" fill="white">
-                <circle cx="40" cy="40" r="3" fill="white"/>
-                {/* Radiating lines */}
-                <line x1="40" y1="10" x2="40" y2="25" stroke="white" strokeWidth="2.5"/>
-                <line x1="40" y1="70" x2="40" y2="55" stroke="white" strokeWidth="2.5"/>
-                <line x1="10" y1="40" x2="25" y2="40" stroke="white" strokeWidth="2.5"/>
-                <line x1="70" y1="40" x2="55" y2="40" stroke="white" strokeWidth="2.5"/>
-                <line x1="18" y1="18" x2="28" y2="28" stroke="white" strokeWidth="2.5"/>
-                <line x1="62" y1="62" x2="52" y2="52" stroke="white" strokeWidth="2.5"/>
-                <line x1="62" y1="18" x2="52" y2="28" stroke="white" strokeWidth="2.5"/>
-                <line x1="18" y1="62" x2="28" y2="52" stroke="white" strokeWidth="2.5"/>
-                <line x1="40" y1="15" x2="40" y2="20" stroke="white" strokeWidth="2"/>
-                <line x1="40" y1="65" x2="40" y2="60" stroke="white" strokeWidth="2"/>
-                <line x1="15" y1="40" x2="20" y2="40" stroke="white" strokeWidth="2"/>
-                <line x1="65" y1="40" x2="60" y2="40" stroke="white" strokeWidth="2"/>
-              </svg>
-            </div>
-            <div className="relative z-10 flex-1 text-left">
-              <h2 className="text-4xl font-semibold text-white mb-0.5" style={{ fontFamily: 'Roboto Serif, serif' }}>Breathe</h2>
-              <p className="text-xl text-white opacity-90">Enter a rhythm</p>
-            </div>
-            <svg className="relative z-10 w-5 h-5 text-white group-hover:translate-x-1 transition-transform" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
-              <path strokeLinecap="round" strokeLinejoin="round" d="M9 5l7 7-7 7"/>
-            </svg>
-          </button>
-
-          {/* Meditate */}
-          <button className="w-full py-5 flex items-center gap-3 hover:bg-gray-50 transition-colors group">
-            <div className="w-14 h-14 flex-shrink-0 flex items-center justify-center">
-              <svg className="w-12 h-12" viewBox="0 0 80 80" fill="black">
-                <path d="M30 20 L50 20 L50 35 L30 35 Z" fill="black"/>
-                <path d="M30 45 L50 45 L50 60 L30 60 Z" fill="black"/>
-              </svg>
-            </div>
-            <div className="flex-1 text-left">
-              <h2 className="text-4xl font-semibold text-black mb-0.5" style={{ fontFamily: 'Roboto Serif, serif' }}>Meditate</h2>
-              <p className="text-xl text-black">Find inner peace</p>
-            </div>
-            <svg className="w-5 h-5 text-black group-hover:translate-x-1 transition-transform" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
-              <path strokeLinecap="round" strokeLinejoin="round" d="M9 5l7 7-7 7"/>
-            </svg>
-          </button>
+              <span className="text-xs font-medium">Menu</span>
+            </button>
+          </div>
         </div>
-
-        {/* Logout Button */}
-        <div className="mt-6 px-0">
-          <button
-            onClick={handleLogout}
-            className="flex items-center gap-2 text-black hover:opacity-70 transition-opacity"
-          >
-            <svg className="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-              <path strokeLinecap="round" strokeLinejoin="round" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1" />
-            </svg>
-            <span className="font-medium text-sm">Logout</span>
-          </button>
-        </div>
-      </div>
-
-      {/* Bottom Menu */}
-      <div className="mt-auto pt-8 flex justify-center">
-        <button className="flex flex-col items-center gap-1 text-black hover:opacity-70 transition-opacity">
-          <svg className="w-6 h-6" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-            <path strokeLinecap="round" strokeLinejoin="round" d="M5 15l7-7 7 7"/>
-          </svg>
-          <span className="text-xs font-medium">Menu</span>
-        </button>
-      </div>
       </div>
     </div>
   );
