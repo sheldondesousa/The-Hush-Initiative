@@ -98,8 +98,8 @@ export default function Home() {
           {/* Top Border - Desktop only */}
           <div className="hidden lg:block border-t border-gray-300"></div>
 
-          {/* Top Half - Image Placeholder */}
-          <div className="flex-1 flex items-center justify-center bg-gray-100">
+          {/* Top Half - Image Placeholder (50% of vertical space) */}
+          <div className="h-1/2 flex items-center justify-center bg-gray-100">
             <div className="text-center">
               <svg className="w-32 h-32 mx-auto text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1} d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" />
@@ -108,8 +108,8 @@ export default function Home() {
             </div>
           </div>
 
-          {/* Bottom Half - Cards Container */}
-          <div className="flex-1 flex items-end justify-center px-4 lg:px-12 pb-8 lg:pb-12">
+          {/* Bottom Half - Cards Container (50% of vertical space) */}
+          <div className="h-1/2 flex items-end justify-center px-4 lg:px-12 pb-8 lg:pb-12">
             <div className="grid grid-cols-1 lg:grid-cols-3 gap-4 lg:gap-6 max-w-4xl w-full">
               {/* Focus Card */}
               <button className="relative aspect-[3/4] max-h-64 rounded-2xl overflow-hidden transition-transform hover:scale-[1.02] group" style={{ background: 'linear-gradient(135deg, #FF6B9D 0%, #FFA06B 50%, #FFD700 100%)' }}>
