@@ -193,69 +193,42 @@ export default function Home() {
             </div>
 
             {/* Cards Container - Right Side */}
-            <div className="flex flex-col justify-center" style={{ width: '580px', height: '932px', paddingLeft: '60px', paddingRight: '60px' }}>
+            <div className="flex flex-col justify-center w-full lg:w-auto px-8 lg:px-12" style={{ height: '932px', maxWidth: '580px' }}>
               {/* Header */}
-              <h1 className="text-6xl font-bold text-black mb-8">What do you need?</h1>
+              <h1 className="text-4xl lg:text-5xl font-bold text-black mb-8 whitespace-nowrap">What do you need?</h1>
 
               {/* Separator */}
               <div className="border-t border-gray-300 mb-0"></div>
 
               {/* Focus Option */}
-              <button className="w-full py-8 flex items-center gap-6 border-b border-gray-300 hover:scale-105 transition-transform group">
-                <div className="w-20 h-20 flex-shrink-0 flex items-center justify-center">
-                  <svg className="w-20 h-20" viewBox="0 0 80 80" fill="black">
-                    <circle cx="40" cy="40" r="12" fill="black"/>
-                    <path d="M40 8 C40 8, 25 25, 25 40 C25 55, 40 72, 40 72 C40 72, 55 55, 55 40 C55 25, 40 8, 40 8" fill="none" stroke="black" strokeWidth="3"/>
-                  </svg>
-                </div>
+              <button className="w-full py-6 lg:py-8 flex items-center justify-between border-b border-gray-300 hover:scale-105 transition-transform group">
                 <div className="flex-1 text-left">
-                  <h2 className="text-4xl font-semibold text-black mb-1">Focus</h2>
-                  <p className="text-xl text-gray-700">Enhance concentration</p>
+                  <h2 className="text-3xl lg:text-4xl font-semibold text-black mb-1">Focus</h2>
+                  <p className="text-lg lg:text-xl text-gray-700">Enhance concentration</p>
                 </div>
-                <svg className="w-6 h-6 text-black transition-transform group-hover:translate-x-2" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
+                <svg className="w-5 h-5 lg:w-6 lg:h-6 text-black transition-transform group-hover:translate-x-2 flex-shrink-0 ml-4" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" d="M9 5l7 7-7 7"/>
                 </svg>
               </button>
 
               {/* Calm Option */}
-              <button className="w-full py-8 flex items-center gap-6 border-b border-gray-300 hover:scale-105 transition-transform group">
-                <div className="w-20 h-20 flex-shrink-0 flex items-center justify-center">
-                  <svg className="w-20 h-20" viewBox="0 0 80 80" fill="black">
-                    <path d="M20 50 Q20 30, 30 25 Q35 22, 40 30 Q45 22, 50 25 Q60 30, 60 50" fill="black"/>
-                    <path d="M25 60 Q25 45, 32 42 Q36 40, 40 46 Q44 40, 48 42 Q55 45, 55 60" fill="black"/>
-                    <path d="M30 70 Q30 58, 36 56 Q39 55, 40 59 Q41 55, 44 56 Q50 58, 50 70" fill="black"/>
-                  </svg>
-                </div>
+              <button className="w-full py-6 lg:py-8 flex items-center justify-between border-b border-gray-300 hover:scale-105 transition-transform group">
                 <div className="flex-1 text-left">
-                  <h2 className="text-4xl font-semibold text-black mb-1">Calm</h2>
-                  <p className="text-xl text-gray-700">Relax and rejuvenate</p>
+                  <h2 className="text-3xl lg:text-4xl font-semibold text-black mb-1">Calm</h2>
+                  <p className="text-lg lg:text-xl text-gray-700">Relax and rejuvenate</p>
                 </div>
-                <svg className="w-6 h-6 text-black transition-transform group-hover:translate-x-2" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
+                <svg className="w-5 h-5 lg:w-6 lg:h-6 text-black transition-transform group-hover:translate-x-2 flex-shrink-0 ml-4" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" d="M9 5l7 7-7 7"/>
                 </svg>
               </button>
 
               {/* Breathe Option */}
-              <button className="w-full py-8 flex items-center gap-6 border-b border-gray-300 hover:scale-105 transition-transform group">
-                <div className="w-20 h-20 flex-shrink-0 flex items-center justify-center">
-                  <svg className="w-20 h-20" viewBox="0 0 80 80" fill="black">
-                    <circle cx="40" cy="40" r="4" fill="black"/>
-                    {/* Radiating lines */}
-                    <line x1="40" y1="10" x2="40" y2="25" stroke="black" strokeWidth="3"/>
-                    <line x1="40" y1="70" x2="40" y2="55" stroke="black" strokeWidth="3"/>
-                    <line x1="10" y1="40" x2="25" y2="40" stroke="black" strokeWidth="3"/>
-                    <line x1="70" y1="40" x2="55" y2="40" stroke="black" strokeWidth="3"/>
-                    <line x1="18" y1="18" x2="28" y2="28" stroke="black" strokeWidth="3"/>
-                    <line x1="62" y1="62" x2="52" y2="52" stroke="black" strokeWidth="3"/>
-                    <line x1="62" y1="18" x2="52" y2="28" stroke="black" strokeWidth="3"/>
-                    <line x1="18" y1="62" x2="28" y2="52" stroke="black" strokeWidth="3"/>
-                  </svg>
-                </div>
+              <button className="w-full py-6 lg:py-8 flex items-center justify-between border-b border-gray-300 hover:scale-105 transition-transform group">
                 <div className="flex-1 text-left">
-                  <h2 className="text-4xl font-semibold text-black mb-1">Breathe</h2>
-                  <p className="text-xl text-gray-700">Reset your rhythm</p>
+                  <h2 className="text-3xl lg:text-4xl font-semibold text-black mb-1">Breathe</h2>
+                  <p className="text-lg lg:text-xl text-gray-700">Reset your rhythm</p>
                 </div>
-                <svg className="w-6 h-6 text-black transition-transform group-hover:translate-x-2" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
+                <svg className="w-5 h-5 lg:w-6 lg:h-6 text-black transition-transform group-hover:translate-x-2 flex-shrink-0 ml-4" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" d="M9 5l7 7-7 7"/>
                 </svg>
               </button>
