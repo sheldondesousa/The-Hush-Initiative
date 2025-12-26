@@ -195,40 +195,40 @@ export default function Home() {
             {/* Cards Container - Right Side */}
             <div className="flex flex-col justify-center w-full lg:w-auto px-8 lg:px-12" style={{ height: '932px', maxWidth: '580px' }}>
               {/* Header */}
-              <h1 className="text-4xl lg:text-5xl font-bold text-black mb-8 whitespace-nowrap">What do you need?</h1>
+              <h1 className="text-4xl lg:text-5xl font-bold text-black mb-8 whitespace-nowrap">Choose your path</h1>
 
               {/* Separator */}
               <div className="border-t border-gray-300 mb-0"></div>
 
               {/* Focus Option */}
               <button className="w-full py-6 lg:py-8 flex items-center justify-between border-b border-gray-300 hover:scale-105 transition-transform group">
-                <div className="flex-1 text-left">
+                <div className="flex-1 text-left pl-4">
                   <h2 className="text-3xl lg:text-4xl font-semibold text-black mb-1">Focus</h2>
                   <p className="text-lg lg:text-xl text-gray-700">Enhance concentration</p>
                 </div>
-                <svg className="w-5 h-5 lg:w-6 lg:h-6 text-black transition-transform group-hover:translate-x-2 flex-shrink-0 ml-4" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
+                <svg className="w-5 h-5 lg:w-6 lg:h-6 text-black transition-transform group-hover:translate-x-2 flex-shrink-0 pr-4" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" d="M9 5l7 7-7 7"/>
                 </svg>
               </button>
 
               {/* Calm Option */}
               <button className="w-full py-6 lg:py-8 flex items-center justify-between border-b border-gray-300 hover:scale-105 transition-transform group">
-                <div className="flex-1 text-left">
+                <div className="flex-1 text-left pl-4">
                   <h2 className="text-3xl lg:text-4xl font-semibold text-black mb-1">Calm</h2>
                   <p className="text-lg lg:text-xl text-gray-700">Relax and rejuvenate</p>
                 </div>
-                <svg className="w-5 h-5 lg:w-6 lg:h-6 text-black transition-transform group-hover:translate-x-2 flex-shrink-0 ml-4" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
+                <svg className="w-5 h-5 lg:w-6 lg:h-6 text-black transition-transform group-hover:translate-x-2 flex-shrink-0 pr-4" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" d="M9 5l7 7-7 7"/>
                 </svg>
               </button>
 
               {/* Breathe Option */}
               <button className="w-full py-6 lg:py-8 flex items-center justify-between border-b border-gray-300 hover:scale-105 transition-transform group">
-                <div className="flex-1 text-left">
+                <div className="flex-1 text-left pl-4">
                   <h2 className="text-3xl lg:text-4xl font-semibold text-black mb-1">Breathe</h2>
                   <p className="text-lg lg:text-xl text-gray-700">Reset your rhythm</p>
                 </div>
-                <svg className="w-5 h-5 lg:w-6 lg:h-6 text-black transition-transform group-hover:translate-x-2 flex-shrink-0 ml-4" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
+                <svg className="w-5 h-5 lg:w-6 lg:h-6 text-black transition-transform group-hover:translate-x-2 flex-shrink-0 pr-4" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" d="M9 5l7 7-7 7"/>
                 </svg>
               </button>
