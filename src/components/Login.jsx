@@ -42,8 +42,13 @@ export default function Login() {
     <>
       {loading && <Loader />}
       <div className="min-h-screen bg-gray-50 flex items-center justify-center p-4">
-        {/* Mobile Container with Border - iPhone 16 Pro Max dimensions */}
-        <div className="w-full max-w-md bg-white border border-gray-300 rounded-2xl shadow-sm px-8 flex flex-col justify-center" style={{ maxWidth: '430px', minHeight: '932px' }}>
+        {/* Mobile Container - iPhone 16 Pro Max dimensions with top/bottom lines */}
+        <div className="relative w-full max-w-md bg-white px-8 flex flex-col justify-center" style={{ maxWidth: '430px', minHeight: '932px' }}>
+          {/* Top line - 932px wide */}
+          <div className="absolute top-0 left-1/2 -translate-x-1/2 border-t border-black" style={{ width: '932px' }}></div>
+
+          {/* Bottom line - 932px wide */}
+          <div className="absolute bottom-0 left-1/2 -translate-x-1/2 border-b border-black" style={{ width: '932px' }}></div>
 
         {/* Logo Placeholder */}
         <div className="flex justify-center mb-12 mt-0">
