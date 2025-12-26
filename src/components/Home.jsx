@@ -16,6 +16,7 @@ export default function Home() {
 
   return (
     <div className="min-h-screen bg-white flex items-center justify-center">
+      {/* NEW DESKTOP LAYOUT - VERSION 2.0 */}
       {/* Main Container - Centered on desktop */}
       <div className="w-full max-w-7xl mx-auto flex">
 
