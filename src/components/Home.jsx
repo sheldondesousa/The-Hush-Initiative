@@ -130,7 +130,7 @@ export default function Home() {
             {/* Cards Container */}
             <div className="flex flex-col justify-center w-full lg:w-auto" style={{ minWidth: '340px', maxWidth: '493px' }}>
               {/* Header */}
-              <h1 className="text-3xl lg:text-4xl font-bold text-black mb-8 whitespace-nowrap">Choose your path</h1>
+              <h1 className="text-3xl lg:text-4xl font-bold text-black mb-8 whitespace-nowrap pl-4">Choose your path</h1>
 
               {/* Separator */}
               <div className="border-t border-gray-300 mb-0"></div>
