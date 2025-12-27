@@ -417,18 +417,18 @@ export default function Home() {
                                 }}
                               />
                             ))}
-                          </div>
 
-                          {/* Timer Display */}
-                          <div className="mt-4 text-center">
-                            <div className="text-lg font-semibold text-gray-700 uppercase tracking-wider mb-2">
-                              {breathingPhase === 'inhale' && 'INHALE'}
-                              {breathingPhase === 'hold1' && 'HOLD'}
-                              {breathingPhase === 'exhale' && 'EXHALE'}
-                              {breathingPhase === 'hold2' && 'HOLD'}
-                            </div>
-                            <div className="text-5xl font-bold text-gray-900">
-                              {timer}
+                            {/* Timer Display - Inside First Circle */}
+                            <div className="absolute text-center">
+                              <div className="text-lg font-semibold text-gray-700 uppercase tracking-wider mb-2">
+                                {breathingPhase === 'inhale' && 'INHALE'}
+                                {breathingPhase === 'hold1' && 'HOLD'}
+                                {breathingPhase === 'exhale' && 'EXHALE'}
+                                {breathingPhase === 'hold2' && 'HOLD'}
+                              </div>
+                              <div className="text-5xl font-bold text-gray-900">
+                                {timer}
+                              </div>
                             </div>
                           </div>
                         </>
