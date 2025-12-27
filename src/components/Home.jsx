@@ -107,16 +107,17 @@ export default function Home() {
 
   // Get circle size based on breathing phase and timer
   const getCircleSize = () => {
-    // Maximum size: 398px (430px player width - 32px padding from p-4)
-    // Timer 1: 262px (base)
-    // Timer 2: 301px (base * 1.15)
-    // Timer 3: 346px (base * 1.15^2)
-    // Timer 4: 398px (base * 1.15^3)
+    // First circle reduced by 30% from original 262px
+    // Each subsequent circle builds on previous with no gaps (adds 40px for 20px border on each side)
+    // Timer 1: 183px (base - 30% reduction)
+    // Timer 2: 223px (builds on previous + 40px)
+    // Timer 3: 263px (builds on previous + 40px)
+    // Timer 4: 303px (builds on previous + 40px)
     const sizes = {
-      1: 262,
-      2: 301,
-      3: 346,
-      4: 398
+      1: 183,
+      2: 223,
+      3: 263,
+      4: 303
     };
 
     if (breathingPhase === 'inhale' || breathingPhase === 'exhale') {
@@ -140,7 +141,7 @@ export default function Home() {
   // Get data for all circles to render
   const getCirclesData = () => {
     const circleCount = getVisibleCircleCount();
-    const sizes = [262, 301, 346, 398];  // 15% size increments
+    const sizes = [183, 223, 263, 303];  // Each builds on previous with no gaps
     const colors = [
       'rgba(6, 122, 195, 1.0)',   // 100% opacity (darkest - innermost)
       'rgba(6, 122, 195, 0.85)',  // 85% opacity (lighter)
