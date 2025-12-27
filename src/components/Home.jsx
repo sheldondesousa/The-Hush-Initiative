@@ -410,54 +410,21 @@ export default function Home() {
                   /* Breathing Exercise Detail View */
                   <div className="flex flex-col h-full w-full">
                     {/* Header - 10% */}
-                    <div className="flex-[0.1] flex flex-col gap-2 px-2">
-                      <div className="flex items-center justify-between">
-                        <button
-                          onClick={() => setSelectedExercise(null)}
-                          className="flex items-center gap-2 text-sm text-gray-700 hover:text-black transition-colors"
-                        >
-                          <svg className="w-4 h-4" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
-                            <path strokeLinecap="round" strokeLinejoin="round" d="M15 19l-7-7 7-7"/>
-                          </svg>
-                          <span>Back</span>
-                        </button>
+                    <div className="flex-[0.1] flex items-center justify-between px-2">
+                      <button
+                        onClick={() => setSelectedExercise(null)}
+                        className="flex items-center gap-2 text-sm text-gray-700 hover:text-black transition-colors"
+                      >
+                        <svg className="w-4 h-4" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
+                          <path strokeLinecap="round" strokeLinejoin="round" d="M15 19l-7-7 7-7"/>
+                        </svg>
+                        <span>Back</span>
+                      </button>
 
-                        <h3 className="text-base font-semibold text-black text-center flex-1 px-4">{selectedExercise.name}</h3>
+                      <h3 className="text-base font-semibold text-black text-center flex-1 px-4">{selectedExercise.name}</h3>
 
-                        {/* Spacer to balance layout */}
-                        <div className="w-14"></div>
-                      </div>
-
-                      {/* Cycle Selection - Only show when not exercising */}
-                      {!isExercising && (
-                        <div className="flex items-center justify-center gap-2">
-                          <span className="text-xs text-gray-600">Cycles:</span>
-                          <div className="flex gap-2">
-                            {[4, 8, 12].map((cycles) => (
-                              <button
-                                key={cycles}
-                                onClick={() => setSelectedCycles(cycles)}
-                                className={`px-3 py-1 rounded-full text-xs font-medium transition-all ${
-                                  selectedCycles === cycles
-                                    ? 'bg-black text-white'
-                                    : 'bg-gray-200 text-gray-700 hover:bg-gray-300'
-                                }`}
-                              >
-                                {cycles}
-                              </button>
-                            ))}
-                          </div>
-                        </div>
-                      )}
-
-                      {/* Cycle Progress - Show during exercise */}
-                      {isExercising && (
-                        <div className="text-center">
-                          <span className="text-xs text-gray-600">
-                            Cycle {currentCycle + 1} of {selectedCycles}
-                          </span>
-                        </div>
-                      )}
+                      {/* Spacer to balance layout */}
+                      <div className="w-14"></div>
                     </div>
 
                     {/* Exercise Image/Animation Area - 80% */}
@@ -548,7 +515,40 @@ export default function Home() {
                     </div>
 
                     {/* Navigation Controls - 10% */}
-                    <div className="flex-[0.1] flex items-center justify-between px-4">
+                    <div className="flex-[0.1] flex flex-col gap-3 px-4">
+                      {/* Progress Display - Show during exercise */}
+                      {isExercising && (
+                        <div className="text-center">
+                          <span className="text-sm text-gray-600 font-medium">
+                            Cycle {currentCycle + 1} of {selectedCycles}
+                          </span>
+                        </div>
+                      )}
+
+                      {/* Cycle Selection - Only show when not exercising */}
+                      {!isExercising && (
+                        <div className="flex flex-col items-center gap-2">
+                          <span className="text-sm text-gray-600 font-medium">Select Cycles</span>
+                          <div className="flex gap-3">
+                            {[4, 8, 12].map((cycles) => (
+                              <button
+                                key={cycles}
+                                onClick={() => setSelectedCycles(cycles)}
+                                className={`w-12 h-12 rounded-full text-base font-bold transition-all ${
+                                  selectedCycles === cycles
+                                    ? 'bg-black text-white shadow-lg'
+                                    : 'bg-gray-200 text-gray-700 hover:bg-gray-300'
+                                }`}
+                              >
+                                {cycles}
+                              </button>
+                            ))}
+                          </div>
+                        </div>
+                      )}
+
+                      {/* Navigation Buttons */}
+                      <div className="flex items-center justify-between">
                       <button
                         onClick={() => {
                           const currentIndex = currentTracks.findIndex(t => t.id === selectedExercise.id);
@@ -596,6 +596,7 @@ export default function Home() {
                         </svg>
                         <span className="text-xs text-gray-700 font-medium">Next</span>
                       </button>
+                      </div>
                     </div>
                   </div>
                 ) : (
