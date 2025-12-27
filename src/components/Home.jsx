@@ -599,6 +599,7 @@ export default function Home() {
                         </svg>
                         <span className="text-xs text-gray-700 font-medium">Next</span>
                       </button>
+                      </div>
                     </div>
                   </div>
                 ) : (
