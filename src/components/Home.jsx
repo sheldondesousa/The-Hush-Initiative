@@ -11,6 +11,8 @@ export default function Home() {
   const [isExercising, setIsExercising] = useState(false);
   const [breathingPhase, setBreathingPhase] = useState('inhale'); // inhale, hold1, exhale, hold2
   const [timer, setTimer] = useState(1);
+  const [selectedCycles, setSelectedCycles] = useState(4);
+  const [currentCycle, setCurrentCycle] = useState(0);
 
   // Breathing animation cycle effect
   useEffect(() => {
@@ -48,8 +50,20 @@ export default function Home() {
           if (prevTimer > 1) {
             return prevTimer - 1;
           } else {
-            setBreathingPhase('inhale');
-            return 1;
+            // Cycle completed, check if we should continue
+            const nextCycle = currentCycle + 1;
+            if (nextCycle >= selectedCycles) {
+              // Reached target cycles, stop the exercise
+              setIsExercising(false);
+              setCurrentCycle(0);
+              setBreathingPhase('inhale');
+              return 1;
+            } else {
+              // Continue to next cycle
+              setCurrentCycle(nextCycle);
+              setBreathingPhase('inhale');
+              return 1;
+            }
           }
         }
         return prevTimer;
@@ -57,7 +71,7 @@ export default function Home() {
     }, 1000);
 
     return () => clearInterval(interval);
-  }, [isExercising, breathingPhase]);
+  }, [isExercising, breathingPhase, currentCycle, selectedCycles]);
 
   // Track data for each option
   const tracksByOption = {
@@ -396,21 +410,54 @@ export default function Home() {
                   /* Breathing Exercise Detail View */
                   <div className="flex flex-col h-full w-full">
                     {/* Header - 10% */}
-                    <div className="flex-[0.1] flex items-center justify-between px-2">
-                      <button
-                        onClick={() => setSelectedExercise(null)}
-                        className="flex items-center gap-2 text-sm text-gray-700 hover:text-black transition-colors"
-                      >
-                        <svg className="w-4 h-4" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
-                          <path strokeLinecap="round" strokeLinejoin="round" d="M15 19l-7-7 7-7"/>
-                        </svg>
-                        <span>Back</span>
-                      </button>
+                    <div className="flex-[0.1] flex flex-col gap-2 px-2">
+                      <div className="flex items-center justify-between">
+                        <button
+                          onClick={() => setSelectedExercise(null)}
+                          className="flex items-center gap-2 text-sm text-gray-700 hover:text-black transition-colors"
+                        >
+                          <svg className="w-4 h-4" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
+                            <path strokeLinecap="round" strokeLinejoin="round" d="M15 19l-7-7 7-7"/>
+                          </svg>
+                          <span>Back</span>
+                        </button>
 
-                      <h3 className="text-base font-semibold text-black text-center flex-1 px-4">{selectedExercise.name}</h3>
+                        <h3 className="text-base font-semibold text-black text-center flex-1 px-4">{selectedExercise.name}</h3>
 
-                      {/* Spacer to balance layout */}
-                      <div className="w-14"></div>
+                        {/* Spacer to balance layout */}
+                        <div className="w-14"></div>
+                      </div>
+
+                      {/* Cycle Selection - Only show when not exercising */}
+                      {!isExercising && (
+                        <div className="flex items-center justify-center gap-2">
+                          <span className="text-xs text-gray-600">Cycles:</span>
+                          <div className="flex gap-2">
+                            {[4, 8, 12].map((cycles) => (
+                              <button
+                                key={cycles}
+                                onClick={() => setSelectedCycles(cycles)}
+                                className={`px-3 py-1 rounded-full text-xs font-medium transition-all ${
+                                  selectedCycles === cycles
+                                    ? 'bg-black text-white'
+                                    : 'bg-gray-200 text-gray-700 hover:bg-gray-300'
+                                }`}
+                              >
+                                {cycles}
+                              </button>
+                            ))}
+                          </div>
+                        </div>
+                      )}
+
+                      {/* Cycle Progress - Show during exercise */}
+                      {isExercising && (
+                        <div className="text-center">
+                          <span className="text-xs text-gray-600">
+                            Cycle {currentCycle + 1} of {selectedCycles}
+                          </span>
+                        </div>
+                      )}
                     </div>
 
                     {/* Exercise Image/Animation Area - 80% */}
@@ -523,10 +570,12 @@ export default function Home() {
                             setIsExercising(true);
                             setBreathingPhase('inhale');
                             setTimer(1);
+                            setCurrentCycle(0);
                           } else {
                             setIsExercising(false);
                             setBreathingPhase('inhale');
                             setTimer(1);
+                            setCurrentCycle(0);
                           }
                         }}
                         className="px-8 py-2 bg-black text-white rounded-full hover:opacity-90 transition-opacity font-medium text-sm"
