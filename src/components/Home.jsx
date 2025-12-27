@@ -1,6 +1,6 @@
 import { useAuth } from '../contexts/AuthContext';
 import { useNavigate } from 'react-router-dom';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 
 export default function Home() {
   const { logout } = useAuth();
@@ -8,6 +8,52 @@ export default function Home() {
   const [menuOpen, setMenuOpen] = useState(false);
   const [selectedOption, setSelectedOption] = useState(null);
   const [selectedExercise, setSelectedExercise] = useState(null);
+  const [isExercising, setIsExercising] = useState(false);
+  const [breathingPhase, setBreathingPhase] = useState('inhale'); // inhale, hold1, exhale, hold2
+  const [timer, setTimer] = useState(1);
+
+  // Breathing animation cycle effect
+  useEffect(() => {
+    if (!isExercising) return;
+
+    const interval = setInterval(() => {
+      setTimer((prevTimer) => {
+        // Handle phase transitions and timer logic
+        if (breathingPhase === 'inhale') {
+          if (prevTimer < 4) {
+            return prevTimer + 1;
+          } else {
+            setBreathingPhase('hold1');
+            return 4;
+          }
+        } else if (breathingPhase === 'hold1') {
+          if (prevTimer > 1) {
+            return prevTimer - 1;
+          } else {
+            setBreathingPhase('exhale');
+            return 4;
+          }
+        } else if (breathingPhase === 'exhale') {
+          if (prevTimer > 1) {
+            return prevTimer - 1;
+          } else {
+            setBreathingPhase('hold2');
+            return 4;
+          }
+        } else if (breathingPhase === 'hold2') {
+          if (prevTimer > 1) {
+            return prevTimer - 1;
+          } else {
+            setBreathingPhase('inhale');
+            return 1;
+          }
+        }
+        return prevTimer;
+      });
+    }, 1000);
+
+    return () => clearInterval(interval);
+  }, [isExercising, breathingPhase]);
 
   // Track data for each option
   const tracksByOption = {
@@ -264,10 +310,125 @@ export default function Home() {
                     </div>
 
                     {/* Exercise Image/Animation Area - 80% */}
-                    <div className="flex-[0.8] bg-gray-200 rounded-lg flex items-center justify-center my-3">
-                      <svg className="w-24 h-24 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M9 19V6l12-3v13M9 19c0 1.105-1.343 2-3 2s-3-.895-3-2 1.343-2 3-2 3 .895 3 2zm12-3c0 1.105-1.343 2-3 2s-3-.895-3-2 1.343-2 3-2 3 .895 3 2zM9 10l12-3" />
-                      </svg>
+                    <div className="flex-[0.8] bg-gradient-to-b from-blue-50 to-purple-50 rounded-lg flex flex-col items-center justify-center my-3 p-4">
+                      {/* Breathing Illustration */}
+                      <div className="flex-1 flex items-center justify-center w-full">
+                        <svg
+                          className="w-full h-full max-w-xs max-h-96"
+                          viewBox="0 0 200 300"
+                          fill="none"
+                          xmlns="http://www.w3.org/2000/svg"
+                        >
+                          {/* Person Silhouette */}
+                          <g className="transition-all duration-1000">
+                            {/* Head */}
+                            <circle
+                              cx="100"
+                              cy="50"
+                              r="25"
+                              fill="#334155"
+                              className="transition-all duration-1000"
+                            />
+
+                            {/* Body */}
+                            <ellipse
+                              cx="100"
+                              cy="120"
+                              rx={breathingPhase === 'inhale' ? 35 + (timer * 2) : breathingPhase === 'exhale' ? 43 - (timer * 2) : 43}
+                              ry={breathingPhase === 'inhale' ? 50 + (timer * 3) : breathingPhase === 'exhale' ? 62 - (timer * 3) : 62}
+                              fill="#475569"
+                              className="transition-all duration-1000"
+                            />
+
+                            {/* Lungs visualization */}
+                            <g opacity={isExercising ? 0.6 : 0.3}>
+                              {/* Left Lung */}
+                              <path
+                                d={`M 80 100 Q 70 120 75 ${breathingPhase === 'inhale' ? 140 + timer * 3 : breathingPhase === 'exhale' ? 152 - timer * 3 : 152}`}
+                                stroke="#60A5FA"
+                                strokeWidth={breathingPhase === 'inhale' ? 2 + timer * 0.5 : breathingPhase === 'exhale' ? 4 - timer * 0.5 : 4}
+                                fill="none"
+                                className="transition-all duration-1000"
+                              />
+                              {/* Right Lung */}
+                              <path
+                                d={`M 120 100 Q 130 120 125 ${breathingPhase === 'inhale' ? 140 + timer * 3 : breathingPhase === 'exhale' ? 152 - timer * 3 : 152}`}
+                                stroke="#60A5FA"
+                                strokeWidth={breathingPhase === 'inhale' ? 2 + timer * 0.5 : breathingPhase === 'exhale' ? 4 - timer * 0.5 : 4}
+                                fill="none"
+                                className="transition-all duration-1000"
+                              />
+                            </g>
+
+                            {/* Breathing flow lines */}
+                            {isExercising && (
+                              <g>
+                                {breathingPhase === 'inhale' && (
+                                  <>
+                                    <path
+                                      d="M 100 25 Q 95 15 90 5"
+                                      stroke="#3B82F6"
+                                      strokeWidth="2"
+                                      fill="none"
+                                      opacity={0.3 + timer * 0.15}
+                                      strokeDasharray="4 4"
+                                    />
+                                    <path
+                                      d="M 100 25 Q 105 15 110 5"
+                                      stroke="#3B82F6"
+                                      strokeWidth="2"
+                                      fill="none"
+                                      opacity={0.3 + timer * 0.15}
+                                      strokeDasharray="4 4"
+                                    />
+                                  </>
+                                )}
+                                {breathingPhase === 'exhale' && (
+                                  <>
+                                    <path
+                                      d="M 90 5 Q 95 15 100 25"
+                                      stroke="#8B5CF6"
+                                      strokeWidth="2"
+                                      fill="none"
+                                      opacity={0.6 - timer * 0.1}
+                                      strokeDasharray="4 4"
+                                    />
+                                    <path
+                                      d="M 110 5 Q 105 15 100 25"
+                                      stroke="#8B5CF6"
+                                      strokeWidth="2"
+                                      fill="none"
+                                      opacity={0.6 - timer * 0.1}
+                                      strokeDasharray="4 4"
+                                    />
+                                  </>
+                                )}
+                              </g>
+                            )}
+
+                            {/* Arms */}
+                            <rect x="60" y="100" width="8" height="70" rx="4" fill="#334155" />
+                            <rect x="132" y="100" width="8" height="70" rx="4" fill="#334155" />
+
+                            {/* Legs */}
+                            <rect x="85" y="170" width="10" height="80" rx="5" fill="#334155" />
+                            <rect x="105" y="170" width="10" height="80" rx="5" fill="#334155" />
+                          </g>
+                        </svg>
+                      </div>
+
+                      {/* Timer Display */}
+                      <div className="mt-4 text-center">
+                        <div className="text-lg font-semibold text-gray-700 uppercase tracking-wider mb-2">
+                          {breathingPhase === 'inhale' && 'INHALE'}
+                          {breathingPhase === 'hold1' && 'HOLD'}
+                          {breathingPhase === 'exhale' && 'EXHALE'}
+                          {breathingPhase === 'hold2' && 'HOLD'}
+                        </div>
+                        <div className="text-5xl font-bold text-gray-900">
+                          {timer}
+                        </div>
+                      </div>
                     </div>
 
                     {/* Navigation Controls - 10% */}
@@ -287,8 +448,21 @@ export default function Home() {
                       </button>
 
                       {/* Start Button */}
-                      <button className="px-8 py-2 bg-black text-white rounded-full hover:opacity-90 transition-opacity font-medium text-sm">
-                        Start
+                      <button
+                        onClick={() => {
+                          if (!isExercising) {
+                            setIsExercising(true);
+                            setBreathingPhase('inhale');
+                            setTimer(1);
+                          } else {
+                            setIsExercising(false);
+                            setBreathingPhase('inhale');
+                            setTimer(1);
+                          }
+                        }}
+                        className="px-8 py-2 bg-black text-white rounded-full hover:opacity-90 transition-opacity font-medium text-sm"
+                      >
+                        {isExercising ? 'Stop' : 'Start'}
                       </button>
 
                       <button
