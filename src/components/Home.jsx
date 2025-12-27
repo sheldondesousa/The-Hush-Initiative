@@ -515,7 +515,7 @@ export default function Home() {
                     </div>
 
                     {/* Cycle Display Area - With equal spacing from circles and navigation */}
-                    <div className="flex flex-col items-center justify-center py-8">
+                    <div className="flex flex-col items-center justify-center py-8 min-h-[120px]">
                       {/* Progress Display - Show during exercise */}
                       {isExercising && (
                         <div className="text-center">
@@ -579,7 +579,7 @@ export default function Home() {
                             setCurrentCycle(0);
                           }
                         }}
-                        className="px-8 py-2 bg-black text-white rounded-full hover:opacity-90 transition-opacity font-medium text-sm"
+                        className="px-8 py-3 bg-black text-white rounded-full hover:opacity-90 transition-opacity font-medium text-sm"
                       >
                         {isExercising ? 'Stop' : 'Start'}
                       </button>
