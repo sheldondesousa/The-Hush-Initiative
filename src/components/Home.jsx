@@ -84,23 +84,23 @@ export default function Home() {
   // Get circle color based on breathing phase and timer
   const getCircleColor = () => {
     // Base color: #067AC3 with transparency changes
-    // 15% increments to match size changes
-    // Timer 1: 55% opacity (base)
-    // Timer 2: 70% opacity (15% increase)
-    // Timer 3: 85% opacity (15% increase)
-    // Timer 4: 100% opacity (15% increase - fully solid)
+    // Start with darkest (100% opacity) as default, get lighter with each increment
+    // Timer 1: 100% opacity (darkest - default)
+    // Timer 2: 85% opacity (15% lighter)
+    // Timer 3: 70% opacity (15% lighter)
+    // Timer 4: 55% opacity (15% lighter - lightest)
     const colors = {
-      1: 'rgba(6, 122, 195, 0.55)',
-      2: 'rgba(6, 122, 195, 0.70)',
-      3: 'rgba(6, 122, 195, 0.85)',
-      4: 'rgba(6, 122, 195, 1.0)'
+      1: 'rgba(6, 122, 195, 1.0)',
+      2: 'rgba(6, 122, 195, 0.85)',
+      3: 'rgba(6, 122, 195, 0.70)',
+      4: 'rgba(6, 122, 195, 0.55)'
     };
 
     if (breathingPhase === 'inhale' || breathingPhase === 'exhale') {
-      // Increment: gets more solid
+      // Increment: gets lighter
       return colors[timer];
     } else {
-      // HOLD: Decrement - reverse to become more transparent
+      // HOLD: Decrement - reverse to become darker
       return colors[5 - timer];
     }
   };
@@ -142,10 +142,10 @@ export default function Home() {
     const circleCount = getVisibleCircleCount();
     const sizes = [262, 301, 346, 398];  // 15% size increments
     const colors = [
-      'rgba(6, 122, 195, 0.55)',  // 55% opacity (base)
-      'rgba(6, 122, 195, 0.70)',  // 70% opacity (+15%)
-      'rgba(6, 122, 195, 0.85)',  // 85% opacity (+15%)
-      'rgba(6, 122, 195, 1.0)'    // 100% opacity (+15%)
+      'rgba(6, 122, 195, 1.0)',   // 100% opacity (darkest - innermost)
+      'rgba(6, 122, 195, 0.85)',  // 85% opacity (lighter)
+      'rgba(6, 122, 195, 0.70)',  // 70% opacity (lighter)
+      'rgba(6, 122, 195, 0.55)'   // 55% opacity (lightest - outermost)
     ];
 
     const circles = [];
@@ -157,7 +157,7 @@ export default function Home() {
       });
     }
 
-    // Render from largest to smallest so smallest is on top
+    // Render from largest to smallest so all rings are visible
     return circles.reverse();
   };
 
@@ -404,8 +404,9 @@ export default function Home() {
                             style={{
                               width: `${circle.size}px`,
                               height: `${circle.size}px`,
-                              backgroundColor: circle.color,
-                              boxShadow: `0 0 40px ${circle.color}40`
+                              border: `20px solid ${circle.color}`,
+                              backgroundColor: 'transparent',
+                              boxShadow: `0 0 20px ${circle.color}`
                             }}
                           />
                         ))}
