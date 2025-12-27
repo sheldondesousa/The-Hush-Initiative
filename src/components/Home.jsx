@@ -213,10 +213,14 @@ export default function Home() {
                   </svg>
                 </div>
                 <h3 className="font-semibold text-xl text-black mb-1 capitalize">
-                  {selectedOption ? `${selectedOption} Collection` : 'Select Your Path'}
+                  {selectedOption === 'breathe' ? 'Breathing Techniques' : selectedOption ? `${selectedOption} Collection` : 'Select Your Path'}
                 </h3>
                 <p className="text-sm text-gray-600">
-                  {selectedOption ? `${currentTracks.length} Track${currentTracks.length !== 1 ? 's' : ''}` : 'Choose Focus, Calm, or Breathe'}
+                  {selectedOption === 'breathe'
+                    ? `${currentTracks.length} Exercise${currentTracks.length !== 1 ? 's' : ''}`
+                    : selectedOption
+                    ? `${currentTracks.length} Track${currentTracks.length !== 1 ? 's' : ''}`
+                    : 'Choose Focus, Calm, or Breathe'}
                 </p>
               </div>
 
@@ -238,44 +242,48 @@ export default function Home() {
                           <p className="text-sm font-medium text-black">{track.name}</p>
                         </div>
                       </div>
-                      <span className="text-sm text-gray-500">{track.duration}</span>
+                      {selectedOption !== 'breathe' && (
+                        <span className="text-sm text-gray-500">{track.duration}</span>
+                      )}
                     </button>
                   ))
                 )}
               </div>
 
               {/* Player Controls */}
-              <div className="border-t border-gray-200 pt-4">
-                {/* Progress Bar */}
-                <div className="mb-3">
-                  <div className="w-full bg-gray-200 rounded-full h-1.5">
-                    <div className="bg-black h-1.5 rounded-full" style={{ width: '45%' }}></div>
+              {selectedOption !== 'breathe' && (
+                <div className="border-t border-gray-200 pt-4">
+                  {/* Progress Bar */}
+                  <div className="mb-3">
+                    <div className="w-full bg-gray-200 rounded-full h-1.5">
+                      <div className="bg-black h-1.5 rounded-full" style={{ width: '45%' }}></div>
+                    </div>
+                    <div className="flex justify-between text-xs text-gray-500 mt-1">
+                      <span>1:16</span>
+                      <span>2:51</span>
+                    </div>
                   </div>
-                  <div className="flex justify-between text-xs text-gray-500 mt-1">
-                    <span>1:16</span>
-                    <span>2:51</span>
-                  </div>
-                </div>
 
-                {/* Control Buttons */}
-                <div className="flex items-center justify-center gap-4">
-                  <button className="p-2 hover:opacity-70 transition-opacity">
-                    <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
-                      <path d="M6 6h2v12H6zm3.5 6l8.5 6V6z"/>
-                    </svg>
-                  </button>
-                  <button className="p-3 bg-black text-white rounded-full hover:opacity-90 transition-opacity">
-                    <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
-                      <path d="M6 4h4v16H6V4zm8 0h4v16h-4V4z"/>
-                    </svg>
-                  </button>
-                  <button className="p-2 hover:opacity-70 transition-opacity">
-                    <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
-                      <path d="M16 18h2V6h-2zm-11 0l8.5-6L5 6z"/>
-                    </svg>
-                  </button>
+                  {/* Control Buttons */}
+                  <div className="flex items-center justify-center gap-4">
+                    <button className="p-2 hover:opacity-70 transition-opacity">
+                      <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
+                        <path d="M6 6h2v12H6zm3.5 6l8.5 6V6z"/>
+                      </svg>
+                    </button>
+                    <button className="p-3 bg-black text-white rounded-full hover:opacity-90 transition-opacity">
+                      <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
+                        <path d="M6 4h4v16H6V4zm8 0h4v16h-4V4z"/>
+                      </svg>
+                    </button>
+                    <button className="p-2 hover:opacity-70 transition-opacity">
+                      <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
+                        <path d="M16 18h2V6h-2zm-11 0l8.5-6L5 6z"/>
+                      </svg>
+                    </button>
+                  </div>
                 </div>
-              </div>
+              )}
             </div>
           </div>
         </main>
