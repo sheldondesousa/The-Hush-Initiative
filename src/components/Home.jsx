@@ -438,9 +438,12 @@ export default function Home() {
                                 {breathingPhase === 'exhale' && 'EXHALE'}
                                 {breathingPhase === 'hold2' && 'HOLD'}
                               </div>
-                              <div className="text-5xl font-bold text-gray-900">
-                                {timer}
-                              </div>
+                              {/* Show timer only during INHALE and EXHALE */}
+                              {(breathingPhase === 'inhale' || breathingPhase === 'exhale') && (
+                                <div className="text-5xl font-bold text-gray-900">
+                                  {timer}
+                                </div>
+                              )}
                             </div>
                           </div>
                         </>
