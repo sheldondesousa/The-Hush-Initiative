@@ -516,8 +516,11 @@ export default function Home() {
 
                     {/* Bottom Section - Fixed height to prevent shifting */}
                     <div className="flex-[0.2] flex flex-col">
-                      {/* Cycle Display Area - With equal spacing from circles and navigation */}
-                      <div className="flex-1 flex flex-col items-center justify-center">
+                      {/* Spacer - Equal spacing above cycle display */}
+                      <div className="flex-1"></div>
+
+                      {/* Cycle Display Area - Centered with equal spacing */}
+                      <div className="flex flex-col items-center justify-center">
                         {/* Progress Display - Show during exercise */}
                         {isExercising && (
                           <div className="text-center">
@@ -550,8 +553,11 @@ export default function Home() {
                         )}
                       </div>
 
+                      {/* Spacer - Equal spacing below cycle display */}
+                      <div className="flex-1"></div>
+
                       {/* Navigation Buttons - At the bottom with spacing */}
-                      <div className="flex items-center justify-between px-4 pb-6">
+                      <div className="flex items-center justify-between px-4 pb-4">
                       <button
                         onClick={() => {
                           const currentIndex = currentTracks.findIndex(t => t.id === selectedExercise.id);
