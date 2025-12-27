@@ -514,50 +514,42 @@ export default function Home() {
                       )}
                     </div>
 
-                    {/* Navigation Controls - 10% */}
-                    <div className="flex-[0.1] flex flex-col px-4">
-                      {/* Spacer to create equal top padding */}
-                      <div className="flex-1"></div>
+                    {/* Cycle Display Area - Centered with equal spacing */}
+                    <div className="flex flex-col items-center justify-center py-6">
+                      {/* Progress Display - Show during exercise */}
+                      {isExercising && (
+                        <div className="text-center">
+                          <span className="text-sm text-gray-600 font-medium">
+                            Cycle {currentCycle + 1} of {selectedCycles}
+                          </span>
+                        </div>
+                      )}
 
-                      {/* Cycle Display Area - Centered between circles and navigation */}
-                      <div className="flex flex-col items-center gap-2">
-                        {/* Progress Display - Show during exercise */}
-                        {isExercising && (
-                          <div className="text-center">
-                            <span className="text-sm text-gray-600 font-medium">
-                              Cycle {currentCycle + 1} of {selectedCycles}
-                            </span>
+                      {/* Cycle Selection - Only show when not exercising */}
+                      {!isExercising && (
+                        <div className="flex flex-col items-center gap-2">
+                          <span className="text-sm text-gray-600 font-medium">Select Cycles</span>
+                          <div className="flex gap-3">
+                            {[4, 8, 12].map((cycles) => (
+                              <button
+                                key={cycles}
+                                onClick={() => setSelectedCycles(cycles)}
+                                className={`w-12 h-12 rounded-full text-base font-bold transition-all ${
+                                  selectedCycles === cycles
+                                    ? 'bg-black text-white shadow-lg'
+                                    : 'bg-gray-200 text-gray-700 hover:bg-gray-300'
+                                }`}
+                              >
+                                {cycles}
+                              </button>
+                            ))}
                           </div>
-                        )}
+                        </div>
+                      )}
+                    </div>
 
-                        {/* Cycle Selection - Only show when not exercising */}
-                        {!isExercising && (
-                          <div className="flex flex-col items-center gap-2">
-                            <span className="text-sm text-gray-600 font-medium">Select Cycles</span>
-                            <div className="flex gap-3">
-                              {[4, 8, 12].map((cycles) => (
-                                <button
-                                  key={cycles}
-                                  onClick={() => setSelectedCycles(cycles)}
-                                  className={`w-12 h-12 rounded-full text-base font-bold transition-all ${
-                                    selectedCycles === cycles
-                                      ? 'bg-black text-white shadow-lg'
-                                      : 'bg-gray-200 text-gray-700 hover:bg-gray-300'
-                                  }`}
-                                >
-                                  {cycles}
-                                </button>
-                              ))}
-                            </div>
-                          </div>
-                        )}
-                      </div>
-
-                      {/* Spacer to create equal bottom padding */}
-                      <div className="flex-1"></div>
-
-                      {/* Navigation Buttons - At the bottom */}
-                      <div className="flex items-center justify-between pb-2">
+                    {/* Navigation Buttons - At the bottom */}
+                    <div className="flex items-center justify-between px-4 pb-4">
                       <button
                         onClick={() => {
                           const currentIndex = currentTracks.findIndex(t => t.id === selectedExercise.id);
