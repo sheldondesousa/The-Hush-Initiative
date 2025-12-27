@@ -138,7 +138,7 @@ export default function Home() {
               {/* Focus Option */}
               <button
                 onClick={() => setSelectedOption('focus')}
-                className={`w-full py-4 lg:py-5 flex items-center justify-between border-b border-gray-300 hover:scale-105 transition-all group ${
+                className={`w-full py-3 lg:py-4 flex items-center justify-between border-b border-gray-300 hover:scale-105 transition-all group ${
                   selectedOption === 'focus' ? 'bg-black' : ''
                 }`}
               >
@@ -160,7 +160,7 @@ export default function Home() {
               {/* Calm Option */}
               <button
                 onClick={() => setSelectedOption('calm')}
-                className={`w-full py-4 lg:py-5 flex items-center justify-between border-b border-gray-300 hover:scale-105 transition-all group ${
+                className={`w-full py-3 lg:py-4 flex items-center justify-between border-b border-gray-300 hover:scale-105 transition-all group ${
                   selectedOption === 'calm' ? 'bg-black' : ''
                 }`}
               >
@@ -182,7 +182,7 @@ export default function Home() {
               {/* Breathe Option */}
               <button
                 onClick={() => setSelectedOption('breathe')}
-                className={`w-full py-4 lg:py-5 flex items-center justify-between border-b border-gray-300 hover:scale-105 transition-all group ${
+                className={`w-full py-3 lg:py-4 flex items-center justify-between border-b border-gray-300 hover:scale-105 transition-all group ${
                   selectedOption === 'breathe' ? 'bg-black' : ''
                 }`}
               >
