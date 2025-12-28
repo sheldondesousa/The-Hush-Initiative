@@ -682,7 +682,7 @@ export default function Home() {
                         <span className="text-xs text-gray-700 font-medium">Previous</span>
                       </button>
 
-                      {/* Start Button */}
+                      {/* Start/Pause Button */}
                       <button
                         onClick={() => {
                           if (!isExercising) {
@@ -697,9 +697,13 @@ export default function Home() {
                             setCurrentCycle(0);
                           }
                         }}
-                        className="px-8 py-3 bg-black text-white rounded-full hover:opacity-90 transition-opacity font-medium text-sm"
+                        className={`px-8 py-3 rounded-full hover:opacity-90 transition-opacity font-medium text-sm ${
+                          isExercising
+                            ? 'bg-transparent text-black border-2 border-black'
+                            : 'bg-black text-white'
+                        }`}
                       >
-                        {isExercising ? 'Stop' : 'Start'}
+                        {isExercising ? 'Pause' : 'Start'}
                       </button>
 
                       <button
