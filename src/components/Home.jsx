@@ -11,6 +11,7 @@ export default function Home() {
   const [showingInfo, setShowingInfo] = useState(false); // Track if showing info screen
   const [countdown, setCountdown] = useState(null); // Track countdown: 3, 2, 1, or null
   const [isExercising, setIsExercising] = useState(false);
+  const [isPaused, setIsPaused] = useState(false); // Track if user manually paused
   const [breathingPhase, setBreathingPhase] = useState('inhale'); // inhale, hold1, exhale, hold2
   const [timer, setTimer] = useState(0);
   const [selectedCycles, setSelectedCycles] = useState(4);
@@ -18,12 +19,13 @@ export default function Home() {
 
   // Countdown effect
   useEffect(() => {
-    if (countdown === null) return;
+    if (countdown === null || isPaused) return;
 
     if (countdown === 0) {
       // Countdown finished, start exercise
       setCountdown(null);
       setIsExercising(true);
+      setIsPaused(false);
       setBreathingPhase('inhale');
       setTimer(0);
       setCurrentCycle(0);
@@ -35,11 +37,11 @@ export default function Home() {
     }, 1000);
 
     return () => clearTimeout(timer);
-  }, [countdown]);
+  }, [countdown, isPaused]);
 
   // Breathing animation cycle effect
   useEffect(() => {
-    if (!isExercising) return;
+    if (!isExercising || isPaused) return;
 
     // Dynamic interval based on breathing phase
     // INHALE and EXHALE: 5 counts (0-4) over 4 seconds = 800ms per count
@@ -99,7 +101,7 @@ export default function Home() {
     }, intervalDuration);
 
     return () => clearInterval(interval);
-  }, [isExercising, breathingPhase, currentCycle, selectedCycles]);
+  }, [isExercising, isPaused, breathingPhase, currentCycle, selectedCycles]);
 
   // Track data for each option
   const tracksByOption = {
@@ -685,25 +687,24 @@ export default function Home() {
                       {/* Start/Pause Button */}
                       <button
                         onClick={() => {
-                          if (!isExercising) {
-                            setIsExercising(true);
-                            setBreathingPhase('inhale');
-                            setTimer(0);
-                            setCurrentCycle(0);
-                          } else {
-                            setIsExercising(false);
-                            setBreathingPhase('inhale');
-                            setTimer(0);
-                            setCurrentCycle(0);
+                          if (isPaused) {
+                            // Resume from pause
+                            setIsPaused(false);
+                          } else if (countdown !== null && countdown > 0) {
+                            // Pause during countdown
+                            setIsPaused(true);
+                          } else if (isExercising) {
+                            // Pause during exercise
+                            setIsPaused(true);
                           }
                         }}
                         className={`px-8 py-3 rounded-full hover:opacity-90 transition-opacity font-medium text-sm ${
-                          isExercising
-                            ? 'bg-transparent text-black border-2 border-black'
-                            : 'bg-black text-white'
+                          isPaused
+                            ? 'bg-black text-white'
+                            : 'bg-transparent text-black border-2 border-black'
                         }`}
                       >
-                        {isExercising ? 'Pause' : 'Start'}
+                        {isPaused ? 'Start' : 'Pause'}
                       </button>
 
                       <button
