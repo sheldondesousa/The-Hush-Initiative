@@ -950,10 +950,11 @@ export default function Home() {
                                   height: 0,
                                   borderLeft: `${triangle.width / 2}px solid transparent`,
                                   borderRight: `${triangle.width / 2}px solid transparent`,
-                                  borderBottom: `${triangle.height}px solid ${triangle.color}`,
+                                  borderTop: `${triangle.height}px solid ${triangle.color}`,
                                   filter: `drop-shadow(0 0 ${triangle.blur}px ${triangle.color})`,
-                                  top: '50%',
-                                  transform: 'translateY(-50%)',
+                                  bottom: 'calc(50% - 140px)',
+                                  left: '50%',
+                                  transform: 'translateX(-50%)',
                                 }}
                               />
                             ))}
