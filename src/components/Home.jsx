@@ -549,8 +549,8 @@ export default function Home() {
                       <div className="w-14"></div>
                     </div>
 
-                    {/* Exercise Image/Animation Area - 70% */}
-                    <div className="flex-[0.7] bg-white rounded-lg flex flex-col items-center justify-center mt-3 p-4">
+                    {/* Exercise Image/Animation Area - 50% */}
+                    <div className="flex-[0.5] bg-white rounded-lg flex flex-col items-center justify-center mt-3 p-4">
                       {/* Conditional Animation based on exercise */}
                       {selectedExercise?.name === 'Box Breathing (4-4-4-4)' ? (
                         <>
@@ -630,8 +630,8 @@ export default function Home() {
                       )}
                     </div>
 
-                    {/* Bottom Section - Fixed height to prevent shifting */}
-                    <div className="flex-[0.2] flex flex-col justify-evenly py-6">
+                    {/* Bottom Section - 40% */}
+                    <div className="flex-[0.4] flex flex-col justify-evenly py-6">
                       {/* Cycle Display Area - Equidistant between circles and nav bar */}
                       <div className="flex flex-col items-center justify-center" style={{ minHeight: '80px' }}>
                         {/* Countdown Progress Bar - Show during countdown */}
