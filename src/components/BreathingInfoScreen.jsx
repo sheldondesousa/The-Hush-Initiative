@@ -9,7 +9,7 @@ const BreathingInfoScreen = () => {
 
   // Exercise data - can be expanded for different types
   const exerciseData = {
-    box: {
+    'box': {
       title: 'Box Breathing',
       description: 'Box breathing (4-4-4-4) is a simple, effective relaxation technique where you inhale for 4 counts, hold for 4, exhale for 4, and hold again for 4, creating a pattern to calm the nervous system, reduce stress, and improve focus for important moments.',
       sectionTitle: 'Why it works',
@@ -29,7 +29,12 @@ Improves focus: Enhances concentration, making it great for high-pressure situat
     }
   };
 
-  const exercise = exerciseData[type] || exerciseData.box;
+  // Debug: Log the type parameter
+  console.log('Exercise type from URL:', type);
+  console.log('Available exercises:', Object.keys(exerciseData));
+  console.log('Exercise data found:', exerciseData[type]);
+
+  const exercise = exerciseData[type] || exerciseData['box'];
 
   const handleStartExercise = () => {
     navigate(`/breathe/${type}/exercise`, { state: { cycles: selectedCycles } });
