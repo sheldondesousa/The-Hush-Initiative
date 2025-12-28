@@ -585,7 +585,24 @@ export default function Home() {
                         <>
                           {/* Breathing Circle Illustration - Box Breathing Only */}
                           <div className="flex-1 flex items-center justify-center w-full relative">
-                            {/* Timeline Progress Ring - Shows during HOLD phases */}
+                            {/* Gray Background Circle - Always visible */}
+                            <svg
+                              className="absolute"
+                              width="363"
+                              height="363"
+                              style={{ transform: 'rotate(-90deg)' }}
+                            >
+                              <circle
+                                cx="181.5"
+                                cy="181.5"
+                                r="175"
+                                fill="none"
+                                stroke="#E5E7EB"
+                                strokeWidth="4"
+                              />
+                            </svg>
+
+                            {/* Blue Progress Circle - Shows during HOLD phases */}
                             {(breathingPhase === 'hold1' || breathingPhase === 'hold2') && (
                               <svg
                                 className="absolute"
@@ -593,16 +610,6 @@ export default function Home() {
                                 height="363"
                                 style={{ transform: 'rotate(-90deg)' }}
                               >
-                                {/* Background circle */}
-                                <circle
-                                  cx="181.5"
-                                  cy="181.5"
-                                  r="175"
-                                  fill="none"
-                                  stroke="#E5E7EB"
-                                  strokeWidth="4"
-                                />
-                                {/* Progress circle */}
                                 <circle
                                   cx="181.5"
                                   cy="181.5"
