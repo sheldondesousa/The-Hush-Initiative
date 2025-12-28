@@ -41,10 +41,8 @@ export default function Home() {
   useEffect(() => {
     if (!isExercising) return;
 
-    // Dynamic interval based on breathing phase
-    // INHALE and EXHALE: 5 counts over 4 seconds = 800ms per count
-    // HOLD1 and HOLD2: 4 counts over 4 seconds = 1000ms per count
-    const intervalDuration = (breathingPhase === 'inhale' || breathingPhase === 'exhale') ? 800 : 1000;
+    // All phases: 5 counts (0-4) over 4 seconds = 800ms per count
+    const intervalDuration = 800;
 
     const interval = setInterval(() => {
       setTimer((prevTimer) => {
@@ -55,12 +53,12 @@ export default function Home() {
             return prevTimer + 1;
           } else {
             setBreathingPhase('hold1');
-            return 4;
+            return 0; // Start HOLD1 at 0
           }
-        // HOLD1: 4-3-2-1 (decrement) - 4 counts over 4 seconds (1000ms each)
+        // HOLD1: 0-1-2-3-4 (increment) - 5 counts over 4 seconds (800ms each)
         } else if (breathingPhase === 'hold1') {
-          if (prevTimer > 1) {
-            return prevTimer - 1;
+          if (prevTimer < 4) {
+            return prevTimer + 1;
           } else {
             setBreathingPhase('exhale');
             return 4; // Start EXHALE at 4
@@ -71,11 +69,11 @@ export default function Home() {
             return prevTimer - 1;
           } else {
             setBreathingPhase('hold2');
-            return 0;
+            return 0; // Start HOLD2 at 0
           }
-        // HOLD2: 0-1-2-3 (increment) - 4 counts over 4 seconds (1000ms each)
+        // HOLD2: 0-1-2-3-4 (increment) - 5 counts over 4 seconds (800ms each)
         } else if (breathingPhase === 'hold2') {
-          if (prevTimer < 3) {
+          if (prevTimer < 4) {
             return prevTimer + 1;
           } else {
             // Cycle completed, check if we should continue
@@ -580,8 +578,8 @@ export default function Home() {
                                   stroke="#067AC3"
                                   strokeWidth="4"
                                   strokeDasharray="1100"
-                                  strokeDashoffset={1100 - (1100 * (5 - timer) / 4)}
-                                  className="transition-all duration-1000"
+                                  strokeDashoffset={1100 - (1100 * timer / 4)}
+                                  className="transition-all duration-800"
                                   strokeLinecap="round"
                                 />
                               </svg>
