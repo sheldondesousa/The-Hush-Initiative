@@ -121,18 +121,18 @@ export default function Home() {
   // Get circle color based on breathing phase and timer
   const getCircleColor = () => {
     // Base color: #067AC3 with transparency changes
-    // Timer 0-4: 5 values over 4 seconds
+    // Timer 0-4: 5 values with enhanced gradient (15% larger differences)
     // Timer 0: 100% opacity (darkest)
-    // Timer 1: 80% opacity
-    // Timer 2: 60% opacity
-    // Timer 3: 40% opacity
-    // Timer 4: 20% opacity (lightest)
+    // Timer 1: 75% opacity
+    // Timer 2: 50% opacity
+    // Timer 3: 25% opacity
+    // Timer 4: 10% opacity (lightest)
     const colors = {
       0: 'rgba(6, 122, 195, 1.0)',
-      1: 'rgba(6, 122, 195, 0.8)',
-      2: 'rgba(6, 122, 195, 0.6)',
-      3: 'rgba(6, 122, 195, 0.4)',
-      4: 'rgba(6, 122, 195, 0.2)'
+      1: 'rgba(6, 122, 195, 0.75)',
+      2: 'rgba(6, 122, 195, 0.5)',
+      3: 'rgba(6, 122, 195, 0.25)',
+      4: 'rgba(6, 122, 195, 0.1)'
     };
 
     if (breathingPhase === 'inhale' || breathingPhase === 'exhale') {
@@ -147,18 +147,18 @@ export default function Home() {
   // Get circle size based on breathing phase and timer
   const getCircleSize = () => {
     // Timer 0-4: 5 size values
-    // Each subsequent value adds ~40px
-    // Timer 0: 143px (smallest)
-    // Timer 1: 183px
-    // Timer 2: 223px
-    // Timer 3: 263px
-    // Timer 4: 303px (largest)
+    // Timer 0: 100px (smallest - can be very small)
+    // Timer 1: 160px
+    // Timer 2: 220px
+    // Timer 3: 280px
+    // Timer 4: 340px (full size)
+    // Each increment adds ~60px
     const sizes = {
-      0: 143,
-      1: 183,
-      2: 223,
-      3: 263,
-      4: 303
+      0: 100,
+      1: 160,
+      2: 220,
+      3: 280,
+      4: 340
     };
 
     if (breathingPhase === 'inhale' || breathingPhase === 'exhale') {
@@ -187,14 +187,15 @@ export default function Home() {
   // Get data for all circles to render
   const getCirclesData = () => {
     const circleCount = getVisibleCircleCount();
-    const sizes = [183, 223, 263, 303];  // Each builds on previous with no gaps
+    const sizes = [100, 160, 220, 280, 340];  // Timer 0-4: 5 circles with 60px increments
     const colors = [
       'rgba(6, 122, 195, 1.0)',   // 100% opacity (darkest - innermost)
-      'rgba(6, 122, 195, 0.75)',  // 75% opacity (25% lighter)
-      'rgba(6, 122, 195, 0.50)',  // 50% opacity (25% lighter)
-      'rgba(6, 122, 195, 0.25)'   // 25% opacity (25% lighter - lightest - outermost)
+      'rgba(6, 122, 195, 0.75)',  // 75% opacity
+      'rgba(6, 122, 195, 0.5)',   // 50% opacity
+      'rgba(6, 122, 195, 0.25)',  // 25% opacity
+      'rgba(6, 122, 195, 0.1)'    // 10% opacity (lightest - outermost)
     ];
-    const blurs = [20, 22, 24, 26];  // 10% blur increase per circle (20, 20*1.1, 20*1.2, 20*1.3)
+    const blurs = [20, 22, 24, 26, 28];  // Progressive blur increase
 
     const circles = [];
     for (let i = 0; i < circleCount; i++) {
