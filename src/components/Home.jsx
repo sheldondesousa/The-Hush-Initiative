@@ -41,8 +41,10 @@ export default function Home() {
   useEffect(() => {
     if (!isExercising) return;
 
-    // All phases: 5 counts (0-4) over 4 seconds = 800ms per count
-    const intervalDuration = 800;
+    // Dynamic interval based on breathing phase
+    // INHALE and EXHALE: 5 counts (0-4) over 4 seconds = 800ms per count
+    // HOLD1 and HOLD2: 4 counts (1-4) over 4 seconds = 1000ms per count
+    const intervalDuration = (breathingPhase === 'inhale' || breathingPhase === 'exhale') ? 800 : 1000;
 
     const interval = setInterval(() => {
       setTimer((prevTimer) => {
@@ -53,9 +55,9 @@ export default function Home() {
             return prevTimer + 1;
           } else {
             setBreathingPhase('hold1');
-            return 0; // Start HOLD1 at 0
+            return 1; // Start HOLD1 at 1
           }
-        // HOLD1: 0-1-2-3-4 (increment) - 5 counts over 4 seconds (800ms each)
+        // HOLD1: 1-2-3-4 (increment) - 4 counts over 4 seconds (1000ms each)
         } else if (breathingPhase === 'hold1') {
           if (prevTimer < 4) {
             return prevTimer + 1;
@@ -69,9 +71,9 @@ export default function Home() {
             return prevTimer - 1;
           } else {
             setBreathingPhase('hold2');
-            return 0; // Start HOLD2 at 0
+            return 1; // Start HOLD2 at 1
           }
-        // HOLD2: 0-1-2-3-4 (increment) - 5 counts over 4 seconds (800ms each)
+        // HOLD2: 1-2-3-4 (increment) - 4 counts over 4 seconds (1000ms each)
         } else if (breathingPhase === 'hold2') {
           if (prevTimer < 4) {
             return prevTimer + 1;
@@ -579,7 +581,7 @@ export default function Home() {
                                   strokeWidth="4"
                                   strokeDasharray="1100"
                                   strokeDashoffset={1100 - (1100 * timer / 4)}
-                                  className="transition-all duration-800"
+                                  className="transition-all duration-1000"
                                   strokeLinecap="round"
                                 />
                               </svg>
