@@ -672,7 +672,7 @@ export default function Home() {
                     </div>
 
                     {/* Navigation Section - 15% */}
-                    <div className="flex-[0.15] flex items-center justify-end py-6 pb-8">
+                    <div className="flex-[0.15] flex flex-col items-center justify-end pb-8">
                       <div className="flex items-center justify-between px-4 w-full max-w-md">
                       <button
                         onClick={() => {
