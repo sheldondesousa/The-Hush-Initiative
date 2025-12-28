@@ -525,7 +525,7 @@ export default function Home() {
                   </div>
                 ) : selectedOption === 'breathe' && selectedExercise ? (
                   /* Breathing Exercise Detail View */
-                  <div className="flex flex-col h-full w-full">
+                  <div className="flex flex-col h-full w-full justify-between">
                     {/* Header - 10% */}
                     <div className="flex-[0.1] flex items-center justify-between px-2">
                       <button
@@ -662,7 +662,7 @@ export default function Home() {
                       {/* Timer Display - Show during INHALE and EXHALE */}
                       {isExercising && (breathingPhase === 'inhale' || breathingPhase === 'exhale') && (
                         <div className="text-center">
-                          <div className="font-bold text-gray-900" style={{ fontSize: '3.6rem' }}>
+                          <div className="font-bold text-gray-900" style={{ fontSize: '4.32rem' }}>
                             {timer}
                           </div>
                         </div>
