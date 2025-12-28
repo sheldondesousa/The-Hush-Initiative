@@ -656,19 +656,10 @@ export default function Home() {
                           </div>
                         )}
 
-                        {/* Progress Display - Show during exercise */}
-                        {isExercising && countdown === null && (
-                          <div className="text-center">
-                            <span className="text-sm text-gray-600 font-medium">
-                              Cycle {currentCycle + 1} of {selectedCycles}
-                            </span>
-                          </div>
-                        )}
-
                         {/* Timer Display - Show during INHALE and EXHALE */}
                         {isExercising && (breathingPhase === 'inhale' || breathingPhase === 'exhale') && (
-                          <div className="text-center mt-4">
-                            <div className="text-5xl font-bold text-gray-900">
+                          <div className="text-center">
+                            <div className="font-bold text-gray-900" style={{ fontSize: '3.6rem' }}>
                               {timer}
                             </div>
                           </div>
