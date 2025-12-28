@@ -12,7 +12,7 @@ export default function Home() {
   const [countdown, setCountdown] = useState(null); // Track countdown: 3, 2, 1, or null
   const [isExercising, setIsExercising] = useState(false);
   const [breathingPhase, setBreathingPhase] = useState('inhale'); // inhale, hold1, exhale, hold2
-  const [timer, setTimer] = useState(1);
+  const [timer, setTimer] = useState(0);
   const [selectedCycles, setSelectedCycles] = useState(4);
   const [currentCycle, setCurrentCycle] = useState(0);
 
@@ -25,7 +25,7 @@ export default function Home() {
       setCountdown(null);
       setIsExercising(true);
       setBreathingPhase('inhale');
-      setTimer(1);
+      setTimer(0);
       setCurrentCycle(0);
       return;
     }
@@ -44,33 +44,33 @@ export default function Home() {
     const interval = setInterval(() => {
       setTimer((prevTimer) => {
         // Handle phase transitions and timer logic
-        // INHALE: 1-2-3-4 (increment)
+        // INHALE: 0-1-2-3 (increment)
         if (breathingPhase === 'inhale') {
-          if (prevTimer < 4) {
+          if (prevTimer < 3) {
             return prevTimer + 1;
           } else {
             setBreathingPhase('hold1');
-            return 4;
+            return 3;
           }
-        // HOLD: 4-3-2-1 (decrement)
+        // HOLD: 3-2-1-0 (decrement)
         } else if (breathingPhase === 'hold1') {
-          if (prevTimer > 1) {
+          if (prevTimer > 0) {
             return prevTimer - 1;
           } else {
             setBreathingPhase('exhale');
-            return 1;
+            return 0;
           }
-        // EXHALE: 1-2-3-4 (increment)
+        // EXHALE: 0-1-2-3 (increment)
         } else if (breathingPhase === 'exhale') {
-          if (prevTimer < 4) {
+          if (prevTimer < 3) {
             return prevTimer + 1;
           } else {
             setBreathingPhase('hold2');
-            return 4;
+            return 3;
           }
-        // HOLD: 4-3-2-1 (decrement)
+        // HOLD: 3-2-1-0 (decrement)
         } else if (breathingPhase === 'hold2') {
-          if (prevTimer > 1) {
+          if (prevTimer > 0) {
             return prevTimer - 1;
           } else {
             // Cycle completed, check if we should continue
@@ -80,12 +80,12 @@ export default function Home() {
               setIsExercising(false);
               setCurrentCycle(0);
               setBreathingPhase('inhale');
-              return 1;
+              return 0;
             } else {
               // Continue to next cycle
               setCurrentCycle(nextCycle);
               setBreathingPhase('inhale');
-              return 1;
+              return 0;
             }
           }
         }
@@ -683,12 +683,12 @@ export default function Home() {
                           if (!isExercising) {
                             setIsExercising(true);
                             setBreathingPhase('inhale');
-                            setTimer(1);
+                            setTimer(0);
                             setCurrentCycle(0);
                           } else {
                             setIsExercising(false);
                             setBreathingPhase('inhale');
-                            setTimer(1);
+                            setTimer(0);
                             setCurrentCycle(0);
                           }
                         }}
