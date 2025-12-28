@@ -173,29 +173,31 @@ export default function Home() {
   // Get number of circles to display based on phase and timer
   const getVisibleCircleCount = () => {
     if (breathingPhase === 'inhale') {
-      return timer; // INHALE: timer 0-4 shows 0-4 circles (expanding)
+      // INHALE: timer 0 = 0 circles, timer 1-4 = 1-4 circles
+      return timer === 0 ? 0 : timer;
     } else if (breathingPhase === 'hold1') {
-      return 4; // HOLD after INHALE: Keep all 4 circles expanded
+      return 0; // HOLD: No circles
     } else if (breathingPhase === 'exhale') {
-      return 4 - timer; // EXHALE: timer 0-4 shows 4-0 circles (contracting)
+      // EXHALE: timer 0 = 0 circles, timer 1-4 = 4-1 circles (contracting)
+      return timer === 0 ? 0 : (5 - timer);
     } else if (breathingPhase === 'hold2') {
-      return 0; // HOLD after EXHALE: No circles (minimal)
+      return 0; // HOLD: No circles
     }
-    return timer;
+    return 0;
   };
 
   // Get data for all circles to render
   const getCirclesData = () => {
     const circleCount = getVisibleCircleCount();
-    const sizes = [100, 160, 220, 280, 340];  // Timer 0-4: 5 circles with 60px increments
+    // Only 4 circles for timer values 1-4 (no circle for 0)
+    const sizes = [160, 220, 280, 340];  // Timer 1-4: 4 circles with 60px increments
     const colors = [
-      'rgba(6, 122, 195, 1.0)',   // 100% opacity (darkest - innermost)
-      'rgba(6, 122, 195, 0.75)',  // 75% opacity
-      'rgba(6, 122, 195, 0.5)',   // 50% opacity
-      'rgba(6, 122, 195, 0.25)',  // 25% opacity
-      'rgba(6, 122, 195, 0.1)'    // 10% opacity (lightest - outermost)
+      'rgba(6, 122, 195, 1.0)',   // 100% opacity (darkest - innermost) - timer 1
+      'rgba(6, 122, 195, 0.75)',  // 75% opacity - timer 2
+      'rgba(6, 122, 195, 0.5)',   // 50% opacity - timer 3
+      'rgba(6, 122, 195, 0.25)'   // 25% opacity (lightest - outermost) - timer 4
     ];
-    const blurs = [20, 22, 24, 26, 28];  // Progressive blur increase
+    const blurs = [20, 22, 24, 26];  // Progressive blur increase
 
     const circles = [];
     for (let i = 0; i < circleCount; i++) {
