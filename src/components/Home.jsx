@@ -551,28 +551,13 @@ export default function Home() {
                       </div>
                     </div>
 
-                    {/* Cycle Count Section - 15% */}
+                    {/* Timer Section - 15% */}
                     <div className="flex-[0.15] flex items-center justify-center">
-                      {/* Countdown Progress Bar - Show during countdown */}
-                      {countdown !== null && countdown > 0 && (
-                        <div className="w-full max-w-xs px-4">
-                          <span className="text-sm text-gray-600 font-medium mb-2 block text-center">
-                            Exercise starting
-                          </span>
-                          {/* Progress Bar Container */}
-                          <div className="w-full h-2 bg-gray-200 rounded-full overflow-hidden">
-                            {/* Segmented Progress */}
-                            <div className="h-full flex gap-1">
-                              {/* Show segments based on countdown value - decrements from left to right */}
-                              {Array.from({ length: 3 }).map((_, index) => (
-                                <div
-                                  key={index}
-                                  className={`flex-1 transition-all duration-300 ${
-                                    index >= (3 - countdown) ? 'bg-black' : 'bg-transparent'
-                                  }`}
-                                />
-                              ))}
-                            </div>
+                      {/* Timer Display - Show during INHALE and EXHALE */}
+                      {isExercising && (breathingPhase === 'inhale' || breathingPhase === 'exhale') && (
+                        <div className="text-center">
+                          <div className="font-bold text-gray-900" style={{ fontSize: '4.32rem' }}>
+                            {timer}
                           </div>
                         </div>
                       )}
@@ -666,13 +651,28 @@ export default function Home() {
                       )}
                     </div>
 
-                    {/* Timer Section - 15% */}
+                    {/* Exercise Starting Section - 15% */}
                     <div className="flex-[0.15] flex items-center justify-center">
-                      {/* Timer Display - Show during INHALE and EXHALE */}
-                      {isExercising && (breathingPhase === 'inhale' || breathingPhase === 'exhale') && (
-                        <div className="text-center">
-                          <div className="font-bold text-gray-900" style={{ fontSize: '4.32rem' }}>
-                            {timer}
+                      {/* Countdown Progress Bar - Show during countdown */}
+                      {countdown !== null && countdown > 0 && (
+                        <div className="w-full max-w-xs px-4">
+                          <span className="text-sm text-gray-600 font-medium mb-2 block text-center">
+                            Exercise starting
+                          </span>
+                          {/* Progress Bar Container */}
+                          <div className="w-full h-2 bg-gray-200 rounded-full overflow-hidden">
+                            {/* Segmented Progress */}
+                            <div className="h-full flex gap-1">
+                              {/* Show segments based on countdown value - decrements from left to right */}
+                              {Array.from({ length: 3 }).map((_, index) => (
+                                <div
+                                  key={index}
+                                  className={`flex-1 transition-all duration-300 ${
+                                    index >= (3 - countdown) ? 'bg-black' : 'bg-transparent'
+                                  }`}
+                                />
+                              ))}
+                            </div>
                           </div>
                         </div>
                       )}
