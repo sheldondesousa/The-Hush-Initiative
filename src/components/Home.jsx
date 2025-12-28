@@ -636,15 +636,27 @@ export default function Home() {
                     <div className="flex-[0.2] flex flex-col justify-between py-6">
                       {/* Cycle Display Area - Centered with equal spacing */}
                       <div className="flex flex-col items-center justify-center">
-                        {/* Countdown Display - Show during countdown */}
+                        {/* Countdown Progress Bar - Show during countdown */}
                         {countdown !== null && countdown > 0 && (
-                          <div className="text-center">
-                            <span className="text-sm text-gray-600 font-medium mb-2 block">
+                          <div className="w-full max-w-xs px-4">
+                            <span className="text-sm text-gray-600 font-medium mb-3 block text-center">
                               Exercise starting
                             </span>
-                            <span className="text-5xl font-bold text-black">
-                              {countdown}
-                            </span>
+                            {/* Progress Bar Container */}
+                            <div className="w-full h-2 bg-gray-200 rounded-full overflow-hidden">
+                              {/* Segmented Progress */}
+                              <div className="h-full flex gap-1">
+                                {/* Show segments based on countdown value */}
+                                {Array.from({ length: 3 }).map((_, index) => (
+                                  <div
+                                    key={index}
+                                    className={`flex-1 transition-all duration-300 ${
+                                      index < countdown ? 'bg-black' : 'bg-transparent'
+                                    }`}
+                                  />
+                                ))}
+                              </div>
+                            </div>
                           </div>
                         )}
 
