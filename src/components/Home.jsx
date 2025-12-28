@@ -630,46 +630,48 @@ export default function Home() {
                       )}
                     </div>
 
-                    {/* Bottom Section - 40% */}
-                    <div className="flex-[0.4] flex flex-col justify-evenly py-6">
-                      {/* Cycle Display Area - Equidistant between circles and nav bar */}
-                      <div className="flex flex-col items-center justify-center" style={{ minHeight: '80px' }}>
-                        {/* Countdown Progress Bar - Show during countdown */}
-                        {countdown !== null && countdown > 0 && (
-                          <div className="w-full max-w-xs px-4">
-                            <span className="text-sm text-gray-600 font-medium mb-3 block text-center">
-                              Exercise starting
-                            </span>
-                            {/* Progress Bar Container */}
-                            <div className="w-full h-2 bg-gray-200 rounded-full overflow-hidden">
-                              {/* Segmented Progress */}
-                              <div className="h-full flex gap-1">
-                                {/* Show segments based on countdown value - decrements from left to right */}
-                                {Array.from({ length: 3 }).map((_, index) => (
-                                  <div
-                                    key={index}
-                                    className={`flex-1 transition-all duration-300 ${
-                                      index >= (3 - countdown) ? 'bg-black' : 'bg-transparent'
-                                    }`}
-                                  />
-                                ))}
-                              </div>
+                    {/* Cycle Count Section - 5% */}
+                    <div className="flex-[0.05] flex items-center justify-center">
+                      {/* Countdown Progress Bar - Show during countdown */}
+                      {countdown !== null && countdown > 0 && (
+                        <div className="w-full max-w-xs px-4">
+                          <span className="text-sm text-gray-600 font-medium mb-2 block text-center">
+                            Exercise starting
+                          </span>
+                          {/* Progress Bar Container */}
+                          <div className="w-full h-2 bg-gray-200 rounded-full overflow-hidden">
+                            {/* Segmented Progress */}
+                            <div className="h-full flex gap-1">
+                              {/* Show segments based on countdown value - decrements from left to right */}
+                              {Array.from({ length: 3 }).map((_, index) => (
+                                <div
+                                  key={index}
+                                  className={`flex-1 transition-all duration-300 ${
+                                    index >= (3 - countdown) ? 'bg-black' : 'bg-transparent'
+                                  }`}
+                                />
+                              ))}
                             </div>
                           </div>
-                        )}
+                        </div>
+                      )}
+                    </div>
 
-                        {/* Timer Display - Show during INHALE and EXHALE */}
-                        {isExercising && (breathingPhase === 'inhale' || breathingPhase === 'exhale') && (
-                          <div className="text-center">
-                            <div className="font-bold text-gray-900" style={{ fontSize: '3.6rem' }}>
-                              {timer}
-                            </div>
+                    {/* Timer Section - 15% */}
+                    <div className="flex-[0.15] flex items-center justify-center">
+                      {/* Timer Display - Show during INHALE and EXHALE */}
+                      {isExercising && (breathingPhase === 'inhale' || breathingPhase === 'exhale') && (
+                        <div className="text-center">
+                          <div className="font-bold text-gray-900" style={{ fontSize: '3.6rem' }}>
+                            {timer}
                           </div>
-                        )}
-                      </div>
+                        </div>
+                      )}
+                    </div>
 
-                      {/* Navigation Buttons - At the bottom */}
-                      <div className="flex items-center justify-between px-4">
+                    {/* Navigation Section - 20% */}
+                    <div className="flex-[0.2] flex items-center justify-center py-6">
+                      <div className="flex items-center justify-between px-4 w-full max-w-md">
                       <button
                         onClick={() => {
                           const currentIndex = currentTracks.findIndex(t => t.id === selectedExercise.id);
