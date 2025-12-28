@@ -273,18 +273,18 @@ export default function Home() {
   // Get balloon animation properties for 4-7-8 breathing
   const getBalloonAnimation478 = () => {
     if (!isExercising) {
-      return { scale: 0.3, translateY: 0, rotation: 0 };
+      return { scale: 0.15, translateY: 0, rotation: 0 };
     }
 
     if (breathingPhase === 'inhale') {
-      // INHALE: Scale from 0.3 to 1.0 AND move upward (0 to -100px)
+      // INHALE: Scale from 0.15 to 1.0 AND move upward (0 to -170px)
       const progress = timer / 4;
       const easeProgress = progress < 0.5
         ? 2 * progress * progress
         : 1 - Math.pow(-2 * progress + 2, 2) / 2; // easeInOut
       return {
-        scale: 0.3 + (0.7 * easeProgress),
-        translateY: -100 * easeProgress,
+        scale: 0.15 + (0.85 * easeProgress),
+        translateY: -170 * easeProgress,
         rotation: 0
       };
     } else if (breathingPhase === 'hold1') {
@@ -293,23 +293,23 @@ export default function Home() {
       const rotation = Math.sin(swayProgress * Math.PI * 2) * 3; // ±3 degrees
       return {
         scale: 1.0,
-        translateY: -100,
+        translateY: -170,
         rotation: rotation
       };
     } else if (breathingPhase === 'exhale') {
-      // EXHALE: Scale from 1.0 to 0.3 AND move downward (-100 to 0)
+      // EXHALE: Scale from 1.0 to 0.15 AND move downward (-170 to 0)
       const progress = timer / 7;
       const easeProgress = progress < 0.5
         ? 2 * progress * progress
         : 1 - Math.pow(-2 * progress + 2, 2) / 2; // easeInOut
       return {
-        scale: 0.3 + (0.7 * easeProgress),
-        translateY: -100 * easeProgress,
+        scale: 0.15 + (0.85 * easeProgress),
+        translateY: -170 * easeProgress,
         rotation: 0
       };
     }
 
-    return { scale: 0.3, translateY: 0, rotation: 0 };
+    return { scale: 0.15, translateY: 0, rotation: 0 };
   };
 
   // Generate 4-7-8 wave path: rise → plateau → decline
@@ -885,21 +885,9 @@ export default function Home() {
                                 </filter>
                               </defs>
 
-                              {/* Balloon string */}
-                              <line
-                                x1="200"
-                                y1={350 + getBalloonAnimation478().translateY + (getBalloonAnimation478().scale * 150)}
-                                x2="200"
-                                y2="480"
-                                stroke="#94A3B8"
-                                strokeWidth="2"
-                                strokeLinecap="round"
-                                className="transition-all duration-1000 ease-out"
-                              />
-
                               {/* Balloon body */}
                               <g
-                                transform={`translate(200, ${350 + getBalloonAnimation478().translateY}) scale(${getBalloonAnimation478().scale}) rotate(${getBalloonAnimation478().rotation})`}
+                                transform={`translate(200, ${420 + getBalloonAnimation478().translateY}) scale(${getBalloonAnimation478().scale}) rotate(${getBalloonAnimation478().rotation})`}
                                 className="transition-all duration-1000 ease-out"
                                 style={{ transformOrigin: 'center' }}
                               >
