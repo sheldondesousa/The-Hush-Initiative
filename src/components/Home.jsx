@@ -28,6 +28,17 @@ export default function Home() {
         { label: 'Position your tongue:', text: 'Place the tip of your tongue against the ridge of tissue just behind your upper front teeth and keep it there throughout the entire exercise.' },
         { label: 'Create sound:', text: 'Exhale completely through your mouth, making an audible "whoosh" sound as you release the air.' }
       ]
+    },
+    'Coherent breathing (5-5)': {
+      description: 'Coherent breathing (or resonance breathing) is a slow, rhythmic breathing technique, typically inhaling for 6 seconds and exhaling for 6 seconds (5-6 breaths per minute), designed to sync your heart rate with your breath for optimal nervous system balance, reducing stress and anxiety while promoting calm and focus by activating the vagus nerve.',
+      sectionTitle: 'How it works',
+      sectionContent: [
+        { label: 'Find Your Rhythm:', text: 'Aim for about 5-6 breaths per minute, meaning roughly 6 seconds to inhale and 6 seconds to exhale.' },
+        { label: 'Breathe Through Your Nose:', text: 'Inhale and exhale gently and silently through your nose.' },
+        { label: 'Engage Your Diaphragm:', text: 'Focus on your belly gently expanding on the inhale and contracting on the exhale, rather than your upper chest.' },
+        { label: 'Relax:', text: 'Release tension in your face, neck, shoulders, and body.' },
+        { label: 'Focus on the Sensation:', text: 'Acknowledge stray thoughts and return your attention to the feeling of your breath.' }
+      ]
     }
   };
   const [showingInfo, setShowingInfo] = useState(false); // Track if showing info screen
