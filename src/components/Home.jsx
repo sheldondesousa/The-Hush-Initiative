@@ -921,7 +921,7 @@ export default function Home() {
                             {/* Phase Text - At Center of Circles */}
                             <div className="absolute text-center">
                               <div
-                                className={`text-lg font-semibold text-gray-800 uppercase tracking-wider bg-gradient-to-b from-white/95 to-gray-100/90 backdrop-blur-sm px-6 py-3 rounded-xl shadow-lg border border-gray-200 inline-block ${
+                                className={`text-lg font-semibold text-gray-800 uppercase tracking-wider bg-gradient-to-b from-white/85 to-gray-100/80 backdrop-blur-sm px-6 py-3 rounded-xl border border-gray-200 inline-block ${
                                   breathingPhase === 'hold1' ? 'pulse-hold' : ''
                                 }`}
                               >
