@@ -90,7 +90,7 @@ export default function Home() {
 
   // Breathing animation cycle effect
   useEffect(() => {
-    if (!isExercising || isPaused) return;
+    if (!isExercising || isPaused || exerciseCompleted) return;
 
     // Exercise-specific timing configurations
     const is478 = selectedExercise?.name === '4-7-8 Breathing';
@@ -243,7 +243,7 @@ export default function Home() {
     }, intervalDuration);
 
     return () => clearInterval(interval);
-  }, [isExercising, isPaused, breathingPhase, currentCycle, selectedCycles, selectedExercise]);
+  }, [isExercising, isPaused, breathingPhase, currentCycle, selectedCycles, selectedExercise, exerciseCompleted]);
 
   // Track data for each option
   const tracksByOption = {
@@ -966,7 +966,7 @@ export default function Home() {
                       {/* Show completion screen when exercise is completed */}
                       {exerciseCompleted ? (
                         <div className="flex flex-col items-center justify-center text-center">
-                          <h2 className="text-6xl font-bold text-black mb-4">COMPLETE</h2>
+                          <h2 className="text-3xl font-bold text-black mb-4">COMPLETE</h2>
                           <p className="text-2xl text-gray-600">You Got This!</p>
                         </div>
                       ) : (
