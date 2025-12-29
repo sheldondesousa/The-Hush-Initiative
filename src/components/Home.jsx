@@ -270,57 +270,54 @@ export default function Home() {
     return 0;
   };
 
-  // Get visible triangle count for 4-7-8 breathing
-  const getVisibleTriangleCount478 = () => {
+  // Get visible circle count for 4-7-8 breathing
+  const getVisibleCircleCount478 = () => {
     if (!isExercising) return 0;
 
     if (breathingPhase === 'inhale') {
-      // INHALE: Add 2 triangles per second (timer 0→4 shows 0,2,4,6,8 triangles)
+      // INHALE: Add 2 circles per second (timer 0→4 shows 0,2,4,6,8 circles)
       return timer * 2;
     } else if (breathingPhase === 'hold1') {
-      // HOLD: Keep all 8 triangles visible
+      // HOLD: Keep all 8 circles visible
       return 8;
     } else if (breathingPhase === 'exhale') {
-      // EXHALE: Remove 1 triangle at a time over 8 seconds (timer 7→0 shows 8,7,6,5,4,3,2,1 triangles)
+      // EXHALE: Remove 1 circle per second (timer 7→0 shows 8,7,6,5,4,3,2,1 circles)
       return Math.max(timer, 1);
     }
 
     return 0;
   };
 
-  // Get triangle layer data for 4-7-8 breathing
-  const getTriangleLayersData478 = () => {
-    const triangleCount = getVisibleTriangleCount478();
+  // Get circle data for 4-7-8 breathing
+  const getCirclesData478 = () => {
+    const circleCount = getVisibleCircleCount478();
 
-    // 8 layers with 10% opacity decrements (filling from bottom up)
-    // Smaller sizes to stay inside gray outline: Heights 30-240px, Widths 35-280px
-    const heights = [30, 60, 90, 120, 150, 180, 210, 240];
-    const widths = [35, 70, 105, 140, 175, 210, 245, 280]; // Proportional widths
+    // 8 circles with 10% opacity decrements
+    const sizes = [120, 160, 200, 240, 280, 320, 360, 400];
     const colors = [
-      'rgba(6, 122, 195, 1.0)',   // 100% opacity (smallest - innermost)
+      'rgba(6, 122, 195, 1.0)',   // 100% opacity (darkest - innermost)
       'rgba(6, 122, 195, 0.9)',   // 90% opacity
       'rgba(6, 122, 195, 0.8)',   // 80% opacity
       'rgba(6, 122, 195, 0.7)',   // 70% opacity
       'rgba(6, 122, 195, 0.6)',   // 60% opacity
       'rgba(6, 122, 195, 0.5)',   // 50% opacity
       'rgba(6, 122, 195, 0.4)',   // 40% opacity
-      'rgba(6, 122, 195, 0.3)'    // 30% opacity (largest - outermost)
+      'rgba(6, 122, 195, 0.3)'    // 30% opacity (lightest - outermost)
     ];
     const blurs = [20, 21, 22, 23, 24, 25, 26, 27];
 
-    const triangles = [];
-    for (let i = 0; i < triangleCount; i++) {
-      triangles.push({
-        height: heights[i],
-        width: widths[i],
+    const circles = [];
+    for (let i = 0; i < circleCount; i++) {
+      circles.push({
+        size: sizes[i],
         color: colors[i],
         blur: blurs[i],
         key: i
       });
     }
 
-    // Render from largest to smallest so all are visible
-    return triangles.reverse();
+    // Render from largest to smallest so all rings are visible
+    return circles.reverse();
   };
 
   // Generate 4-7-8 wave path: rise → plateau → decline
@@ -864,46 +861,64 @@ export default function Home() {
                       ) : selectedExercise?.name === '4-7-8 Breathing' ? (
                         /* 4-7-8 Triangle Animation */
                         <>
-                          {/* Triangle Illustration */}
+                          {/* Breathing Circle Illustration - 4-7-8 */}
                           <div className="flex-1 flex items-center justify-center w-full relative">
-                            {/* Gray Outline Triangle - Always visible (INVERTED - pointing down) - Larger than fill */}
+                            {/* Gray Background Circle - Always visible */}
                             <svg
                               className="absolute"
                               width="363"
                               height="363"
-                              viewBox="0 0 363 363"
+                              style={{ transform: 'rotate(-90deg)' }}
                             >
-                              <polygon
-                                points="21.5,21.5 341.5,21.5 181.5,341.5"
+                              <circle
+                                cx="181.5"
+                                cy="181.5"
+                                r="200"
                                 fill="none"
                                 stroke="#E5E7EB"
                                 strokeWidth="4"
-                                strokeLinejoin="round"
-                                strokeLinecap="round"
                               />
                             </svg>
 
-                            {/* Filled Triangle Layers - Build from bottom up (INVERTED) */}
-                            {getTriangleLayersData478().map((triangle) => (
+                            {/* Blue Progress Circle - Shows during HOLD phase (7 seconds) */}
+                            {breathingPhase === 'hold1' && (
+                              <svg
+                                className="absolute"
+                                width="363"
+                                height="363"
+                                style={{ transform: 'rotate(-90deg)' }}
+                              >
+                                <circle
+                                  cx="181.5"
+                                  cy="181.5"
+                                  r="200"
+                                  fill="none"
+                                  stroke="#067AC3"
+                                  strokeWidth="4"
+                                  strokeDasharray="1256"
+                                  strokeDashoffset={1256 - (1256 * timer / 6)}
+                                  className="transition-all duration-1000"
+                                  strokeLinecap="round"
+                                />
+                              </svg>
+                            )}
+
+                            {/* Colored Circles - 8 circles with gradients */}
+                            {getCirclesData478().map((circle) => (
                               <div
-                                key={triangle.key}
-                                className="absolute transition-all duration-1000 ease-in-out"
+                                key={circle.key}
+                                className="rounded-full transition-all duration-1000 ease-in-out absolute"
                                 style={{
-                                  width: 0,
-                                  height: 0,
-                                  borderLeft: `${triangle.width / 2}px solid transparent`,
-                                  borderRight: `${triangle.width / 2}px solid transparent`,
-                                  borderTop: `${triangle.height}px solid ${triangle.color}`,
-                                  filter: `drop-shadow(0 0 ${triangle.blur}px ${triangle.color})`,
-                                  bottom: 'calc(50% - 140px)',
-                                  left: '50%',
-                                  transform: 'translateX(-50%)',
-                                  borderRadius: '8px',
+                                  width: `${circle.size}px`,
+                                  height: `${circle.size}px`,
+                                  border: `20px solid ${circle.color}`,
+                                  backgroundColor: 'transparent',
+                                  boxShadow: `0 0 ${circle.blur}px ${circle.color}`
                                 }}
                               />
                             ))}
 
-                            {/* Phase Text - At Center */}
+                            {/* Phase Text - At Center of Circles */}
                             <div className="absolute text-center">
                               <div
                                 className={`text-lg font-semibold text-gray-700 uppercase tracking-wider ${
