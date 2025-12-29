@@ -652,7 +652,7 @@ export default function Home() {
             </div>
 
             {/* Music Player - iPhone 17 Pro Max dimensions on desktop */}
-            <div className="music-player-desktop bg-white border-2 border-gray-300 rounded-2xl p-6 flex flex-col w-full lg:flex-shrink-0">
+            <div className="music-player-desktop bg-white border-2 border-gray-300 rounded-2xl p-6 flex flex-col w-full lg:flex-shrink-0 relative overflow-hidden">
               {/* Album Art & Info - Hide when breathing exercise is selected */}
               {!(selectedOption === 'breathe' && selectedExercise) && (
                 <div className="mb-6">
@@ -765,11 +765,11 @@ export default function Home() {
                     {/* Tips Bottom Sheet */}
                     {showTipsSheet && (
                       <div
-                        className="fixed inset-0 bg-black bg-opacity-50 z-50 flex items-end"
+                        className="absolute inset-0 bg-black bg-opacity-50 z-50 flex items-end"
                         onClick={() => setShowTipsSheet(false)}
                       >
                         <div
-                          className="bg-white rounded-t-3xl w-full max-h-[80vh] overflow-y-auto"
+                          className="bg-white rounded-t-3xl w-full max-h-[70vh] overflow-y-auto"
                           onClick={(e) => e.stopPropagation()}
                         >
                           <div className="p-6">
