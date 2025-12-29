@@ -23,9 +23,16 @@ export default function Home() {
       ],
       preparationTitle: 'Preparation',
       preparationContent: [
+        { label: 'Find a Quiet Space:', text: 'Choose a distraction-free environment to help you focus entirely on your breath.' },
         { label: 'Sit Upright:', text: 'Choose a comfortable chair where you can sit with your back supported and feet flat on the floor. This allows for better lung expansion.' },
         { label: 'Relax Your Muscles:', text: 'Before starting, consciously drop your shoulders and release tension in your jaw.' },
         { label: 'Begin on Empty:', text: 'To start correctly, first exhale all the air out of your lungs so you begin with a full, fresh inhale.' }
+      ],
+      whenToUseTitle: 'When to use',
+      whenToUseContent: [
+        { label: 'Before Stressful Events:', text: 'Use it to steady nerves before major tasks like public speaking, exams, or interviews.' },
+        { label: 'During a Mid-Day Reset:', text: 'Practice for 5 minutes during a work break or "afternoon slump" to regain focus and concentration.' },
+        { label: 'Before Bedtime:', text: 'Perform a few cycles to quiet a racing mind and lower your heart rate for better sleep.' }
       ]
     },
     '4-7-8 Breathing': {
@@ -59,6 +66,7 @@ export default function Home() {
   const [currentCycle, setCurrentCycle] = useState(0);
   const [showTipsSheet, setShowTipsSheet] = useState(false); // Track tips bottom sheet visibility
   const [showPreparationSheet, setShowPreparationSheet] = useState(false); // Track preparation bottom sheet visibility
+  const [showWhenToUseSheet, setShowWhenToUseSheet] = useState(false); // Track when to use bottom sheet visibility
   const [exerciseCompleted, setExerciseCompleted] = useState(false); // Track if exercise completed
 
   // Auto-start countdown when exercise view loads
@@ -837,6 +845,22 @@ export default function Home() {
                           <span className="text-2xl font-light text-gray-700">+</span>
                         </button>
                       )}
+
+                      {/* When to use Tile - Only for Box Breathing */}
+                      {selectedExercise?.name === 'Box Breathing (4-4-4-4)' && (
+                        <button
+                          onClick={() => setShowWhenToUseSheet(true)}
+                          className="w-full flex items-center justify-between p-4 border-2 border-gray-300 rounded-xl mb-6 hover:bg-gray-50 transition-colors"
+                        >
+                          <div className="flex items-center gap-3">
+                            <svg className="w-6 h-6 text-gray-700" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
+                              <path strokeLinecap="round" strokeLinejoin="round" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
+                            </svg>
+                            <span className="text-base font-semibold text-black">When to use</span>
+                          </div>
+                          <span className="text-2xl font-light text-gray-700">+</span>
+                        </button>
+                      )}
                     </div>
 
                     {/* Cycle Selector - Static position */}
@@ -1001,6 +1025,55 @@ export default function Home() {
                             {/* Close Button */}
                             <button
                               onClick={() => setShowPreparationSheet(false)}
+                              className="w-full py-3 bg-gray-100 text-black text-base font-bold rounded-xl hover:bg-gray-200 transition-colors"
+                            >
+                              Close
+                            </button>
+                          </div>
+                        </div>
+                      </div>
+                    )}
+
+                    {/* When to use Bottom Sheet */}
+                    {showWhenToUseSheet && (
+                      <div
+                        className="absolute inset-0 bg-black bg-opacity-50 z-50 flex items-end"
+                        onClick={() => setShowWhenToUseSheet(false)}
+                      >
+                        <div
+                          className="bg-white rounded-t-3xl w-full max-h-[70vh] overflow-y-auto animate-slide-up"
+                          onClick={(e) => e.stopPropagation()}
+                        >
+                          <div className="p-6">
+                            {/* Sheet Handle */}
+                            <div className="w-12 h-1 bg-gray-300 rounded-full mx-auto mb-6"></div>
+
+                            {/* Section Title */}
+                            <h2 className="text-2xl font-bold mb-4 text-black">
+                              {exerciseContent[selectedExercise.name]?.whenToUseTitle || 'When to use'}
+                            </h2>
+
+                            {/* Section Content */}
+                            <div className="text-base text-gray-700 mb-6 leading-relaxed">
+                              {exerciseContent[selectedExercise.name]?.whenToUseContent?.map((item, index) => (
+                                <div key={index} className={`flex gap-3 ${index > 0 ? 'mt-4' : ''}`}>
+                                  {/* Checkbox with tick mark */}
+                                  <svg className="w-5 h-5 flex-shrink-0 mt-0.5" fill="none" viewBox="0 0 24 24">
+                                    {/* Blue circle */}
+                                    <circle cx="12" cy="12" r="9" stroke="#067AC3" strokeWidth="2" fill="none" />
+                                    {/* Black checkmark */}
+                                    <path d="M9 12l2 2 4-4" stroke="black" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
+                                  </svg>
+                                  <p>
+                                    {item.label && <strong>{item.label}</strong>} {item.text}
+                                  </p>
+                                </div>
+                              ))}
+                            </div>
+
+                            {/* Close Button */}
+                            <button
+                              onClick={() => setShowWhenToUseSheet(false)}
                               className="w-full py-3 bg-gray-100 text-black text-base font-bold rounded-xl hover:bg-gray-200 transition-colors"
                             >
                               Close
