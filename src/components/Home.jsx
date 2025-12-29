@@ -16,10 +16,10 @@ export default function Home() {
       sectionTitle: 'Tips',
       sectionContent: [
         { label: 'Duration:', text: 'If 4 seconds feels too long, start with a 2 or 3-second count and gradually increase it as you become more comfortable.' },
-        { label: 'Focus on the belly:', text: 'Use "diaphragmatic breathing." Your stomach should rise as you inhale, rather than just your chest.' },
-        { label: '', text: 'Start on Empty.' },
-        { label: '', text: 'Inhale slowly through your nose, filling your lungs and abdomen. Then HOLD.' },
-        { label: '', text: 'Exhale gently through your mouth or nose, emptying your lungs completely. Then HOLD.' }
+        { label: 'Focus:', text: 'Use "diaphragmatic breathing." Your stomach should rise as you inhale, rather than just your chest.' },
+        { label: '', text: 'Start on empty.' },
+        { label: '', text: 'Inhale slowly through your nose.' },
+        { label: '', text: 'Exhale gently through your mouth or nose.' }
       ],
       preparationTitle: 'Preparation',
       preparationContent: [
