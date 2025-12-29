@@ -669,19 +669,19 @@ export default function Home() {
                   setSelectedExercise(null);
                 }}
                 className={`w-full py-3 lg:py-4 flex items-center justify-between border-b border-gray-300 hover:scale-105 transition-all group ${
-                  selectedOption === 'focus' ? 'bg-black' : ''
+                  selectedOption === 'focus' ? 'bg-black' : 'bg-gray-100'
                 }`}
               >
                 <div className="flex-1 text-left pl-4">
                   <h2 className={`text-xl lg:text-2xl font-semibold mb-1 ${
-                    selectedOption === 'focus' ? 'text-white' : 'text-black'
+                    selectedOption === 'focus' ? 'text-white' : 'text-gray-400'
                   }`}>Focus</h2>
                   <p className={`text-sm lg:text-base ${
-                    selectedOption === 'focus' ? 'text-gray-300' : 'text-gray-700'
+                    selectedOption === 'focus' ? 'text-gray-300' : 'text-gray-400'
                   }`}>Enhance concentration</p>
                 </div>
                 <svg className={`w-8 h-8 lg:w-9 lg:h-9 transition-transform group-hover:translate-x-2 flex-shrink-0 pr-4 ${
-                  selectedOption === 'focus' ? 'text-white' : 'text-black'
+                  selectedOption === 'focus' ? 'text-white' : 'text-gray-400'
                 }`} fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" d="M9 5l7 7-7 7"/>
                 </svg>
@@ -694,19 +694,19 @@ export default function Home() {
                   setSelectedExercise(null);
                 }}
                 className={`w-full py-3 lg:py-4 flex items-center justify-between border-b border-gray-300 hover:scale-105 transition-all group ${
-                  selectedOption === 'calm' ? 'bg-black' : ''
+                  selectedOption === 'calm' ? 'bg-black' : 'bg-gray-100'
                 }`}
               >
                 <div className="flex-1 text-left pl-4">
                   <h2 className={`text-xl lg:text-2xl font-semibold mb-1 ${
-                    selectedOption === 'calm' ? 'text-white' : 'text-black'
+                    selectedOption === 'calm' ? 'text-white' : 'text-gray-400'
                   }`}>Calm</h2>
                   <p className={`text-sm lg:text-base ${
-                    selectedOption === 'calm' ? 'text-gray-300' : 'text-gray-700'
+                    selectedOption === 'calm' ? 'text-gray-300' : 'text-gray-400'
                   }`}>Relax and rejuvenate</p>
                 </div>
                 <svg className={`w-8 h-8 lg:w-9 lg:h-9 transition-transform group-hover:translate-x-2 flex-shrink-0 pr-4 ${
-                  selectedOption === 'calm' ? 'text-white' : 'text-black'
+                  selectedOption === 'calm' ? 'text-white' : 'text-gray-400'
                 }`} fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" d="M9 5l7 7-7 7"/>
                 </svg>
@@ -1287,6 +1287,11 @@ export default function Home() {
                       </button>
                       </div>
                     </div>
+                  </div>
+                ) : selectedOption === 'focus' || selectedOption === 'calm' ? (
+                  /* Development Message for Focus and Calm */
+                  <div className="flex items-center justify-center py-12 text-center">
+                    <p className="text-gray-400 text-sm">Feature is still in development</p>
                   </div>
                 ) : (
                   /* Track List */
