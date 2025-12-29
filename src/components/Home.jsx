@@ -41,9 +41,32 @@ export default function Home() {
       description: 'The 4-7-8 breathing technique, also known as the "Relaxing Breath," is a rhythmic breathing pattern developed by Dr. Andrew Weil. Rooted in the ancient yogic practice of pranayama, it acts as a "natural tranquilizer" for the nervous system by activating the parasympathetic response.',
       sectionTitle: 'Tips',
       sectionContent: [
-        { label: '', text: 'Breathe in normally through your nose.' },
-        { label: 'Position your tongue:', text: 'Place the tip of your tongue against the ridge of tissue just behind your upper front teeth and keep it there throughout the entire exercise.' },
-        { label: 'Create sound:', text: 'Exhale completely through your mouth, making an audible "whoosh" sound as you release the air.' }
+        { label: 'Tongue Placement:', text: 'Keep the tip of your tongue against the ridge of tissue behind your upper front teeth throughout the entire exercise.' },
+        { label: 'Consistency:', text: 'Practice at least twice a day to train your nervous system to respond more quickly over time.' },
+        { label: 'Exhale Sound:', text: 'Create an audible "whoosh" sound by exhaling through your mouth around your tongue or through pursed lips.' },
+        { label: 'Limit Cycles:', text: 'Start with only four breath cycles at a time during your first month of practice before gradually increasing to eight.' }
+      ],
+      preparationTitle: 'Preparation',
+      preparationContent: [
+        { label: 'Be Comfortable:', text: 'Sit with your back straight or lie down if you are using the technique to fall asleep.' },
+        { label: 'Eliminate Distractions:', text: 'Choose a quiet, private space and consider closing your eyes to focus better.' },
+        { label: 'Empty Your Lungs:', text: 'Begin by exhaling completely through your mouth to clear your lungs before starting the first inhale.' },
+        { label: 'Relax Your Body:', text: 'Intentionally relax your shoulders, jaw, and brow to prevent tensing during the breath hold.' }
+      ],
+      whenToUseTitle: 'When to use',
+      whenToUseContent: [
+        { label: 'Before Bed:', text: 'Use it as part of a nighttime routine to quiet a racing mind and fall asleep faster.' },
+        { label: 'During Acute Stress:', text: 'Practice before reacting to upsetting situations or when feeling internal tension.' },
+        { label: 'Anxiety Management:', text: 'Use it to ground yourself during anxiety episodes or panic attacks.' },
+        { label: 'To Curb Cravings:', text: 'It can help manage impulsive emotional responses, such as food cravings or anger.' },
+        { label: 'Daily Resets:', text: 'Incorporate it into your morning or mid-day routine to maintain a lower baseline stress level.' }
+      ],
+      safetyTitle: 'Safety First',
+      safetyContent: [
+        { label: 'Don\'t Overdo It:', text: 'Stick to the recommended four cycles initially to avoid hyperventilating or feeling uncomfortable.' },
+        { label: 'Consult Professionals:', text: 'If you have respiratory conditions (like asthma) or a history of hyperventilation, consult a doctor before trying.' },
+        { label: 'Avoid Focus Tasks:', text: 'Do not practice this while driving or performing any task that requires your full, alert attention.' },
+        { label: 'Listen to Your Body:', text: 'Stop immediately if you feel short of breath or distressed; your comfort dictates the correct pace.' }
       ]
     },
     'Coherent breathing (5-5)': {
@@ -833,8 +856,8 @@ export default function Home() {
                         <span className="text-2xl font-light text-gray-700">+</span>
                       </button>
 
-                      {/* Preparation Tile - Only for Box Breathing */}
-                      {selectedExercise?.name === 'Box Breathing (4-4-4-4)' && (
+                      {/* Preparation Tile - For Box Breathing and 4-7-8 */}
+                      {(selectedExercise?.name === 'Box Breathing (4-4-4-4)' || selectedExercise?.name === '4-7-8 Breathing') && (
                         <button
                           onClick={() => setShowPreparationSheet(true)}
                           className="w-full flex items-center justify-between p-4 border-2 border-gray-300 rounded-xl mb-5 hover:bg-gray-50 transition-colors"
@@ -849,8 +872,8 @@ export default function Home() {
                         </button>
                       )}
 
-                      {/* When to use Tile - Only for Box Breathing */}
-                      {selectedExercise?.name === 'Box Breathing (4-4-4-4)' && (
+                      {/* When to use Tile - For Box Breathing and 4-7-8 */}
+                      {(selectedExercise?.name === 'Box Breathing (4-4-4-4)' || selectedExercise?.name === '4-7-8 Breathing') && (
                         <button
                           onClick={() => setShowWhenToUseSheet(true)}
                           className="w-full flex items-center justify-between p-4 border-2 border-gray-300 rounded-xl mb-5 hover:bg-gray-50 transition-colors"
@@ -865,8 +888,8 @@ export default function Home() {
                         </button>
                       )}
 
-                      {/* Safety Tile - Only for Box Breathing */}
-                      {selectedExercise?.name === 'Box Breathing (4-4-4-4)' && (
+                      {/* Precautions Tile - For Box Breathing and 4-7-8 */}
+                      {(selectedExercise?.name === 'Box Breathing (4-4-4-4)' || selectedExercise?.name === '4-7-8 Breathing') && (
                         <button
                           onClick={() => setShowSafetySheet(true)}
                           className="w-full flex items-center justify-between p-4 border-2 border-gray-300 rounded-xl mb-5 hover:bg-gray-50 transition-colors"
@@ -1123,7 +1146,24 @@ export default function Home() {
 
                             {/* Section Content */}
                             <div className="text-base text-gray-700 mb-6 leading-relaxed">
-                              <p>{exerciseContent[selectedExercise.name]?.safetyContent}</p>
+                              {Array.isArray(exerciseContent[selectedExercise.name]?.safetyContent) ? (
+                                exerciseContent[selectedExercise.name]?.safetyContent.map((item, index) => (
+                                  <div key={index} className={`flex gap-3 ${index > 0 ? 'mt-4' : ''}`}>
+                                    {/* Checkbox with tick mark */}
+                                    <svg className="w-5 h-5 flex-shrink-0 mt-0.5" fill="none" viewBox="0 0 24 24">
+                                      {/* Blue circle */}
+                                      <circle cx="12" cy="12" r="9" stroke="#067AC3" strokeWidth="2" fill="none" />
+                                      {/* Black checkmark */}
+                                      <path d="M9 12l2 2 4-4" stroke="black" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
+                                    </svg>
+                                    <p>
+                                      {item.label && <strong>{item.label}</strong>} {item.text}
+                                    </p>
+                                  </div>
+                                ))
+                              ) : (
+                                <p>{exerciseContent[selectedExercise.name]?.safetyContent}</p>
+                              )}
                             </div>
 
                             {/* Close Button */}
