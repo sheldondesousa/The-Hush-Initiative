@@ -39,6 +39,13 @@ export default function Home() {
   const [selectedCycles, setSelectedCycles] = useState(4);
   const [currentCycle, setCurrentCycle] = useState(0);
 
+  // Auto-start countdown when exercise view loads
+  useEffect(() => {
+    if (selectedOption === 'breathe' && selectedExercise && !showingInfo && countdown === null && !isExercising) {
+      setCountdown(3);
+    }
+  }, [showingInfo, selectedExercise, selectedOption, countdown, isExercising]);
+
   // Countdown effect
   useEffect(() => {
     if (countdown === null || isPaused) return;
