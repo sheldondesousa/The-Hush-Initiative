@@ -558,20 +558,21 @@ export default function Home() {
     // Box size (40x40 px squares)
     const boxSize = 40;
 
-    // Blue gradient colors (for boxes 0-5)
+    // Blue gradient colors (for boxes 0-5) - progressively lighter from dark to light blue
+    // Using the same blue (#067AC3) as breathing circles, creating gradient effect
     const blueGradients = [
-      'linear-gradient(135deg, #067AC3 0%, #045a91 100%)',
-      'linear-gradient(135deg, #0892D0 0%, #067AC3 100%)',
-      'linear-gradient(135deg, #067AC3 0%, #045a91 100%)',
-      'linear-gradient(135deg, #0892D0 0%, #067AC3 100%)',
-      'linear-gradient(135deg, #067AC3 0%, #045a91 100%)',
-      'linear-gradient(135deg, #0892D0 0%, #067AC3 100%)'
+      '#045a91',  // Darkest blue (box 1)
+      '#0568A6',  // Dark blue (box 2)
+      '#067AC3',  // Medium blue (box 3)
+      '#0892D0',  // Light blue (box 4)
+      '#3AA8DB',  // Lighter blue (box 5)
+      '#6EC1E4'   // Very light blue (box 6)
     ];
 
-    // Green gradient colors (for boxes 6-7)
+    // Green gradient colors (for boxes 6-7) - 2 light green shades continuing the progression
     const greenGradients = [
-      'linear-gradient(135deg, #10B981 0%, #059669 100%)',
-      'linear-gradient(135deg, #34D399 0%, #10B981 100%)'
+      '#6EE7B7',  // Light green (box 7)
+      '#A7F3D0'   // Very light green (box 8)
     ];
 
     for (let i = 0; i < boxCount; i++) {
