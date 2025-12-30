@@ -1635,7 +1635,7 @@ export default function Home() {
                                   <div
                                     className="w-full"
                                     style={{
-                                      height: `${breathingPhase === 'inhale' ? 100 : getPhysiologicalFillWidth()}%`,
+                                      height: `${breathingPhase === 'exhale' ? getPhysiologicalFillWidth() : 0}%`,
                                       background: `linear-gradient(to top,
                                         #045a91 0%,
                                         #0568A6 12.5%,
@@ -1647,7 +1647,7 @@ export default function Home() {
                                         #6EE7B7 87.5%,
                                         #A7F3D0 100%
                                       )`,
-                                      transition: 'height 1000ms linear',
+                                      transition: `height ${breathingPhase === 'exhale' && timer === 8 ? '0' : '1000'}ms linear`,
                                       borderRadius: '4px'
                                     }}
                                   />
