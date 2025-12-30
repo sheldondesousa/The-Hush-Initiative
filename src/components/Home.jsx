@@ -897,7 +897,12 @@ export default function Home() {
 
                       {/* Description */}
                       <p className="text-base text-gray-700 mb-6 leading-relaxed whitespace-pre-line">
-                        {exerciseContent[selectedExercise.name]?.description || 'Exercise description not available.'}
+                        {(exerciseContent[selectedExercise.name]?.description || 'Exercise description not available.').split('\n').map((line, index) => (
+                          <span key={index}>
+                            {line.trim().startsWith('Suggested:') ? <strong>{line}</strong> : line}
+                            {index < (exerciseContent[selectedExercise.name]?.description || '').split('\n').length - 1 && '\n'}
+                          </span>
+                        ))}
                       </p>
 
                       {/* Tips Tile */}
