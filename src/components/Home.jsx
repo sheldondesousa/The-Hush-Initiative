@@ -35,7 +35,12 @@ export default function Home() {
         { label: 'Before Bedtime:', text: 'Perform a few cycles to quiet a racing mind and lower your heart rate for better sleep.' }
       ],
       safetyTitle: 'Safety First',
-      safetyContent: 'Consult a doctor before practicing if you are pregnant, have a heart condition, or suffer from severe respiratory issues. Stop immediately if you feel dizzy or lightheaded, and return to your normal breathing rhythm.'
+      safetyContent: [
+        { label: 'Don\'t Overdo It:', text: 'Stick to fewer cycles or shorter time ranges initially and build momentum and capacity with more experience.' },
+        { label: 'Consult Professionals:', text: 'If you have respiratory conditions (like asthma) or a history of hyperventilation, consult a doctor before trying.' },
+        { label: 'Avoid Focus Tasks:', text: 'Do not practice this while driving or performing any task that requires your full, alert attention.' },
+        { label: 'Listen to Your Body:', text: 'Stop immediately if you feel short of breath or distressed; your comfort dictates the correct pace.' }
+      ]
     },
     '4-7-8 Breathing': {
       description: 'The 4-7-8 breathing technique, also known as the "Relaxing Breath," is a rhythmic breathing pattern. Rooted in the ancient yogic practice of pranayama, it acts as a "natural tranquilizer" for the nervous system by activating the parasympathetic response.',
@@ -63,7 +68,7 @@ export default function Home() {
       ],
       safetyTitle: 'Safety First',
       safetyContent: [
-        { label: 'Don\'t Overdo It:', text: 'Stick to the recommended four cycles initially to avoid hyperventilating or feeling uncomfortable.' },
+        { label: 'Don\'t Overdo It:', text: 'Stick to fewer cycles or shorter time ranges initially and build momentum and capacity with more experience.' },
         { label: 'Consult Professionals:', text: 'If you have respiratory conditions (like asthma) or a history of hyperventilation, consult a doctor before trying.' },
         { label: 'Avoid Focus Tasks:', text: 'Do not practice this while driving or performing any task that requires your full, alert attention.' },
         { label: 'Listen to Your Body:', text: 'Stop immediately if you feel short of breath or distressed; your comfort dictates the correct pace.' }
@@ -78,6 +83,13 @@ export default function Home() {
         { label: 'Engage Your Diaphragm:', text: 'Focus on your belly gently expanding on the inhale and contracting on the exhale, rather than your upper chest.' },
         { label: 'Relax:', text: 'Release tension in your face, neck, shoulders, and body.' },
         { label: 'Focus on the Sensation:', text: 'Acknowledge stray thoughts and return your attention to the feeling of your breath.' }
+      ],
+      safetyTitle: 'Safety First',
+      safetyContent: [
+        { label: 'Don\'t Overdo It:', text: 'Stick to fewer cycles or shorter time ranges initially and build momentum and capacity with more experience.' },
+        { label: 'Consult Professionals:', text: 'If you have respiratory conditions (like asthma) or a history of hyperventilation, consult a doctor before trying.' },
+        { label: 'Avoid Focus Tasks:', text: 'Do not practice this while driving or performing any task that requires your full, alert attention.' },
+        { label: 'Listen to Your Body:', text: 'Stop immediately if you feel short of breath or distressed; your comfort dictates the correct pace.' }
       ]
     }
   };
@@ -888,8 +900,8 @@ export default function Home() {
                         </button>
                       )}
 
-                      {/* Precautions Tile - For Box Breathing and 4-7-8 */}
-                      {(selectedExercise?.name === 'Box Breathing (4-4-4-4)' || selectedExercise?.name === '4-7-8 Breathing') && (
+                      {/* Precautions Tile - For all breathing exercises */}
+                      {(selectedExercise?.name === 'Box Breathing (4-4-4-4)' || selectedExercise?.name === '4-7-8 Breathing' || selectedExercise?.name === 'Coherent breathing (5-5)') && (
                         <button
                           onClick={() => setShowSafetySheet(true)}
                           className="w-full flex items-center justify-between p-4 border-2 border-gray-300 rounded-xl mb-5 hover:bg-gray-50 transition-colors"
