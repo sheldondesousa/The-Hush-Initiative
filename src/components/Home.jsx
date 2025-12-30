@@ -550,36 +550,38 @@ export default function Home() {
     return 0;
   };
 
-  // Get box data for Physiological Sigh
+  // Get column data for Physiological Sigh
   const getBoxDataPhysiological = () => {
     const boxCount = getVisibleBoxCountPhysiological();
     const boxes = [];
 
-    // Box size (40x40 px squares)
-    const boxSize = 40;
+    // Column dimensions (vertical rectangles)
+    const columnWidth = 35;
+    const columnHeight = 120;
 
-    // Blue gradient colors (for boxes 0-5) - progressively lighter from dark to light blue
+    // Blue gradient colors (for columns 0-5) - progressively lighter from dark to light blue
     // Using the same blue (#067AC3) as breathing circles, creating gradient effect
     const blueGradients = [
-      '#045a91',  // Darkest blue (box 1)
-      '#0568A6',  // Dark blue (box 2)
-      '#067AC3',  // Medium blue (box 3)
-      '#0892D0',  // Light blue (box 4)
-      '#3AA8DB',  // Lighter blue (box 5)
-      '#6EC1E4'   // Very light blue (box 6)
+      '#045a91',  // Darkest blue (column 1)
+      '#0568A6',  // Dark blue (column 2)
+      '#067AC3',  // Medium blue (column 3)
+      '#0892D0',  // Light blue (column 4)
+      '#3AA8DB',  // Lighter blue (column 5)
+      '#6EC1E4'   // Very light blue (column 6)
     ];
 
-    // Green gradient colors (for boxes 6-7) - 2 light green shades continuing the progression
+    // Green gradient colors (for columns 6-7) - 2 light green shades continuing the progression
     const greenGradients = [
-      '#6EE7B7',  // Light green (box 7)
-      '#A7F3D0'   // Very light green (box 8)
+      '#6EE7B7',  // Light green (column 7)
+      '#A7F3D0'   // Very light green (column 8)
     ];
 
     for (let i = 0; i < boxCount; i++) {
       const isGreen = i >= 6;
       boxes.push({
-        size: boxSize,
-        gradient: isGreen ? greenGradients[i - 6] : blueGradients[i],
+        width: columnWidth,
+        height: columnHeight,
+        color: isGreen ? greenGradients[i - 6] : blueGradients[i],
         key: i,
         isGreen: isGreen
       });
@@ -1606,30 +1608,31 @@ export default function Home() {
                         <>
                           {/* Breathing Box Illustration - Physiological Sigh */}
                           <div className="flex-1 flex items-center justify-center w-full relative">
-                            {/* Gray Border Box Container */}
+                            {/* Gray Border Box Container with columns */}
                             <div
-                              className="border-4 border-gray-300 rounded-3xl p-6 flex flex-wrap gap-2 items-center justify-center"
-                              style={{ width: '360px', minHeight: '200px' }}
+                              className="border-4 border-gray-300 rounded-3xl p-6 flex items-center justify-center"
+                              style={{ width: '360px', height: '180px' }}
                             >
-                              {/* Render gradient boxes */}
-                              {getBoxDataPhysiological().map((box, index) => (
-                                <div key={box.key} className="flex items-center">
+                              {/* Render gradient columns */}
+                              {getBoxDataPhysiological().map((column, index) => (
+                                <div key={column.key} className="flex items-center">
+                                  {/* Vertical column */}
                                   <div
-                                    className="transition-all duration-500 ease-in-out rounded-lg"
+                                    className="transition-all duration-500 ease-in-out"
                                     style={{
-                                      width: `${box.size}px`,
-                                      height: `${box.size}px`,
-                                      background: box.gradient,
-                                      boxShadow: '0 2px 4px rgba(0,0,0,0.1)'
+                                      width: `${column.width}px`,
+                                      height: `${column.height}px`,
+                                      backgroundColor: column.color,
+                                      borderRadius: '4px'
                                     }}
                                   />
-                                  {/* Black divider line between 6th blue and 1st green box */}
+                                  {/* Black divider line between 6th blue and 1st green column */}
                                   {index === 5 && getBoxDataPhysiological().length > 6 && (
                                     <div
-                                      className="mx-2"
+                                      className="mx-1"
                                       style={{
                                         width: '2px',
-                                        height: '50px',
+                                        height: '120px',
                                         backgroundColor: 'black'
                                       }}
                                     />
