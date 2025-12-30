@@ -1584,42 +1584,80 @@ export default function Home() {
                           </div>
                         </>
                       ) : selectedExercise?.name === 'Physiological Sigh' ? (
-                        /* Physiological Sigh Box Animation */
+                        /* Physiological Sigh Dual Container Animation */
                         <>
                           {/* Breathing Box Illustration - Physiological Sigh */}
                           <div className="flex-1 flex items-center justify-center w-full relative">
-                            {/* Gray Border Container */}
-                            <div
-                              className="border-4 border-gray-300 rounded-3xl flex items-center overflow-hidden"
-                              style={{ width: '360px', height: '360px', padding: '2px' }}
-                            >
-                              {/* Smooth gradient fill bar */}
-                              <div
-                                className="h-full"
-                                style={{
-                                  width: `${getPhysiologicalFillWidth()}%`,
-                                  background: `linear-gradient(to right,
-                                    #045a91 0%,
-                                    #0568A6 12.5%,
-                                    #067AC3 25%,
-                                    #0892D0 37.5%,
-                                    #3AA8DB 50%,
-                                    #6EC1E4 62.5%,
-                                    #6EC1E4 75%,
-                                    #6EE7B7 87.5%,
-                                    #A7F3D0 100%
-                                  )`,
-                                  transition: 'width 1000ms linear',
-                                  borderRadius: '4px'
-                                }}
-                              />
-                            </div>
+                            {/* Two containers side by side */}
+                            <div className="flex gap-4">
+                              {/* First Container - INHALE (fills bottom to top) */}
+                              <div className="flex flex-col">
+                                <div
+                                  className="border-4 border-gray-300 rounded-3xl flex flex-col justify-end overflow-hidden"
+                                  style={{ width: '175px', height: '360px', padding: '2px' }}
+                                >
+                                  {/* Vertical gradient fill bar */}
+                                  <div
+                                    className="w-full"
+                                    style={{
+                                      height: `${breathingPhase === 'inhale' ? getPhysiologicalFillWidth() : 0}%`,
+                                      background: `linear-gradient(to top,
+                                        #045a91 0%,
+                                        #0568A6 12.5%,
+                                        #067AC3 25%,
+                                        #0892D0 37.5%,
+                                        #3AA8DB 50%,
+                                        #6EC1E4 62.5%,
+                                        #6EC1E4 75%,
+                                        #6EE7B7 87.5%,
+                                        #A7F3D0 100%
+                                      )`,
+                                      transition: 'height 1000ms linear',
+                                      borderRadius: '4px'
+                                    }}
+                                  />
+                                </div>
+                                {/* INHALE Label */}
+                                <div className="text-center mt-4">
+                                  <div className="text-lg font-semibold text-gray-800 uppercase tracking-wider">
+                                    INHALE
+                                  </div>
+                                </div>
+                              </div>
 
-                            {/* Phase Text - Below the box */}
-                            <div className="absolute" style={{ bottom: '-60px' }}>
-                              <div className="text-lg font-semibold text-gray-800 uppercase tracking-wider">
-                                {breathingPhase === 'inhale' && 'INHALE'}
-                                {breathingPhase === 'exhale' && 'EXHALE'}
+                              {/* Second Container - EXHALE (empties top to bottom) */}
+                              <div className="flex flex-col">
+                                <div
+                                  className="border-4 border-gray-300 rounded-3xl flex flex-col justify-end overflow-hidden"
+                                  style={{ width: '175px', height: '360px', padding: '2px' }}
+                                >
+                                  {/* Vertical gradient fill bar */}
+                                  <div
+                                    className="w-full"
+                                    style={{
+                                      height: `${breathingPhase === 'exhale' ? getPhysiologicalFillWidth() : 0}%`,
+                                      background: `linear-gradient(to top,
+                                        #045a91 0%,
+                                        #0568A6 12.5%,
+                                        #067AC3 25%,
+                                        #0892D0 37.5%,
+                                        #3AA8DB 50%,
+                                        #6EC1E4 62.5%,
+                                        #6EC1E4 75%,
+                                        #6EE7B7 87.5%,
+                                        #A7F3D0 100%
+                                      )`,
+                                      transition: 'height 1000ms linear',
+                                      borderRadius: '4px'
+                                    }}
+                                  />
+                                </div>
+                                {/* EXHALE Label */}
+                                <div className="text-center mt-4">
+                                  <div className="text-lg font-semibold text-gray-800 uppercase tracking-wider">
+                                    EXHALE
+                                  </div>
+                                </div>
                               </div>
                             </div>
                           </div>
