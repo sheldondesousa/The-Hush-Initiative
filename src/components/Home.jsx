@@ -549,44 +549,21 @@ export default function Home() {
     return 0;
   };
 
-  // Get column data for Physiological Sigh
-  const getBoxDataPhysiological = () => {
-    const boxCount = getVisibleBoxCountPhysiological();
-    const boxes = [];
+  // Get gradient fill width for Physiological Sigh (like Coherent Breathing)
+  const getPhysiologicalFillWidth = () => {
+    if (!isExercising) return 0;
 
-    // Column dimensions (tall vertical bars)
-    const columnWidth = 28;
-    const columnHeight = 140;
-
-    // Blue gradient colors (for columns 0-5) - progressively lighter from dark to light blue
-    // Using the same blue (#067AC3) as breathing circles, creating gradient effect
-    const blueGradients = [
-      '#045a91',  // Darkest blue (column 1)
-      '#0568A6',  // Dark blue (column 2)
-      '#067AC3',  // Medium blue (column 3)
-      '#0892D0',  // Light blue (column 4)
-      '#3AA8DB',  // Lighter blue (column 5)
-      '#6EC1E4'   // Very light blue (column 6)
-    ];
-
-    // Green gradient colors (for columns 6-7) - 2 light green shades continuing the progression
-    const greenGradients = [
-      '#6EE7B7',  // Light green (column 7)
-      '#A7F3D0'   // Very light green (column 8)
-    ];
-
-    for (let i = 0; i < boxCount; i++) {
-      const isGreen = i >= 6;
-      boxes.push({
-        width: columnWidth,
-        height: columnHeight,
-        color: isGreen ? greenGradients[i - 6] : blueGradients[i],
-        key: i,
-        isGreen: isGreen
-      });
+    if (breathingPhase === 'inhale') {
+      // INHALE: timer 0-40 (4 seconds)
+      const progress = timer / 40; // 0 to 1
+      return progress * 100; // 0% to 100%
+    } else if (breathingPhase === 'exhale') {
+      // EXHALE: timer 80-0 (8 seconds)
+      const progress = timer / 80; // 1 to 0
+      return progress * 100; // 100% to 0%
     }
 
-    return boxes;
+    return 0;
   };
 
   // Generate 4-7-8 wave path: rise → plateau → decline
@@ -1607,38 +1584,31 @@ export default function Home() {
                         <>
                           {/* Breathing Box Illustration - Physiological Sigh */}
                           <div className="flex-1 flex items-center justify-center w-full relative">
-                            {/* Gray Border Box Container with columns */}
+                            {/* Gray Border Container */}
                             <div
-                              className="border-4 border-gray-300 rounded-3xl p-6 flex items-center justify-start gap-0"
-                              style={{ width: '340px', height: '200px' }}
+                              className="border-4 border-gray-300 rounded-3xl flex items-center overflow-hidden"
+                              style={{ width: '360px', height: '200px', padding: '2px' }}
                             >
-                              {/* Render gradient columns */}
-                              {getBoxDataPhysiological().map((column, index) => (
-                                <>
-                                  {/* Vertical column */}
-                                  <div
-                                    key={column.key}
-                                    className="transition-all duration-100 ease-linear"
-                                    style={{
-                                      width: `${column.width}px`,
-                                      height: `${column.height}px`,
-                                      backgroundColor: column.color,
-                                      borderRadius: '2px'
-                                    }}
-                                  />
-                                  {/* Black divider line between 6th blue and 1st green column */}
-                                  {index === 5 && getBoxDataPhysiological().length > 6 && (
-                                    <div
-                                      style={{
-                                        width: '3px',
-                                        height: '140px',
-                                        backgroundColor: 'black',
-                                        margin: '0 2px'
-                                      }}
-                                    />
-                                  )}
-                                </>
-                              ))}
+                              {/* Smooth gradient fill bar */}
+                              <div
+                                className="h-full"
+                                style={{
+                                  width: `${getPhysiologicalFillWidth()}%`,
+                                  background: `linear-gradient(to right,
+                                    #045a91 0%, #045a91 12.5%,
+                                    #0568A6 12.5%, #0568A6 25%,
+                                    #067AC3 25%, #067AC3 37.5%,
+                                    #0892D0 37.5%, #0892D0 50%,
+                                    #3AA8DB 50%, #3AA8DB 62.5%,
+                                    #6EC1E4 62.5%, #6EC1E4 75%,
+                                    black 75%, black 75.5%,
+                                    #6EE7B7 75.5%, #6EE7B7 87.5%,
+                                    #A7F3D0 87.5%, #A7F3D0 100%
+                                  )`,
+                                  transition: 'width 100ms linear',
+                                  borderRadius: '4px'
+                                }}
+                              />
                             </div>
 
                             {/* Phase Text - Below the box */}
