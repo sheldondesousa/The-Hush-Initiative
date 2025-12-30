@@ -1625,21 +1625,21 @@ export default function Home() {
                                   <div
                                     className="w-full"
                                     style={{
-                                      height: `${getPhysiologicalGreenHeight()}%`,
+                                      height: breathingPhase === 'inhale' ? `${getPhysiologicalGreenHeight()}%` : '25%',
                                       background: `linear-gradient(to top,
                                         #6EE7B7 0%,
                                         #A7F3D0 100%
                                       )`,
                                       transition: breathingPhase === 'inhale' ? 'height 1000ms linear' : 'opacity 500ms ease-out',
                                       opacity: breathingPhase === 'inhale' ? 1 : 0,
-                                      borderRadius: '4px'
+                                      borderRadius: '20px'
                                     }}
                                   />
                                   {/* Blue gradient fill bar (0-3 seconds, bottom layer) */}
                                   <div
                                     className="w-full"
                                     style={{
-                                      height: `${getPhysiologicalBlueHeight()}%`,
+                                      height: breathingPhase === 'inhale' ? `${getPhysiologicalBlueHeight()}%` : '75%',
                                       background: `linear-gradient(to top,
                                         #045a91 0%,
                                         #0568A6 16.67%,
@@ -1651,7 +1651,7 @@ export default function Home() {
                                       )`,
                                       transition: breathingPhase === 'inhale' ? 'height 1000ms linear' : 'opacity 500ms ease-out',
                                       opacity: breathingPhase === 'inhale' ? 1 : 0,
-                                      borderRadius: '4px'
+                                      borderRadius: '20px'
                                     }}
                                   />
                                 </div>
@@ -1686,7 +1686,7 @@ export default function Home() {
                                         #A7F3D0 100%
                                       )`,
                                       transition: `height ${breathingPhase === 'exhale' && timer === 8 ? '0' : '1000'}ms linear`,
-                                      borderRadius: '4px'
+                                      borderRadius: '20px'
                                     }}
                                   />
                                 </div>
