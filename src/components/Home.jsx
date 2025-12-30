@@ -106,7 +106,7 @@ export default function Home() {
       ]
     },
     'Physiological Sigh': {
-      description: 'The physiological sigh is a science-backed breathing technique featuring a double inhale (1 long, 1 short) followed by a long, slow exhale. It is designed to rapidly offload carbon dioxide and trigger the parasympathetic nervous system for stress relief. Suggested: Total inhale of 4 seconds.',
+      description: 'The physiological sigh is a science-backed breathing technique featuring a double inhale (1 long, 1 short) followed by a long, slow exhale. It is designed to rapidly offload carbon dioxide and trigger the parasympathetic nervous system for stress relief.\n\nSuggested: Total inhale of 4 seconds.',
       sectionTitle: 'Tips',
       sectionContent: [
         { label: 'The "Second Sip":', text: 'Make the second inhale short and sharp to fully pop open the tiny air sacs (alveoli) in the lungs.' },
@@ -896,7 +896,7 @@ export default function Home() {
                       </h1>
 
                       {/* Description */}
-                      <p className="text-base text-gray-700 mb-6 leading-relaxed">
+                      <p className="text-base text-gray-700 mb-6 leading-relaxed whitespace-pre-line">
                         {exerciseContent[selectedExercise.name]?.description || 'Exercise description not available.'}
                       </p>
 
@@ -964,50 +964,52 @@ export default function Home() {
                     </div>
 
                     {/* Cycle Selector - Static position */}
-                    <div className="px-2 mb-[50px]">
-                      <div className="flex flex-col items-center gap-2">
-                        <span className="text-sm text-gray-600 font-medium">
-                          {selectedExercise?.name === 'Coherent breathing (5-5)' ? 'Select Time' : 'Select Cycles'}
-                        </span>
-                        <div className="flex gap-3">
-                          {selectedExercise?.name === 'Coherent breathing (5-5)' ? (
-                            // Time options for Coherent Breathing (1 min = 6 cycles, 2 min = 12 cycles, 3 min = 18 cycles)
-                            [
-                              { time: '1 min', cycles: 6 },
-                              { time: '2 min', cycles: 12 },
-                              { time: '3 min', cycles: 18 }
-                            ].map((option) => (
-                              <button
-                                key={option.cycles}
-                                onClick={() => setSelectedCycles(option.cycles)}
-                                className={`px-4 h-12 rounded-full text-base font-bold transition-all whitespace-nowrap ${
-                                  selectedCycles === option.cycles
-                                    ? 'bg-black text-white shadow-lg'
-                                    : 'bg-gray-200 text-gray-700 hover:bg-gray-300'
-                                }`}
-                              >
-                                {option.time}
-                              </button>
-                            ))
-                          ) : (
-                            // Cycle options for other exercises
-                            [4, 8, 12].map((cycles) => (
-                              <button
-                                key={cycles}
-                                onClick={() => setSelectedCycles(cycles)}
-                                className={`w-12 h-12 rounded-full text-base font-bold transition-all ${
-                                  selectedCycles === cycles
-                                    ? 'bg-black text-white shadow-lg'
-                                    : 'bg-gray-200 text-gray-700 hover:bg-gray-300'
-                                }`}
-                              >
-                                {cycles}
-                              </button>
-                            ))
-                          )}
+                    {selectedExercise?.name !== 'Physiological Sigh' && (
+                      <div className="px-2 mb-[50px]">
+                        <div className="flex flex-col items-center gap-2">
+                          <span className="text-sm text-gray-600 font-medium">
+                            {selectedExercise?.name === 'Coherent breathing (5-5)' ? 'Select Time' : 'Select Cycles'}
+                          </span>
+                          <div className="flex gap-3">
+                            {selectedExercise?.name === 'Coherent breathing (5-5)' ? (
+                              // Time options for Coherent Breathing (1 min = 6 cycles, 2 min = 12 cycles, 3 min = 18 cycles)
+                              [
+                                { time: '1 min', cycles: 6 },
+                                { time: '2 min', cycles: 12 },
+                                { time: '3 min', cycles: 18 }
+                              ].map((option) => (
+                                <button
+                                  key={option.cycles}
+                                  onClick={() => setSelectedCycles(option.cycles)}
+                                  className={`px-4 h-12 rounded-full text-base font-bold transition-all whitespace-nowrap ${
+                                    selectedCycles === option.cycles
+                                      ? 'bg-black text-white shadow-lg'
+                                      : 'bg-gray-200 text-gray-700 hover:bg-gray-300'
+                                  }`}
+                                >
+                                  {option.time}
+                                </button>
+                              ))
+                            ) : (
+                              // Cycle options for other exercises
+                              [4, 8, 12].map((cycles) => (
+                                <button
+                                  key={cycles}
+                                  onClick={() => setSelectedCycles(cycles)}
+                                  className={`w-12 h-12 rounded-full text-base font-bold transition-all ${
+                                    selectedCycles === cycles
+                                      ? 'bg-black text-white shadow-lg'
+                                      : 'bg-gray-200 text-gray-700 hover:bg-gray-300'
+                                  }`}
+                                >
+                                  {cycles}
+                                </button>
+                              ))
+                            )}
+                          </div>
                         </div>
                       </div>
-                    </div>
+                    )}
 
                     {/* Start Exercise Button - Static position */}
                     <div className="px-2 pb-4">
