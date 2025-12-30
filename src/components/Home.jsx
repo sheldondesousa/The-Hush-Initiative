@@ -110,7 +110,7 @@ export default function Home() {
       sectionTitle: 'Tips',
       sectionContent: [
         { label: 'The "Second Sip":', text: 'Make the second inhale short and sharp to fully pop open the tiny air sacs (alveoli) in the lungs.' },
-        { label: 'Slow Exhale:', text: 'Aim to make the exhale roughly twice as long as the combined inhales to maximize the calming effect.' },
+        { label: 'Slow Exhale:', text: 'Exhale through the mouth. Aim to make the exhale roughly twice as long as the combined inhales to maximize the calming effect.' },
         { label: 'Nose for Inhaling:', text: 'Use your nose for both inhales whenever possible to better regulate air intake.' },
         { label: 'Minimal Repetition:', text: 'You typically only need 1 to 3 cycles to feel a noticeable reduction in autonomic arousal.' },
         { label: 'Consistency:', text: 'While effective for immediate relief, practicing for 5 minutes daily can improve long-term mood and respiratory health.' }
