@@ -217,8 +217,8 @@ export default function Home() {
       // Coherent: INHALE=5s (50 counts, 100ms), EXHALE=5s (50 counts, 100ms) for smooth animation
       intervalDuration = 100; // 100ms for smooth transitions
     } else if (isPhysiological) {
-      // Physiological Sigh: INHALE=4s (5 counts: 0-4, 1000ms), EXHALE=8s (9 counts: 8-0, 1000ms)
-      intervalDuration = 1000; // 1000ms per count for both phases
+      // Physiological Sigh: INHALE=4s (40 counts, 100ms), EXHALE=8s (80 counts, 100ms) for smooth animation
+      intervalDuration = 100; // 100ms for smooth fluid transitions
     } else {
       // Box breathing: all phases use same interval pattern
       // INHALE and EXHALE: 5 counts (0-4) over 4 seconds = 800ms per count
@@ -304,17 +304,17 @@ export default function Home() {
         } else if (isPhysiological) {
           // Physiological Sigh pattern
           if (breathingPhase === 'inhale') {
-            // INHALE: 0-1-2-3-4 (5 counts over 4s, 1s per count)
-            // Timer 1: 2 blue bars, Timer 2: 4 blue bars, Timer 3: 6 blue bars (all blue complete)
-            // Timer 4: 8 bars (6 blue + 2 green)
-            if (prevTimer < 4) {
+            // INHALE: 0-40 (40 counts over 4s, 100ms per count)
+            // Smooth progression: columns appear gradually from left to right
+            if (prevTimer < 40) {
               return prevTimer + 1;
             } else {
               setBreathingPhase('exhale');
-              return 8; // Start EXHALE at 8
+              return 80; // Start EXHALE at 80
             }
           } else if (breathingPhase === 'exhale') {
-            // EXHALE: 8-7-6-5-4-3-2-1-0 (9 counts over 8s, remove 1 bar per second)
+            // EXHALE: 80-0 (80 counts over 8s, 100ms per count)
+            // Smooth progression: columns disappear gradually from right to left
             if (prevTimer > 0) {
               return prevTimer - 1;
             } else {
@@ -534,16 +534,17 @@ export default function Home() {
   // Get box count for Physiological Sigh
   const getVisibleBoxCountPhysiological = () => {
     if (breathingPhase === 'inhale') {
-      // INHALE: timer 0-1-2-3-4 (5 counts over 4s)
-      // Timer 0: 0 bars, Timer 1: 2 bars, Timer 2: 4 bars, Timer 3: 6 bars (all blue), Timer 4: 8 bars (6 blue + 2 green)
-      if (timer === 0) return 0;
-      else if (timer === 1) return 2;
-      else if (timer === 2) return 4;
-      else if (timer === 3) return 6;
-      else return 8; // timer 4
+      // INHALE: timer 0-40 (40 counts over 4s, 100ms per count)
+      // Smooth progression from 0 to 8 columns
+      // At timer 30 (3s): 6 columns (all blue)
+      // At timer 40 (4s): 8 columns (6 blue + 2 green)
+      const columnCount = Math.floor((timer / 40) * 8);
+      return Math.min(columnCount, 8);
     } else if (breathingPhase === 'exhale') {
-      // EXHALE: timer 8→0 shows 8,7,6,5,4,3,2,1,0 bars (remove 1 bar per second)
-      return timer;
+      // EXHALE: timer 80→0 (80 counts over 8s, 100ms per count)
+      // Smooth progression from 8 to 0 columns
+      const columnCount = Math.floor((timer / 80) * 8);
+      return Math.max(columnCount, 0);
     }
     return 0;
   };
@@ -1617,7 +1618,7 @@ export default function Home() {
                                   {/* Vertical column */}
                                   <div
                                     key={column.key}
-                                    className="transition-all duration-500 ease-in-out"
+                                    className="transition-all duration-100 ease-linear"
                                     style={{
                                       width: `${column.width}px`,
                                       height: `${column.height}px`,
