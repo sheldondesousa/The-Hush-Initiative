@@ -36,7 +36,7 @@ export default function Home() {
       ],
       safetyTitle: 'Safety First',
       safetyContent: [
-        { label: 'Don\'t Overdo It:', text: 'Stick to fewer cycles or shorter time ranges initially and build momentum and capacity with more experience.' },
+        { label: 'Don\'t Overdo It:', text: 'Stick to fewer cycles or shorter time ranges initially. Build momentum as you gain experience.' },
         { label: 'Consult Professionals:', text: 'If you have respiratory conditions (like asthma) or a history of hyperventilation, consult a doctor before trying.' },
         { label: 'Avoid Focus Tasks:', text: 'Do not practice this while driving or performing any task that requires your full, alert attention.' },
         { label: 'Listen to Your Body:', text: 'Stop immediately if you feel short of breath or distressed; your comfort dictates the correct pace.' }
@@ -68,7 +68,7 @@ export default function Home() {
       ],
       safetyTitle: 'Safety First',
       safetyContent: [
-        { label: 'Don\'t Overdo It:', text: 'Stick to fewer cycles or shorter time ranges initially and build momentum and capacity with more experience.' },
+        { label: 'Don\'t Overdo It:', text: 'Stick to fewer cycles or shorter time ranges initially. Build momentum as you gain experience.' },
         { label: 'Consult Professionals:', text: 'If you have respiratory conditions (like asthma) or a history of hyperventilation, consult a doctor before trying.' },
         { label: 'Avoid Focus Tasks:', text: 'Do not practice this while driving or performing any task that requires your full, alert attention.' },
         { label: 'Listen to Your Body:', text: 'Stop immediately if you feel short of breath or distressed; your comfort dictates the correct pace.' }
@@ -86,7 +86,7 @@ export default function Home() {
       ],
       safetyTitle: 'Safety First',
       safetyContent: [
-        { label: 'Don\'t Overdo It:', text: 'Stick to fewer cycles or shorter time ranges initially and build momentum and capacity with more experience.' },
+        { label: 'Don\'t Overdo It:', text: 'Stick to fewer cycles or shorter time ranges initially. Build momentum as you gain experience.' },
         { label: 'Consult Professionals:', text: 'If you have respiratory conditions (like asthma) or a history of hyperventilation, consult a doctor before trying.' },
         { label: 'Avoid Focus Tasks:', text: 'Do not practice this while driving or performing any task that requires your full, alert attention.' },
         { label: 'Listen to Your Body:', text: 'Stop immediately if you feel short of breath or distressed; your comfort dictates the correct pace.' }
