@@ -304,17 +304,17 @@ export default function Home() {
         } else if (isPhysiological) {
           // Physiological Sigh pattern
           if (breathingPhase === 'inhale') {
-            // INHALE: 0-4 (4 counts over 4s, 1s per count)
-            // 0-3: Blue gradient (3 seconds)
-            // 3-4: Green gradient (1 second)
-            if (prevTimer < 4) {
+            // INHALE: 0-3 (4 counts over 4s, 1s per count)
+            // 0-2: Blue gradient (3 seconds)
+            // 3: Green gradient (1 second)
+            if (prevTimer < 3) {
               return prevTimer + 1;
             } else {
               setBreathingPhase('exhale');
-              return 8; // Start EXHALE at 8
+              return 7; // Start EXHALE at 7
             }
           } else if (breathingPhase === 'exhale') {
-            // EXHALE: 8-0 (8 counts over 8s, 1s per count)
+            // EXHALE: 7-0 (8 counts over 8s, 1s per count)
             // Slow decrease from right to left
             if (prevTimer > 0) {
               return prevTimer - 1;
@@ -555,43 +555,44 @@ export default function Home() {
     if (!isExercising) return 0;
 
     if (breathingPhase === 'inhale') {
-      // INHALE: timer 0-4 (4 seconds, 1s intervals)
-      // Timer 0-3: Blue fills to 75%
-      // Timer 3-4: Green fills from 75% to 100%
-      const progress = timer / 4; // 0 to 1
+      // INHALE: timer 0-3 (4 seconds, 1s intervals)
+      // Timer 0-2: Blue fills to 75%
+      // Timer 3: Green fills from 75% to 100%
+      const progress = timer / 3; // 0 to 1
       return progress * 100; // 0% to 100%
     } else if (breathingPhase === 'exhale') {
-      // EXHALE: timer 8-0 (8 seconds, 1s intervals)
+      // EXHALE: timer 7-0 (8 seconds, 1s intervals)
       // Slow decrease from 100% to 0%
-      const progress = timer / 8; // 1 to 0
+      const progress = timer / 7; // 1 to 0
       return progress * 100; // 100% to 0%
     }
 
     return 0;
   };
 
-  // Get blue gradient height for Physiological Sigh INHALE (0-3 seconds)
+  // Get blue gradient height for Physiological Sigh INHALE (0-2 seconds)
   const getPhysiologicalBlueHeight = () => {
     if (!isExercising || breathingPhase !== 'inhale') return 0;
 
-    if (timer <= 3) {
-      // Fill to 75% of container over 3 seconds
-      return (timer / 3) * 75;
+    if (timer < 3) {
+      // Fill to 75% of container over first 3 seconds (timer 0,1,2)
+      // At timer=0: 25%, timer=1: 50%, timer=2: 75%
+      return ((timer + 1) / 3) * 75;
     } else {
-      // Stay at 75% while green fills (timer 4)
+      // Stay at 75% while green fills (timer 3)
       return 75;
     }
   };
 
-  // Get green gradient height for Physiological Sigh INHALE (3-4 seconds)
+  // Get green gradient height for Physiological Sigh INHALE (3 seconds)
   const getPhysiologicalGreenHeight = () => {
     if (!isExercising || breathingPhase !== 'inhale') return 0;
 
-    if (timer <= 3) {
-      return 0; // No green yet
+    if (timer < 3) {
+      return 0; // No green yet (timer 0,1,2)
     } else {
-      // Fill to 25% of container in 1 second (timer 3→4)
-      return ((timer - 3) / 1) * 25;
+      // Fill to 25% of container at timer 3 (final second)
+      return 25;
     }
   };
 
@@ -1625,7 +1626,7 @@ export default function Home() {
                                   <div
                                     className="w-full"
                                     style={{
-                                      height: breathingPhase === 'inhale' ? `${getPhysiologicalGreenHeight()}%` : '25%',
+                                      height: breathingPhase === 'inhale' ? `${getPhysiologicalGreenHeight()}%` : '0%',
                                       background: `linear-gradient(to top,
                                         #6EE7B7 0%,
                                         #A7F3D0 100%
@@ -1642,7 +1643,7 @@ export default function Home() {
                                   <div
                                     className="w-full"
                                     style={{
-                                      height: breathingPhase === 'inhale' ? `${getPhysiologicalBlueHeight()}%` : '75%',
+                                      height: breathingPhase === 'inhale' ? `${getPhysiologicalBlueHeight()}%` : '0%',
                                       background: `linear-gradient(to top,
                                         #045a91 0%,
                                         #0568A6 16.67%,
