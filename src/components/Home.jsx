@@ -1635,7 +1635,7 @@ export default function Home() {
                                   <div
                                     className="w-full"
                                     style={{
-                                      height: `${breathingPhase === 'exhale' ? getPhysiologicalFillWidth() : 0}%`,
+                                      height: `${breathingPhase === 'inhale' ? 100 : getPhysiologicalFillWidth()}%`,
                                       background: `linear-gradient(to top,
                                         #045a91 0%,
                                         #0568A6 12.5%,
