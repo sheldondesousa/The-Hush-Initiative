@@ -217,8 +217,8 @@ export default function Home() {
       // Coherent: INHALE=5s (50 counts, 100ms), EXHALE=5s (50 counts, 100ms) for smooth animation
       intervalDuration = 100; // 100ms for smooth transitions
     } else if (isPhysiological) {
-      // Physiological Sigh: INHALE=4s (40 counts, 100ms), EXHALE=8s (80 counts, 100ms) for smooth animation
-      intervalDuration = 100; // 100ms for smooth fluid transitions
+      // Physiological Sigh: INHALE=4s (4 counts, 1000ms), EXHALE=8s (8 counts, 1000ms)
+      intervalDuration = 1000; // 1000ms (1 second) intervals
     } else {
       // Box breathing: all phases use same interval pattern
       // INHALE and EXHALE: 5 counts (0-4) over 4 seconds = 800ms per count
@@ -304,17 +304,18 @@ export default function Home() {
         } else if (isPhysiological) {
           // Physiological Sigh pattern
           if (breathingPhase === 'inhale') {
-            // INHALE: 0-40 (40 counts over 4s, 100ms per count)
-            // Smooth progression: columns appear gradually from left to right
-            if (prevTimer < 40) {
+            // INHALE: 0-4 (4 counts over 4s, 1s per count)
+            // 0-3: Blue gradient (3 seconds)
+            // 3-4: Green gradient (1 second)
+            if (prevTimer < 4) {
               return prevTimer + 1;
             } else {
               setBreathingPhase('exhale');
-              return 80; // Start EXHALE at 80
+              return 8; // Start EXHALE at 8
             }
           } else if (breathingPhase === 'exhale') {
-            // EXHALE: 80-0 (80 counts over 8s, 100ms per count)
-            // Smooth progression: columns disappear gradually from right to left
+            // EXHALE: 8-0 (8 counts over 8s, 1s per count)
+            // Slow decrease from right to left
             if (prevTimer > 0) {
               return prevTimer - 1;
             } else {
@@ -549,17 +550,20 @@ export default function Home() {
     return 0;
   };
 
-  // Get gradient fill width for Physiological Sigh (like Coherent Breathing)
+  // Get gradient fill width for Physiological Sigh
   const getPhysiologicalFillWidth = () => {
     if (!isExercising) return 0;
 
     if (breathingPhase === 'inhale') {
-      // INHALE: timer 0-40 (4 seconds)
-      const progress = timer / 40; // 0 to 1
+      // INHALE: timer 0-4 (4 seconds, 1s intervals)
+      // Timer 0-3: Blue fills to 75%
+      // Timer 3-4: Green fills from 75% to 100%
+      const progress = timer / 4; // 0 to 1
       return progress * 100; // 0% to 100%
     } else if (breathingPhase === 'exhale') {
-      // EXHALE: timer 80-0 (8 seconds)
-      const progress = timer / 80; // 1 to 0
+      // EXHALE: timer 8-0 (8 seconds, 1s intervals)
+      // Slow decrease from 100% to 0%
+      const progress = timer / 8; // 1 to 0
       return progress * 100; // 100% to 0%
     }
 
@@ -1604,7 +1608,7 @@ export default function Home() {
                                     #6EE7B7 87.5%,
                                     #A7F3D0 100%
                                   )`,
-                                  transition: 'width 100ms linear',
+                                  transition: 'width 1000ms linear',
                                   borderRadius: '4px'
                                 }}
                               />
