@@ -106,7 +106,7 @@ export default function Home() {
       ]
     },
     'Physiological Sigh': {
-      description: 'The physiological sigh is a science-backed breathing technique featuring a double inhale (1 long, 1 short) followed by a long, slow exhale. It is designed to rapidly offload carbon dioxide and trigger the parasympathetic nervous system for stress relief.\n\nSuggested: Total inhale of 4 seconds.',
+      description: 'The physiological sigh is a science-backed breathing technique featuring a double inhale (1 long, 1 short) followed by a long, slow exhale. It is designed to rapidly offload carbon dioxide and trigger the parasympathetic nervous system for stress relief.\n\nSuggested: Total INHALE of approximately 4 seconds.',
       sectionTitle: 'Tips',
       sectionContent: [
         { label: 'The "Second Sip":', text: 'Make the second inhale short and sharp to fully pop open the tiny air sacs (alveoli) in the lungs.' },
@@ -899,7 +899,7 @@ export default function Home() {
                       <p className="text-base text-gray-700 mb-6 leading-relaxed whitespace-pre-line">
                         {(exerciseContent[selectedExercise.name]?.description || 'Exercise description not available.').split('\n').map((line, index) => (
                           <span key={index}>
-                            {line.trim().startsWith('Suggested:') ? <strong>{line}</strong> : line}
+                            {line.trim().startsWith('Suggested:') ? <span className="font-semibold text-[15px]">{line}</span> : line}
                             {index < (exerciseContent[selectedExercise.name]?.description || '').split('\n').length - 1 && '\n'}
                           </span>
                         ))}
