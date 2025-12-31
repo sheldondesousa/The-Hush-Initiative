@@ -8,6 +8,7 @@ export default function Home() {
   const [menuOpen, setMenuOpen] = useState(false);
   const [selectedOption, setSelectedOption] = useState('breathe');
   const [selectedExercise, setSelectedExercise] = useState(null);
+  const [showAboutHum, setShowAboutHum] = useState(false);
 
   // Exercise content data
   const exerciseContent = {
@@ -831,7 +832,10 @@ export default function Home() {
             <div className="pb-6 border-b border-gray-300">
               <h2 className="text-lg font-semibold text-black">Menu</h2>
             </div>
-            <button className="block w-full text-left text-base text-black hover:opacity-70 transition-opacity py-6 border-b border-gray-300">
+            <button
+              onClick={() => setShowAboutHum(true)}
+              className="block w-full text-left text-base text-black hover:opacity-70 transition-opacity py-6 border-b border-gray-300"
+            >
               About Hum
             </button>
             <button className="block w-full text-left text-base text-black hover:opacity-70 transition-opacity py-6 border-b border-gray-300">
@@ -876,7 +880,13 @@ export default function Home() {
                 <div className="pb-6 border-b border-gray-300">
                   <h2 className="text-lg font-semibold text-black">Menu</h2>
                 </div>
-                <button className="block w-full text-left text-base text-black hover:opacity-70 transition-opacity py-6 border-b border-gray-300">
+                <button
+                  onClick={() => {
+                    setShowAboutHum(true);
+                    setMenuOpen(false);
+                  }}
+                  className="block w-full text-left text-base text-black hover:opacity-70 transition-opacity py-6 border-b border-gray-300"
+                >
                   About Hum
                 </button>
                 <button className="block w-full text-left text-base text-black hover:opacity-70 transition-opacity py-6 border-b border-gray-300">
@@ -903,8 +913,101 @@ export default function Home() {
         <main className="flex-1 flex items-center justify-center p-8 lg:p-16">
           {/* Centered Container - Music Player */}
           <div className="flex items-center justify-center max-w-7xl">
-            {/* Music Player - iPhone 17 Pro Max dimensions on desktop */}
-            <div className="music-player-desktop bg-white border-2 border-gray-300 rounded-2xl p-6 flex flex-col w-full lg:flex-shrink-0 relative overflow-hidden">
+            {showAboutHum ? (
+              /* About Hum Page */
+              <div className="music-player-desktop bg-white border-2 border-gray-300 rounded-2xl p-8 flex flex-col w-full lg:flex-shrink-0 relative overflow-y-auto" style={{ maxHeight: '90vh' }}>
+                {/* Header with Back Button */}
+                <div className="flex items-center mb-6 pb-4 border-b border-gray-300">
+                  <button
+                    onClick={() => setShowAboutHum(false)}
+                    className="flex items-center gap-2 text-sm text-gray-700 hover:text-black transition-colors"
+                  >
+                    <svg className="w-4 h-4" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" d="M15 19l-7-7 7-7"/>
+                    </svg>
+                    <span>Back</span>
+                  </button>
+                  <h2 className="flex-1 text-center text-xl font-semibold text-black pr-12">About Hum</h2>
+                </div>
+
+                {/* Content */}
+                <div className="space-y-6 text-black leading-relaxed">
+                  <div>
+                    <h3 className="font-bold text-lg mb-3">It Started With Silence.</h3>
+                    <p className="text-base">
+                      There's a particular kind of exhaustion that comes from being always on. The notifications, the deadlines, the endless scroll, the noise that follows you from the office to your living room to the space behind your eyes when you try to sleep.
+                    </p>
+                  </div>
+
+                  <p className="text-base">
+                    I love electronic dance music. I love the energy, the rhythm, the escape it offers. But I realized something: even my escape had become noise. Another layer on top of everything else. Another thing demanding my attention.
+                  </p>
+
+                  <p className="text-base">
+                    I didn't need more content. I didn't need another course, another process, another seven-step journey to inner peace. I didn't need a meditation app that felt like homework or a wellness subscription that made me feel guilty for not "keeping up."
+                  </p>
+
+                  <p className="text-base">
+                    I just needed to breathe. I needed something I could turn to—on my terms, in my time—that would let me detach. Not forever, just for a moment. A space where I could float, focus, or simply let my mind rest from its constant race.
+                  </p>
+
+                  <div>
+                    <h3 className="font-bold text-lg mb-3">What I Couldn't Find</h3>
+                    <p className="text-base">
+                      So I went looking. And what I found were apps that were visually overwhelming, full of upsells, cluttered with features I didn't want. Apps that promised calm but delivered complexity. Apps that felt like they were designed to keep me engaged rather than let me disconnect.
+                    </p>
+                  </div>
+
+                  <p className="text-base">
+                    I wanted the opposite: minimalism that matches the clarity I was seeking. I wanted something backed by science—real evidence, not wellness buzzwords. Something simple, honest, and effective. Something that did one thing exceptionally well instead of everything moderately.
+                  </p>
+
+                  <div>
+                    <h3 className="font-bold text-lg mb-3">The 'Aha' Moment</h3>
+                    <p className="text-base">
+                      It happened when I started experimenting with sound. Not music, not guided meditations—just sound. Pure, intentional, evidence-based frequencies designed to help the brain do what it naturally wants to do: settle. No voice telling me how to breathe. No subscription gate. No achievement badges or streaks.
+                    </p>
+                  </div>
+
+                  <p className="text-base">
+                    Just sound, space, and choice. That's when I realized: this is what I'd been looking for. And if I was searching for it, maybe others were too.
+                  </p>
+
+                  <div>
+                    <h3 className="font-bold text-lg mb-3">This Is For You If...</h3>
+                    <p className="text-base">
+                      You're tired of the noise—all of it. The external chaos and the internal chatter. You want something on your terms. Not another commitment, not another thing to optimize or gamify.
+                    </p>
+                  </div>
+
+                  <p className="text-base">
+                    You're looking for a moment of detachment in a world that demands constant attachment. You value simplicity over complexity, and evidence over trends. You don't need millions of features. You need one thing that works.
+                  </p>
+
+                  <div>
+                    <h3 className="font-bold text-lg mb-3">A Small Collective</h3>
+                    <p className="text-base">
+                      This app isn't built to chase millions of users or dominate app store rankings. It's built for people like us—a small collective who understand that sometimes the most radical thing you can do is simply rest your mind.
+                    </p>
+                  </div>
+
+                  <p className="text-base">
+                    The cities are loud. Work is loud. Social media is loud. Stress, anxiety, expectations—they're all loud.
+                    This app is your companion when you need that break. When you need to empty your head of the unnecessary, refocus on what matters, or just exist without demands.
+                  </p>
+
+                  <div>
+                    <h3 className="font-bold text-lg mb-3">Join Us</h3>
+                    <p className="text-base">
+                      If this resonates with you, you're already part of this. Use the app when you need it. Share it if you want to. Support its growth if it serves you.
+                      This isn't a revolution. It's quieter than that. It's a breath. And you're invited to take it with us.
+                    </p>
+                  </div>
+                </div>
+              </div>
+            ) : (
+              /* Music Player - iPhone 17 Pro Max dimensions on desktop */
+              <div className="music-player-desktop bg-white border-2 border-gray-300 rounded-2xl p-6 flex flex-col w-full lg:flex-shrink-0 relative overflow-hidden">
               {/* Album Art & Info - Hide when breathing exercise is selected */}
               {!(selectedOption === 'breathe' && selectedExercise) && (
                 <div className="mb-6">
@@ -1905,6 +2008,7 @@ export default function Home() {
                 </div>
               )}
             </div>
+            )}
           </div>
         </main>
       </div>
