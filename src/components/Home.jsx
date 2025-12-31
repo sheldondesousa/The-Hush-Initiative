@@ -1578,7 +1578,8 @@ export default function Home() {
                                     style={{
                                       height: breathingPhase === 'inhale' ? `${getPhysiologicalGreenHeight()}%` : '0%',
                                       background: `linear-gradient(to top,
-                                        #6EE7B7 0%,
+                                        #6EC1E4 0%,
+                                        #6EE7B7 50%,
                                         #A7F3D0 100%
                                       )`,
                                       transition: breathingPhase === 'inhale' ? 'height 0ms' : 'opacity 400ms ease-out',
