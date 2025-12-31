@@ -41,14 +41,11 @@ export default function Login() {
   return (
     <>
       {loading && <Loader />}
-      <div className="min-h-screen bg-gray-50 flex items-center justify-center p-4">
-        {/* Mobile Container - iPhone 16 Pro Max dimensions with top/bottom lines */}
-        <div className="relative w-full max-w-md bg-white px-8 flex flex-col justify-center" style={{ maxWidth: '430px', minHeight: '932px' }}>
-          {/* Top line - 932px wide */}
-          <div className="absolute top-0 left-1/2 -translate-x-1/2 border-t border-black" style={{ width: '932px' }}></div>
+      <div className="min-h-screen bg-gray-50 flex">
+        {/* Left Half - Login Form */}
+        <div className="w-1/2 flex items-center justify-center p-4">
+          <div className="w-full max-w-md bg-white px-8 py-12 rounded-2xl shadow-sm">
 
-          {/* Bottom line - 932px wide */}
-          <div className="absolute bottom-0 left-1/2 -translate-x-1/2 border-b border-black" style={{ width: '932px' }}></div>
 
         {/* Logo Placeholder */}
         <div className="flex justify-center mb-12 mt-0">
@@ -158,6 +155,16 @@ export default function Login() {
           <span className="text-black font-semibold">Terms of Service</span> and{' '}
           <span className="text-black font-semibold">Privacy Policy</span>
         </p>
+          </div>
+        </div>
+
+        {/* Right Half - Image */}
+        <div className="w-1/2 bg-gray-100">
+          <img
+            src="/path-to-your-image.jpg"
+            alt="Login background"
+            className="w-full h-full object-cover"
+          />
         </div>
       </div>
     </>
