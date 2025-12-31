@@ -217,8 +217,9 @@ export default function Home() {
       // Coherent: INHALE=5s (50 counts, 100ms), EXHALE=5s (50 counts, 100ms) for smooth animation
       intervalDuration = 100; // 100ms for smooth transitions
     } else if (isPhysiological) {
-      // Physiological Sigh: INHALE=4s (4 counts, 1000ms), EXHALE=8s (8 counts, 1000ms)
-      intervalDuration = 1000; // 1000ms (1 second) intervals
+      // Physiological Sigh: INHALE=5s (0-4, 1000ms), HOLD=300ms, EXHALE=8s (8-0, 1000ms)
+      if (breathingPhase === 'hold1') intervalDuration = 300; // 300ms gap
+      else intervalDuration = 1000; // 1000ms (1 second) intervals
     } else {
       // Box breathing: all phases use same interval pattern
       // INHALE and EXHALE: 5 counts (0-4) over 4 seconds = 800ms per count
@@ -304,16 +305,18 @@ export default function Home() {
         } else if (isPhysiological) {
           // Physiological Sigh pattern
           if (breathingPhase === 'inhale') {
-            // INHALE: 0-3 (4 counts over 4s, 1s per count)
-            // 0-2: Blue gradient (3 seconds)
-            // 3: Green gradient (1 second)
-            if (prevTimer < 3) {
+            // INHALE: 0-4 (5 counts over 5s, 1s per count)
+            if (prevTimer < 4) {
               return prevTimer + 1;
             } else {
-              // Transition to EXHALE, INHALE will dissolve over 400ms
-              setBreathingPhase('exhale');
-              return 8; // Start EXHALE at 8
+              // Transition to 300ms hold
+              setBreathingPhase('hold1');
+              return 0;
             }
+          } else if (breathingPhase === 'hold1') {
+            // HOLD: 300ms gap
+            setBreathingPhase('exhale');
+            return 8; // Start EXHALE at 8
           } else if (breathingPhase === 'exhale') {
             // EXHALE: 8-0 (8 seconds, 1s per count, showing timer value)
             // Slow decrease from 100% to 0%
