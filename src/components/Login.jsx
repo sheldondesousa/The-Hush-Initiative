@@ -161,7 +161,7 @@ export default function Login() {
         {/* Right Half - Image */}
         <div className="w-1/2 bg-gray-100">
           <img
-            src="/path-to-your-image.jpg"
+            src="/login-background.jpg"
             alt="Login background"
             className="w-full h-full object-cover"
           />
