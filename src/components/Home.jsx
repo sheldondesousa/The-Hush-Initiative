@@ -834,31 +834,31 @@ export default function Home() {
             </div>
             <button
               onClick={() => setCurrentView('interactive')}
-              className="block w-full text-left text-base text-black hover:opacity-70 transition-opacity py-6 border-b border-gray-300"
+              className={`block w-full text-left text-base text-black hover:opacity-70 transition-opacity py-6 border-b border-gray-300 ${currentView === 'interactive' ? 'font-bold' : ''}`}
             >
               Interactive mode
             </button>
             <button
               onClick={() => setCurrentView('about')}
-              className="block w-full text-left text-base text-black hover:opacity-70 transition-opacity py-6 border-b border-gray-300"
+              className={`block w-full text-left text-base text-black hover:opacity-70 transition-opacity py-6 border-b border-gray-300 ${currentView === 'about' ? 'font-bold' : ''}`}
             >
               About Hum
             </button>
             <button
               onClick={() => setCurrentView('support')}
-              className="block w-full text-left text-base text-black hover:opacity-70 transition-opacity py-6 border-b border-gray-300"
+              className={`block w-full text-left text-base text-black hover:opacity-70 transition-opacity py-6 border-b border-gray-300 ${currentView === 'support' ? 'font-bold' : ''}`}
             >
               Support the app
             </button>
             <button
               onClick={() => setCurrentView('faqs')}
-              className="block w-full text-left text-base text-black hover:opacity-70 transition-opacity py-6 border-b border-gray-300"
+              className={`block w-full text-left text-base text-black hover:opacity-70 transition-opacity py-6 border-b border-gray-300 ${currentView === 'faqs' ? 'font-bold' : ''}`}
             >
               FAQs
             </button>
             <button
               onClick={() => setCurrentView('terms')}
-              className="block w-full text-left text-base text-black hover:opacity-70 transition-opacity py-6 border-b border-gray-300"
+              className={`block w-full text-left text-base text-black hover:opacity-70 transition-opacity py-6 border-b border-gray-300 ${currentView === 'terms' ? 'font-bold' : ''}`}
             >
               Terms & Conditions
             </button>
@@ -900,7 +900,7 @@ export default function Home() {
                     setCurrentView('interactive');
                     setMenuOpen(false);
                   }}
-                  className="block w-full text-left text-base text-black hover:opacity-70 transition-opacity py-6 border-b border-gray-300"
+                  className={`block w-full text-left text-base text-black hover:opacity-70 transition-opacity py-6 border-b border-gray-300 ${currentView === 'interactive' ? 'font-bold' : ''}`}
                 >
                   Interactive mode
                 </button>
@@ -909,7 +909,7 @@ export default function Home() {
                     setCurrentView('about');
                     setMenuOpen(false);
                   }}
-                  className="block w-full text-left text-base text-black hover:opacity-70 transition-opacity py-6 border-b border-gray-300"
+                  className={`block w-full text-left text-base text-black hover:opacity-70 transition-opacity py-6 border-b border-gray-300 ${currentView === 'about' ? 'font-bold' : ''}`}
                 >
                   About Hum
                 </button>
@@ -918,7 +918,7 @@ export default function Home() {
                     setCurrentView('support');
                     setMenuOpen(false);
                   }}
-                  className="block w-full text-left text-base text-black hover:opacity-70 transition-opacity py-6 border-b border-gray-300"
+                  className={`block w-full text-left text-base text-black hover:opacity-70 transition-opacity py-6 border-b border-gray-300 ${currentView === 'support' ? 'font-bold' : ''}`}
                 >
                   Support the app
                 </button>
@@ -927,7 +927,7 @@ export default function Home() {
                     setCurrentView('faqs');
                     setMenuOpen(false);
                   }}
-                  className="block w-full text-left text-base text-black hover:opacity-70 transition-opacity py-6 border-b border-gray-300"
+                  className={`block w-full text-left text-base text-black hover:opacity-70 transition-opacity py-6 border-b border-gray-300 ${currentView === 'faqs' ? 'font-bold' : ''}`}
                 >
                   FAQs
                 </button>
@@ -936,7 +936,7 @@ export default function Home() {
                     setCurrentView('terms');
                     setMenuOpen(false);
                   }}
-                  className="block w-full text-left text-base text-black hover:opacity-70 transition-opacity py-6 border-b border-gray-300"
+                  className={`block w-full text-left text-base text-black hover:opacity-70 transition-opacity py-6 border-b border-gray-300 ${currentView === 'terms' ? 'font-bold' : ''}`}
                 >
                   Terms & Conditions
                 </button>
