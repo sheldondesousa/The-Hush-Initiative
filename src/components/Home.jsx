@@ -624,9 +624,14 @@ export default function Home() {
   const getPhysiologicalExhaleBlueHeight = () => {
     if (!isExercising || breathingPhase !== 'exhale') return 0;
 
-    // Blue decrements from 75% to 0% over full duration (timer 7→0)
-    // Smooth linear decrement: timer * (75/7) ≈ timer * 10.714%
-    return timer * (75 / 7);
+    if (timer > 5) {
+      // Timer 7,6: Blue stays at 62.5% while green decrements
+      return 62.5;
+    } else {
+      // Timer 5-0: Blue decrements at 12.5% per second
+      // Timer 5: 62.5%, Timer 4: 50%, Timer 3: 37.5%, Timer 2: 25%, Timer 1: 12.5%, Timer 0: 0%
+      return timer * 12.5;
+    }
   };
 
   // Generate 4-7-8 wave path: rise → plateau → decline
