@@ -8,7 +8,7 @@ export default function Home() {
   const [menuOpen, setMenuOpen] = useState(false);
   const [selectedOption, setSelectedOption] = useState('breathe');
   const [selectedExercise, setSelectedExercise] = useState(null);
-  const [showAboutHum, setShowAboutHum] = useState(false);
+  const [currentView, setCurrentView] = useState('interactive'); // 'interactive', 'about', 'support', 'faqs', 'terms'
 
   // Exercise content data
   const exerciseContent = {
@@ -833,18 +833,33 @@ export default function Home() {
               <h2 className="text-lg font-semibold text-black">Menu</h2>
             </div>
             <button
-              onClick={() => setShowAboutHum(true)}
+              onClick={() => setCurrentView('interactive')}
+              className="block w-full text-left text-base text-black hover:opacity-70 transition-opacity py-6 border-b border-gray-300"
+            >
+              Interactive mode
+            </button>
+            <button
+              onClick={() => setCurrentView('about')}
               className="block w-full text-left text-base text-black hover:opacity-70 transition-opacity py-6 border-b border-gray-300"
             >
               About Hum
             </button>
-            <button className="block w-full text-left text-base text-black hover:opacity-70 transition-opacity py-6 border-b border-gray-300">
+            <button
+              onClick={() => setCurrentView('support')}
+              className="block w-full text-left text-base text-black hover:opacity-70 transition-opacity py-6 border-b border-gray-300"
+            >
               Support the app
             </button>
-            <button className="block w-full text-left text-base text-black hover:opacity-70 transition-opacity py-6 border-b border-gray-300">
+            <button
+              onClick={() => setCurrentView('faqs')}
+              className="block w-full text-left text-base text-black hover:opacity-70 transition-opacity py-6 border-b border-gray-300"
+            >
               FAQs
             </button>
-            <button className="block w-full text-left text-base text-black hover:opacity-70 transition-opacity py-6 border-b border-gray-300">
+            <button
+              onClick={() => setCurrentView('terms')}
+              className="block w-full text-left text-base text-black hover:opacity-70 transition-opacity py-6 border-b border-gray-300"
+            >
               Terms & Conditions
             </button>
             <button
@@ -882,20 +897,47 @@ export default function Home() {
                 </div>
                 <button
                   onClick={() => {
-                    setShowAboutHum(true);
+                    setCurrentView('interactive');
+                    setMenuOpen(false);
+                  }}
+                  className="block w-full text-left text-base text-black hover:opacity-70 transition-opacity py-6 border-b border-gray-300"
+                >
+                  Interactive mode
+                </button>
+                <button
+                  onClick={() => {
+                    setCurrentView('about');
                     setMenuOpen(false);
                   }}
                   className="block w-full text-left text-base text-black hover:opacity-70 transition-opacity py-6 border-b border-gray-300"
                 >
                   About Hum
                 </button>
-                <button className="block w-full text-left text-base text-black hover:opacity-70 transition-opacity py-6 border-b border-gray-300">
+                <button
+                  onClick={() => {
+                    setCurrentView('support');
+                    setMenuOpen(false);
+                  }}
+                  className="block w-full text-left text-base text-black hover:opacity-70 transition-opacity py-6 border-b border-gray-300"
+                >
                   Support the app
                 </button>
-                <button className="block w-full text-left text-base text-black hover:opacity-70 transition-opacity py-6 border-b border-gray-300">
+                <button
+                  onClick={() => {
+                    setCurrentView('faqs');
+                    setMenuOpen(false);
+                  }}
+                  className="block w-full text-left text-base text-black hover:opacity-70 transition-opacity py-6 border-b border-gray-300"
+                >
                   FAQs
                 </button>
-                <button className="block w-full text-left text-base text-black hover:opacity-70 transition-opacity py-6 border-b border-gray-300">
+                <button
+                  onClick={() => {
+                    setCurrentView('terms');
+                    setMenuOpen(false);
+                  }}
+                  className="block w-full text-left text-base text-black hover:opacity-70 transition-opacity py-6 border-b border-gray-300"
+                >
                   Terms & Conditions
                 </button>
                 <button
@@ -913,13 +955,13 @@ export default function Home() {
         <main className="flex-1 flex items-center justify-center p-8 lg:p-16">
           {/* Centered Container - Music Player */}
           <div className="flex items-center justify-center max-w-7xl">
-            {showAboutHum ? (
+            {currentView === 'about' ? (
               /* About Hum Page */
               <div className="music-player-desktop bg-white border-2 border-gray-300 rounded-2xl p-8 flex flex-col w-full lg:flex-shrink-0 relative overflow-y-auto" style={{ maxHeight: '90vh' }}>
                 {/* Header with Back Button */}
                 <div className="flex items-center mb-6 pb-4 border-b border-gray-300">
                   <button
-                    onClick={() => setShowAboutHum(false)}
+                    onClick={() => setCurrentView('interactive')}
                     className="flex items-center gap-2 text-sm text-gray-700 hover:text-black transition-colors"
                   >
                     <svg className="w-4 h-4" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
@@ -1005,7 +1047,7 @@ export default function Home() {
                   </div>
                 </div>
               </div>
-            ) : (
+            ) : currentView === 'interactive' ? (
               /* Music Player - iPhone 17 Pro Max dimensions on desktop */
               <div className="music-player-desktop bg-white border-2 border-gray-300 rounded-2xl p-6 flex flex-col w-full lg:flex-shrink-0 relative overflow-hidden">
               {/* Album Art & Info - Hide when breathing exercise is selected */}
@@ -2008,6 +2050,32 @@ export default function Home() {
                 </div>
               )}
             </div>
+            ) : (
+              /* Placeholder pages for other menu options */
+              <div className="music-player-desktop bg-white border-2 border-gray-300 rounded-2xl p-8 flex flex-col w-full lg:flex-shrink-0 relative overflow-y-auto" style={{ maxHeight: '90vh' }}>
+                {/* Header with Back Button */}
+                <div className="flex items-center mb-6 pb-4 border-b border-gray-300">
+                  <button
+                    onClick={() => setCurrentView('interactive')}
+                    className="flex items-center gap-2 text-sm text-gray-700 hover:text-black transition-colors"
+                  >
+                    <svg className="w-4 h-4" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" d="M15 19l-7-7 7-7"/>
+                    </svg>
+                    <span>Back</span>
+                  </button>
+                  <h2 className="flex-1 text-center text-xl font-semibold text-black pr-12">
+                    {currentView === 'support' && 'Support the App'}
+                    {currentView === 'faqs' && 'FAQs'}
+                    {currentView === 'terms' && 'Terms & Conditions'}
+                  </h2>
+                </div>
+
+                {/* Content */}
+                <div className="flex flex-col items-center justify-center py-12 text-center">
+                  <p className="text-gray-400 text-sm">This page is coming soon</p>
+                </div>
+              </div>
             )}
           </div>
         </main>
