@@ -184,7 +184,7 @@ export default function Home() {
       setIsExercising(true);
       setIsPaused(false);
       setBreathingPhase('inhale');
-      setTimer(0);
+      setTimer(selectedExercise?.name === 'Physiological Sigh' ? 1 : 0);
       setCurrentCycle(0);
       return;
     }
@@ -217,8 +217,9 @@ export default function Home() {
       // Coherent: INHALE=5s (50 counts, 100ms), EXHALE=5s (50 counts, 100ms) for smooth animation
       intervalDuration = 100; // 100ms for smooth transitions
     } else if (isPhysiological) {
-      // Physiological Sigh: INHALE=5s (0-4, 1000ms), HOLD=200ms, EXHALE=8s (8-0, 1000ms)
-      if (breathingPhase === 'hold1') intervalDuration = 200; // 200ms gap
+      // Physiological Sigh: INHALE=4s (1-4, 1000ms), HOLD1=200ms, EXHALE=8s (8-1, 1000ms), HOLD2=100ms
+      if (breathingPhase === 'hold1') intervalDuration = 200; // 200ms gap after INHALE
+      else if (breathingPhase === 'hold2') intervalDuration = 100; // 100ms gap after EXHALE
       else intervalDuration = 1000; // 1000ms (1 second) intervals
     } else {
       // Box breathing: all phases use same interval pattern
@@ -305,39 +306,43 @@ export default function Home() {
         } else if (isPhysiological) {
           // Physiological Sigh pattern
           if (breathingPhase === 'inhale') {
-            // INHALE: 0-4 (5 counts over 5s, 1s per count)
+            // INHALE: 1-4 (4 counts over 4s, 1s per count)
             if (prevTimer < 4) {
               return prevTimer + 1;
             } else {
-              // Transition to 300ms hold
+              // Transition to 200ms hold
               setBreathingPhase('hold1');
               return 0;
             }
           } else if (breathingPhase === 'hold1') {
-            // HOLD: 300ms gap
+            // HOLD1: 200ms gap after INHALE
             setBreathingPhase('exhale');
             return 8; // Start EXHALE at 8
           } else if (breathingPhase === 'exhale') {
-            // EXHALE: 8-0 (8 seconds, 1s per count, showing timer value)
-            // Slow decrease from 100% to 0%
-            if (prevTimer > 0) {
+            // EXHALE: 8-1 (8 seconds, 1s per count, showing timer value)
+            // Slow decrease from 100% to 12.5%
+            if (prevTimer > 1) {
               return prevTimer - 1;
             } else {
-              // Cycle completed, check if we should continue
-              const nextCycle = currentCycle + 1;
-              if (nextCycle >= selectedCycles) {
-                // Reached target cycles, show completion screen
-                setIsExercising(false);
-                setExerciseCompleted(true);
-                setCurrentCycle(0);
-                setBreathingPhase('inhale');
-                return 0;
-              } else {
-                // Continue to next cycle
-                setCurrentCycle(nextCycle);
-                setBreathingPhase('inhale');
-                return 0;
-              }
+              // EXHALE complete at 1, transition to hold2
+              setBreathingPhase('hold2');
+              return 0;
+            }
+          } else if (breathingPhase === 'hold2') {
+            // HOLD2: 100ms gap after EXHALE
+            const nextCycle = currentCycle + 1;
+            if (nextCycle >= selectedCycles) {
+              // Reached target cycles, show completion screen
+              setIsExercising(false);
+              setExerciseCompleted(true);
+              setCurrentCycle(0);
+              setBreathingPhase('inhale');
+              return 0;
+            } else {
+              // Continue to next cycle
+              setCurrentCycle(nextCycle);
+              setBreathingPhase('inhale');
+              return 1; // Start next INHALE at 1
             }
           }
         } else {
@@ -576,46 +581,46 @@ export default function Home() {
     return 0;
   };
 
-  // Get blue gradient height for Physiological Sigh INHALE (0-2 seconds)
+  // Get blue gradient height for Physiological Sigh INHALE (timer 1-4)
   const getPhysiologicalBlueHeight = () => {
     if (!isExercising || breathingPhase !== 'inhale') return 0;
 
-    if (timer < 3) {
-      // Fill to 75% of container over first 3 seconds (timer 0,1,2)
-      // At timer=0: 25%, timer=1: 50%, timer=2: 75%
-      return ((timer + 1) / 3) * 75;
+    if (timer <= 3) {
+      // Fill to 75% of container over first 3 seconds (timer 1,2,3)
+      // At timer=1: 25%, timer=2: 50%, timer=3: 75%
+      return (timer / 3) * 75;
     } else {
-      // Stay at 75% while green fills (timer 3)
+      // Stay at 75% while green fills (timer 4)
       return 75;
     }
   };
 
-  // Get green gradient height for Physiological Sigh INHALE (3 seconds)
+  // Get green gradient height for Physiological Sigh INHALE (timer 4)
   const getPhysiologicalGreenHeight = () => {
     if (!isExercising || breathingPhase !== 'inhale') return 0;
 
-    if (timer < 3) {
-      return 0; // No green yet (timer 0,1,2)
+    if (timer < 4) {
+      return 0; // No green yet (timer 1,2,3)
     } else {
-      // Fill to 25% of container at timer 3 (final second)
+      // Fill to 25% of container at timer 4 (final second)
       return 25;
     }
   };
 
-  // Get green gradient height for Physiological Sigh EXHALE (decrements at 12.5% per second)
+  // Get green gradient height for Physiological Sigh EXHALE (timer 8-1)
   const getPhysiologicalExhaleGreenHeight = () => {
     if (!isExercising || breathingPhase !== 'exhale') return 0;
 
     if (timer > 6) {
       // Timer 8,7: Green decrements at 12.5% per second
-      // Timer 8: 25%, Timer 7: 12.5%, Timer 6: 0%
+      // Timer 8: 25%, Timer 7: 12.5%
       return (timer - 6) * 12.5;
     } else {
       return 0; // Green gone by timer 6
     }
   };
 
-  // Get blue gradient height for Physiological Sigh EXHALE (decrements at 12.5% per second)
+  // Get blue gradient height for Physiological Sigh EXHALE (timer 8-1)
   const getPhysiologicalExhaleBlueHeight = () => {
     if (!isExercising || breathingPhase !== 'exhale') return 0;
 
@@ -623,8 +628,8 @@ export default function Home() {
       // Timer 8,7: Blue stays at 75% while green decrements
       return 75;
     } else {
-      // Timer 6-0: Blue decrements at 12.5% per second
-      // Timer 6: 75%, Timer 5: 62.5%, ..., Timer 0: 0%
+      // Timer 6-1: Blue decrements at 12.5% per second
+      // Timer 6: 75%, Timer 5: 62.5%, ..., Timer 1: 12.5%
       return timer * 12.5;
     }
   };
@@ -1630,7 +1635,7 @@ export default function Home() {
                                         #6EE7B7 0%,
                                         #A7F3D0 100%
                                       )`,
-                                      transition: `height ${timer === 8 || timer === 0 ? '0ms' : '1000ms'} linear`,
+                                      transition: `height ${timer === 8 || timer === 1 ? '0ms' : '1000ms'} linear`,
                                       borderTopLeftRadius: '20px',
                                       borderTopRightRadius: '20px',
                                       borderBottomLeftRadius: '0',
@@ -1651,7 +1656,7 @@ export default function Home() {
                                         #6EC1E4 83.33%,
                                         #6EC1E4 100%
                                       )`,
-                                      transition: `height ${timer === 8 || timer === 0 ? '0ms' : '1000ms'} linear`,
+                                      transition: `height ${timer === 8 || timer === 1 ? '0ms' : '1000ms'} linear`,
                                       borderTopLeftRadius: '0',
                                       borderTopRightRadius: '0',
                                       borderBottomLeftRadius: '20px',
@@ -1718,14 +1723,15 @@ export default function Home() {
                           // Navigate to previous exercise and show info screen
                           const currentIndex = currentTracks.findIndex(t => t.id === selectedExercise.id);
                           const prevIndex = currentIndex > 0 ? currentIndex - 1 : currentTracks.length - 1;
-                          setSelectedExercise(currentTracks[prevIndex]);
+                          const prevExercise = currentTracks[prevIndex];
+                          setSelectedExercise(prevExercise);
                           setShowingInfo(true);
                           // Reset all exercise state
                           setIsExercising(false);
                           setCountdown(null);
                           setIsPaused(false);
                           setBreathingPhase('inhale');
-                          setTimer(0);
+                          setTimer(prevExercise.name === 'Physiological Sigh' ? 1 : 0);
                           setCurrentCycle(0);
                         }}
                         className="flex flex-col items-center gap-1 hover:opacity-70 transition-opacity"
@@ -1746,7 +1752,7 @@ export default function Home() {
                             setIsPaused(false);
                             setCurrentCycle(0);
                             setBreathingPhase('inhale');
-                            setTimer(0);
+                            setTimer(selectedExercise?.name === 'Physiological Sigh' ? 1 : 0);
                           } else if (isPaused) {
                             // Resume from pause
                             setIsPaused(false);
@@ -1772,14 +1778,15 @@ export default function Home() {
                           // Navigate to next exercise and show info screen
                           const currentIndex = currentTracks.findIndex(t => t.id === selectedExercise.id);
                           const nextIndex = currentIndex < currentTracks.length - 1 ? currentIndex + 1 : 0;
-                          setSelectedExercise(currentTracks[nextIndex]);
+                          const nextExercise = currentTracks[nextIndex];
+                          setSelectedExercise(nextExercise);
                           setShowingInfo(true);
                           // Reset all exercise state
                           setIsExercising(false);
                           setCountdown(null);
                           setIsPaused(false);
                           setBreathingPhase('inhale');
-                          setTimer(0);
+                          setTimer(nextExercise.name === 'Physiological Sigh' ? 1 : 0);
                           setCurrentCycle(0);
                         }}
                         className="flex flex-col items-center gap-1 hover:opacity-70 transition-opacity"
