@@ -312,10 +312,10 @@ export default function Home() {
             } else {
               // Transition to EXHALE, INHALE will dissolve over 400ms
               setBreathingPhase('exhale');
-              return 7; // Start EXHALE at 7
+              return 8; // Start EXHALE at 8
             }
           } else if (breathingPhase === 'exhale') {
-            // EXHALE: 7-0 (8 counts over 8s, 1s per count)
+            // EXHALE: 8-0 (8 seconds, 1s per count, showing timer value)
             // Slow decrease from 100% to 0%
             if (prevTimer > 0) {
               return prevTimer - 1;
@@ -562,9 +562,9 @@ export default function Home() {
       const progress = timer / 3; // 0 to 1
       return progress * 100; // 0% to 100%
     } else if (breathingPhase === 'exhale') {
-      // EXHALE: timer 7-0 (8 seconds, 1s intervals)
+      // EXHALE: timer 8-0 (8 seconds, 1s intervals)
       // Slow decrease from 100% to 0%
-      const progress = timer / 7; // 1 to 0
+      const progress = timer / 8; // 1 to 0
       return progress * 100; // 100% to 0%
     }
 
@@ -1693,7 +1693,7 @@ export default function Home() {
                                         #6EE7B7 87.5%,
                                         #A7F3D0 100%
                                       )`,
-                                      transition: `height ${breathingPhase === 'exhale' && timer === 7 ? '0' : '1000'}ms linear`,
+                                      transition: `height ${breathingPhase === 'exhale' && timer === 8 ? '0' : '1000'}ms linear`,
                                       borderRadius: '20px'
                                     }}
                                   />
