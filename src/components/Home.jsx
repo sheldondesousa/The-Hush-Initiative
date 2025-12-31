@@ -602,19 +602,20 @@ export default function Home() {
     }
   };
 
-  // Get green gradient height for Physiological Sigh EXHALE (decrements first, timer 8,7)
+  // Get green gradient height for Physiological Sigh EXHALE (decrements at 12.5% per second)
   const getPhysiologicalExhaleGreenHeight = () => {
     if (!isExercising || breathingPhase !== 'exhale') return 0;
 
-    if (timer >= 7) {
-      // Timer 8,7: Green decrements from 25% to 0%
-      return ((timer - 6) / 2) * 25;
+    if (timer > 6) {
+      // Timer 8,7: Green decrements at 12.5% per second
+      // Timer 8: 25%, Timer 7: 12.5%, Timer 6: 0%
+      return (timer - 6) * 12.5;
     } else {
       return 0; // Green gone by timer 6
     }
   };
 
-  // Get blue gradient height for Physiological Sigh EXHALE (decrements second, timer 6-0)
+  // Get blue gradient height for Physiological Sigh EXHALE (decrements at 12.5% per second)
   const getPhysiologicalExhaleBlueHeight = () => {
     if (!isExercising || breathingPhase !== 'exhale') return 0;
 
@@ -622,8 +623,9 @@ export default function Home() {
       // Timer 8,7: Blue stays at 75% while green decrements
       return 75;
     } else {
-      // Timer 6,5,4,3,2,1,0: Blue decrements from 75% to 0%
-      return (timer / 6) * 75;
+      // Timer 6-0: Blue decrements at 12.5% per second
+      // Timer 6: 75%, Timer 5: 62.5%, ..., Timer 0: 0%
+      return timer * 12.5;
     }
   };
 
