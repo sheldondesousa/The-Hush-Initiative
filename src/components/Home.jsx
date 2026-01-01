@@ -266,7 +266,7 @@ export default function Home() {
       setIsExercising(true);
       setIsPaused(false);
       setBreathingPhase('inhale');
-      setTimer(selectedExercise?.name === 'Physiological Sigh' ? 1 : 0);
+      setTimer(selectedExercise?.name === 'Physiological Sigh' ? 0 : 0);
       setCurrentCycle(0);
       return;
     }
@@ -388,7 +388,7 @@ export default function Home() {
         } else if (isPhysiological) {
           // Physiological Sigh pattern
           if (breathingPhase === 'inhale') {
-            // INHALE: 1-4 (4 counts over 4s, 1s per count)
+            // INHALE: 0-1-2-3-4 (5 counts over 4s, 1s per count)
             if (prevTimer < 4) {
               return prevTimer + 1;
             } else {
@@ -401,8 +401,7 @@ export default function Home() {
             setBreathingPhase('exhale');
             return 8; // Start EXHALE at 8
           } else if (breathingPhase === 'exhale') {
-            // EXHALE: 8-0 (9 values over 8 seconds, 1s per count)
-            // Decrease from 100% to 0% at 12.5% per second
+            // EXHALE: 8-7-6-5-4-3-2-1-0 (9 values over 8 seconds, 1s per count)
             if (prevTimer > 0) {
               return prevTimer - 1;
             } else {
@@ -424,7 +423,7 @@ export default function Home() {
               // Continue to next cycle
               setCurrentCycle(nextCycle);
               setBreathingPhase('inhale');
-              return 1; // Start next INHALE at 1
+              return 0; // Start next INHALE at 0
             }
           }
         } else {
@@ -599,98 +598,11 @@ export default function Home() {
     return circles.reverse();
   };
 
-  // Get box count for Physiological Sigh
-  const getVisibleBoxCountPhysiological = () => {
-    if (breathingPhase === 'inhale') {
-      // INHALE: timer 0-40 (40 counts over 4s, 100ms per count)
-      // Smooth progression from 0 to 8 columns
-      // At timer 30 (3s): 6 columns (all blue)
-      // At timer 40 (4s): 8 columns (6 blue + 2 green)
-      const columnCount = Math.floor((timer / 40) * 8);
-      return Math.min(columnCount, 8);
-    } else if (breathingPhase === 'exhale') {
-      // EXHALE: timer 80→0 (80 counts over 8s, 100ms per count)
-      // Smooth progression from 8 to 0 columns
-      const columnCount = Math.floor((timer / 80) * 8);
-      return Math.max(columnCount, 0);
-    }
-    return 0;
-  };
 
-  // Get gradient fill width for Physiological Sigh
-  const getPhysiologicalFillWidth = () => {
-    if (!isExercising) return 0;
 
-    if (breathingPhase === 'inhale') {
-      // INHALE: timer 0-3 (4 seconds, 1s intervals)
-      // Timer 0-2: Blue fills to 75%
-      // Timer 3: Green fills from 75% to 100%
-      const progress = timer / 3; // 0 to 1
-      return progress * 100; // 0% to 100%
-    } else if (breathingPhase === 'exhale') {
-      // EXHALE: timer 8-0 (8 seconds, 1s intervals)
-      // Adjust calculation to sync animation with timer display
-      // When displaying timer N, container should be at N/8 percentage
-      if (timer === 0) return 0; // Ensure 0% at timer 0
-      const progress = timer / 8; // 1 to 0
-      return progress * 100; // 100% to 0%
-    }
 
-    return 0;
-  };
 
-  // Get blue gradient height for Physiological Sigh INHALE (timer 1-4)
-  const getPhysiologicalBlueHeight = () => {
-    if (!isExercising || breathingPhase !== 'inhale') return 0;
 
-    if (timer <= 3) {
-      // Fill to 75% of container over first 3 seconds (timer 1,2,3)
-      // At timer=1: 25%, timer=2: 50%, timer=3: 75%
-      return (timer / 3) * 75;
-    } else {
-      // Stay at 75% while green fills (timer 4)
-      return 75;
-    }
-  };
-
-  // Get green gradient height for Physiological Sigh INHALE (timer 4)
-  const getPhysiologicalGreenHeight = () => {
-    if (!isExercising || breathingPhase !== 'inhale') return 0;
-
-    if (timer < 4) {
-      return 0; // No green yet (timer 1,2,3)
-    } else {
-      // Fill to 25% of container at timer 4 (final second)
-      return 25;
-    }
-  };
-
-  // Get green gradient height for Physiological Sigh EXHALE (timer 8-0)
-  const getPhysiologicalExhaleGreenHeight = () => {
-    if (!isExercising || breathingPhase !== 'exhale') return 0;
-
-    if (timer > 6) {
-      // Timer 8,7: Green decrements from 25% to 0%
-      // Timer 8: 25%, Timer 7: 12.5%, Timer 6: 0%
-      return (timer - 6) * 12.5;
-    } else {
-      return 0; // Green gone by timer 6
-    }
-  };
-
-  // Get blue gradient height for Physiological Sigh EXHALE (timer 8-0)
-  const getPhysiologicalExhaleBlueHeight = () => {
-    if (!isExercising || breathingPhase !== 'exhale') return 0;
-
-    if (timer > 6) {
-      // Timer 8,7: Blue stays at 75% while green decrements
-      return 75;
-    } else {
-      // Timer 6-0: Blue decrements at 12.5% per second
-      // Timer 6: 75%, Timer 5: 62.5%, Timer 4: 50%, Timer 3: 37.5%, Timer 2: 25%, Timer 1: 12.5%, Timer 0: 0%
-      return timer * 12.5;
-    }
-  };
 
   // Generate 4-7-8 wave path: rise → plateau → decline
   const generateWavePath478 = () => {
@@ -797,6 +709,43 @@ export default function Home() {
       'rgba(6, 122, 195, 0.25)'    // Darkest navy (outermost) - timer 4 (100%)
     ];
     const blurs = [20, 22, 24, 26];  // Progressive blur increase
+
+    const circles = [];
+    for (let i = 0; i < circleCount; i++) {
+      circles.push({
+        size: sizes[i],
+        color: colors[i],
+        blur: blurs[i],
+        key: i
+      });
+    }
+
+    // Render from largest to smallest so all rings are visible
+    return circles.reverse();
+  };
+
+  // Get data for Physiological Sigh circles (4 circles: 3 blue, 1 green)
+  const getPhysiologicalCirclesData = () => {
+    let circleCount;
+    if (breathingPhase === 'inhale') {
+      // INHALE: Show 1 circle per second (timer 0-4 = 0,1,2,3,4 circles)
+      circleCount = timer;
+    } else if (breathingPhase === 'exhale') {
+      // EXHALE: Remove circles (timer 8-0)
+      // Map timer 8-0 to circles 4-0
+      circleCount = Math.ceil(timer / 2); // 8,7=4, 6,5=3, 4,3=2, 2,1=1, 0=0
+    } else {
+      circleCount = breathingPhase === 'hold1' ? 4 : 0;
+    }
+
+    const sizes = [160, 220, 280, 340];  // 4 circles with 60px increments
+    const colors = [
+      'rgba(6, 122, 195, 1.0)',   // Blue - circle 1
+      'rgba(6, 122, 195, 0.75)',  // Blue - circle 2
+      'rgba(6, 122, 195, 0.5)',   // Blue - circle 3
+      'rgba(110, 231, 183, 1.0)'  // Green - circle 4 (#6EE7B7)
+    ];
+    const blurs = [20, 22, 24, 26];
 
     const circles = [];
     for (let i = 0; i < circleCount; i++) {
@@ -1592,7 +1541,7 @@ export default function Home() {
                               onClick={() => {
                                 setExerciseCompleted(false);
                                 setCurrentCycle(0);
-                                setTimer(selectedExercise?.name === 'Physiological Sigh' ? 1 : 0);
+                                setTimer(selectedExercise?.name === 'Physiological Sigh' ? 0 : 0);
                                 setBreathingPhase('inhale');
                                 setIsExercising(true);
                               }}
@@ -1799,126 +1748,34 @@ export default function Home() {
                           </div>
                         </>
                       ) : selectedExercise?.name === 'Physiological Sigh' ? (
-                        /* Physiological Sigh Dual Container Animation */
+                        /* Physiological Sigh Circle Animation */
                         <>
-                          {/* Breathing Box Illustration - Physiological Sigh */}
+                          {/* Breathing Circle Illustration - Physiological Sigh */}
                           <div className="flex-1 flex items-center justify-center w-full relative">
-                            {/* Two containers side by side */}
-                            <div className="flex gap-4">
-                              {/* First Container - INHALE (fills bottom to top) */}
-                              <div className="flex flex-col">
-                                <div
-                                  className="border-4 border-gray-300 rounded-3xl flex flex-col justify-end overflow-hidden"
-                                  style={{ width: '175px', height: '360px', padding: '2px' }}
-                                >
-                                  {/* Green gradient fill bar (4th second, top layer - instant flash) */}
-                                  <div
-                                    className="w-full flex items-center justify-center"
-                                    style={{
-                                      height: breathingPhase === 'inhale' ? `${getPhysiologicalGreenHeight()}%` : '0%',
-                                      background: `linear-gradient(to top,
-                                        #6EC1E4 0%,
-                                        #6EE7B7 50%,
-                                        #A7F3D0 100%
-                                      )`,
-                                      transition: breathingPhase === 'inhale' ? 'height 0ms' : 'opacity 400ms ease-out',
-                                      opacity: breathingPhase === 'inhale' ? 1 : 0,
-                                      borderTopLeftRadius: '20px',
-                                      borderTopRightRadius: '20px',
-                                      borderBottomLeftRadius: '0',
-                                      borderBottomRightRadius: '0'
-                                    }}
-                                  >
-                                    {breathingPhase === 'inhale' && timer === 4 && (
-                                      <span className="text-white font-bold text-lg uppercase tracking-wider">Short</span>
-                                    )}
-                                  </div>
-                                  {/* Blue gradient fill bar (0-3 seconds, bottom layer) */}
-                                  <div
-                                    className="w-full flex items-center justify-center"
-                                    style={{
-                                      height: breathingPhase === 'inhale' ? `${getPhysiologicalBlueHeight()}%` : '0%',
-                                      background: `linear-gradient(to top,
-                                        #045a91 0%,
-                                        #0568A6 16.67%,
-                                        #067AC3 33.33%,
-                                        #0892D0 50%,
-                                        #3AA8DB 66.67%,
-                                        #6EC1E4 83.33%,
-                                        #6EC1E4 100%
-                                      )`,
-                                      transition: breathingPhase === 'inhale' ? 'height 1000ms linear' : 'opacity 400ms ease-out',
-                                      opacity: breathingPhase === 'inhale' ? 1 : 0,
-                                      borderTopLeftRadius: '0',
-                                      borderTopRightRadius: '0',
-                                      borderBottomLeftRadius: '20px',
-                                      borderBottomRightRadius: '20px'
-                                    }}
-                                  >
-                                    {breathingPhase === 'inhale' && (
-                                      <span className="text-white font-bold text-lg uppercase tracking-wider">Long</span>
-                                    )}
-                                  </div>
-                                </div>
-                                {/* INHALE Label */}
-                                <div className="text-center mt-4">
-                                  <div className="text-lg font-semibold text-gray-800 uppercase tracking-wider">
-                                    INHALE
-                                  </div>
-                                </div>
-                              </div>
+                            {/* Breathing Circles */}
+                            {getPhysiologicalCirclesData().map((circle) => (
+                              <div
+                                key={circle.key}
+                                className="rounded-full transition-all duration-1000 ease-in-out absolute"
+                                style={{
+                                  width: `${circle.size}px`,
+                                  height: `${circle.size}px`,
+                                  border: `20px solid ${circle.color}`,
+                                  backgroundColor: 'transparent',
+                                  boxShadow: `0 0 ${circle.blur}px ${circle.color}`
+                                }}
+                              />
+                            ))}
 
-                              {/* Second Container - EXHALE (empties top to bottom) */}
-                              <div className="flex flex-col">
-                                <div
-                                  className="border-4 border-gray-300 rounded-3xl flex flex-col justify-end overflow-hidden"
-                                  style={{ width: '175px', height: '360px', padding: '2px' }}
-                                >
-                                  {/* Green gradient fill bar (decrements first, top layer) */}
-                                  <div
-                                    className="w-full"
-                                    style={{
-                                      height: `${getPhysiologicalExhaleGreenHeight()}%`,
-                                      background: `linear-gradient(to top,
-                                        #6EC1E4 0%,
-                                        #6EE7B7 50%,
-                                        #A7F3D0 100%
-                                      )`,
-                                      transition: `height ${timer === 8 || timer === 0 ? '0ms' : '1000ms'} linear`,
-                                      borderTopLeftRadius: '20px',
-                                      borderTopRightRadius: '20px',
-                                      borderBottomLeftRadius: '0',
-                                      borderBottomRightRadius: '0'
-                                    }}
-                                  />
-                                  {/* Blue gradient fill bar (decrements second, bottom layer) */}
-                                  <div
-                                    className="w-full"
-                                    style={{
-                                      height: `${getPhysiologicalExhaleBlueHeight()}%`,
-                                      background: `linear-gradient(to top,
-                                        #045a91 0%,
-                                        #0568A6 16.67%,
-                                        #067AC3 33.33%,
-                                        #0892D0 50%,
-                                        #3AA8DB 66.67%,
-                                        #6EC1E4 83.33%,
-                                        #6EC1E4 100%
-                                      )`,
-                                      transition: `height ${timer === 8 || timer === 0 ? '0ms' : '1000ms'} linear`,
-                                      borderTopLeftRadius: '0',
-                                      borderTopRightRadius: '0',
-                                      borderBottomLeftRadius: '20px',
-                                      borderBottomRightRadius: '20px'
-                                    }}
-                                  />
-                                </div>
-                                {/* EXHALE Label */}
-                                <div className="text-center mt-4">
-                                  <div className="text-lg font-semibold text-gray-800 uppercase tracking-wider">
-                                    EXHALE
-                                  </div>
-                                </div>
+                            {/* Timer Display - Inside Circles */}
+                            <div className="absolute text-center">
+                              <div className="text-lg font-semibold text-gray-700 uppercase tracking-wider mb-2">
+                                {breathingPhase === 'inhale' && 'INHALE'}
+                                {breathingPhase === 'exhale' && 'EXHALE'}
+                              </div>
+                              {/* Show timer during inhale and exhale */}
+                              <div className="text-5xl font-bold text-gray-900">
+                                {timer}
                               </div>
                             </div>
                           </div>
@@ -2002,7 +1859,7 @@ export default function Home() {
                             setIsPaused(false);
                             setCurrentCycle(0);
                             setBreathingPhase('inhale');
-                            setTimer(selectedExercise?.name === 'Physiological Sigh' ? 1 : 0);
+                            setTimer(selectedExercise?.name === 'Physiological Sigh' ? 0 : 0);
                           } else if (isPaused) {
                             // Resume from pause
                             setIsPaused(false);
