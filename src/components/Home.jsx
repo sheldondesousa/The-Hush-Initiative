@@ -783,7 +783,7 @@ export default function Home() {
   };
 
   return (
-    <div className="min-h-screen bg-gray-50">
+    <div className="min-h-screen" style={{ backgroundColor: '#E0EBE9' }}>
       <style>{`
         @media (min-width: 1024px) {
           .music-player-desktop {
