@@ -866,7 +866,7 @@ export default function Home() {
   };
 
   return (
-    <div className="min-h-screen" style={{ backgroundColor: '#E0EBE9' }}>
+    <div className="min-h-screen">
       <style>{`
         @media (min-width: 1024px) {
           .music-player-desktop {
@@ -1142,7 +1142,7 @@ export default function Home() {
                 className="music-player-desktop music-player-frame border-2 border-white rounded-3xl p-6 flex flex-col w-full lg:flex-shrink-0 relative overflow-hidden"
                 style={
                   selectedExercise?.name === 'Box Breathing (4-4-4-4)'
-                    ? { background: 'linear-gradient(to bottom, #DAF5FE 75%, #FFF6D6 100%)' }
+                    ? { background: 'linear-gradient(to bottom, #DAF5FE 60%, #FFF6D6 100%)' }
                     : { backgroundColor: 'white' }
                 }
               >
@@ -1150,11 +1150,6 @@ export default function Home() {
               {!(selectedOption === 'breathe' && selectedExercise) && (
                 <div className="mb-6">
                   <div className="w-full aspect-square bg-gray-200 rounded-lg mb-4 overflow-hidden">
-                    <img
-                      src={`/${currentVisual}`}
-                      alt="Album art"
-                      className="w-full h-full object-cover"
-                    />
                   </div>
                   <h3 className="font-semibold text-xl text-black mb-1 capitalize">
                     {selectedOption === 'breathe' ? 'Breathing exercises' : selectedOption ? `${selectedOption} Collection` : 'Select Your Path'}
