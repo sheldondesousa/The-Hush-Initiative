@@ -71,7 +71,25 @@ export default function BreathingExerciseScreen() {
     return () => clearInterval(interval);
   }, [isExercising, breathingPhase, currentCycle, cyclesFromInfo]);
 
-  // Calculate circle sizes and colors for animation
+  // Get circle color based on breathing phase and timer
+  const getCircleColor = () => {
+    // Base color: #067AC3 with transparency changes
+    const baseOpacity = 0.5;
+    const phase = breathingPhase;
+    let opacity = baseOpacity;
+
+    if (phase === 'inhale') {
+      opacity = baseOpacity + (timer / 4) * 0.4;
+    } else if (phase === 'exhale') {
+      opacity = baseOpacity + ((4 - timer) / 4) * 0.4;
+    } else if (phase === 'hold1' || phase === 'hold2') {
+      opacity = 0.9;
+    }
+
+    return `rgba(6, 122, 195, ${opacity})`;
+  };
+
+  // Calculate circle sizes for animation
   const getCirclesData = () => {
     const phase = breathingPhase;
     let scale = 1;
@@ -84,12 +102,12 @@ export default function BreathingExerciseScreen() {
       scale = timer <= 2 ? 1 : 0.6;
     }
 
-    // Linear gradient from #86EDD2 to #15122C (3 circles evenly distributed)
-    // Outermost (largest) circle is darkest, innermost (smallest) is lightest
+    const color = getCircleColor();
+
     return [
-      { key: 'circle3', size: 363 * scale, color: '#15122C', blur: 30 }, // Darkest (outermost) - 100%
-      { key: 'circle2', size: 286 * scale, color: '#4E807F', blur: 25 }, // 50% gradient (middle)
-      { key: 'circle1', size: 209 * scale, color: '#86EDD2', blur: 20 }  // Lightest (innermost) - 0%
+      { key: 'circle3', size: 363 * scale, color, blur: 30 },
+      { key: 'circle2', size: 286 * scale, color, blur: 25 },
+      { key: 'circle1', size: 209 * scale, color, blur: 20 }
     ];
   };
 
@@ -154,7 +172,7 @@ export default function BreathingExerciseScreen() {
                   cy="181.5"
                   r="175"
                   fill="none"
-                  stroke="#3B5B63"
+                  stroke="#067AC3"
                   strokeWidth="4"
                   strokeDasharray="1100"
                   strokeDashoffset={1100 - (1100 * (5 - timer) / 4)}

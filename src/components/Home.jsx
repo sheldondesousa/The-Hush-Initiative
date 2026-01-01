@@ -791,10 +791,10 @@ export default function Home() {
     const sizes = [160, 220, 280, 340];  // Timer 1-4: 4 circles with 60px increments
     // Linear gradient from #86EDD2 to #15122C
     const colors = [
-      '#86EDD2',   // Lightest cyan (innermost) - timer 1 (0%)
-      '#60A49B',   // 33% gradient between start and end - timer 2
-      '#3B5B63',   // 67% gradient between start and end - timer 3
-      '#15122C'    // Darkest navy (outermost) - timer 4 (100%)
+      'rgba(6, 122, 195, 1.0)',   // Lightest cyan (innermost) - timer 1 (0%)
+      'rgba(6, 122, 195, 0.75)',   // 33% gradient between start and end - timer 2
+      'rgba(6, 122, 195, 0.5)',   // 67% gradient between start and end - timer 3
+      'rgba(6, 122, 195, 0.25)'    // Darkest navy (outermost) - timer 4 (100%)
     ];
     const blurs = [20, 22, 24, 26];  // Progressive blur increase
 
@@ -1117,7 +1117,7 @@ export default function Home() {
                 className="music-player-desktop music-player-frame border-2 border-white rounded-3xl p-6 flex flex-col w-full lg:flex-shrink-0 relative overflow-hidden"
                 style={
                   selectedExercise?.name === 'Box Breathing (4-4-4-4)'
-                    ? { background: 'linear-gradient(to bottom, #E6F8FD 50%, #FEF9E4 100%)' }
+                    ? { background: 'white' }
                     : { backgroundColor: 'white' }
                 }
               >
@@ -1343,7 +1343,7 @@ export default function Home() {
                                     {selectedExercise?.name === 'Box Breathing (4-4-4-4)' && (
                                       <svg className="w-5 h-5 flex-shrink-0 mt-0.5" fill="none" viewBox="0 0 24 24">
                                         {/* Blue circle */}
-                                        <circle cx="12" cy="12" r="9" stroke="#3B5B63" strokeWidth="2" fill="none" />
+                                        <circle cx="12" cy="12" r="9" stroke="#067AC3" strokeWidth="2" fill="none" />
                                         {/* Black checkmark */}
                                         <path d="M9 12l2 2 4-4" stroke="black" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
                                       </svg>
@@ -1395,7 +1395,7 @@ export default function Home() {
                                   {/* Checkbox with tick mark */}
                                   <svg className="w-5 h-5 flex-shrink-0 mt-0.5" fill="none" viewBox="0 0 24 24">
                                     {/* Blue circle */}
-                                    <circle cx="12" cy="12" r="9" stroke="#3B5B63" strokeWidth="2" fill="none" />
+                                    <circle cx="12" cy="12" r="9" stroke="#067AC3" strokeWidth="2" fill="none" />
                                     {/* Black checkmark */}
                                     <path d="M9 12l2 2 4-4" stroke="black" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
                                   </svg>
@@ -1444,7 +1444,7 @@ export default function Home() {
                                   {/* Checkbox with tick mark */}
                                   <svg className="w-5 h-5 flex-shrink-0 mt-0.5" fill="none" viewBox="0 0 24 24">
                                     {/* Blue circle */}
-                                    <circle cx="12" cy="12" r="9" stroke="#3B5B63" strokeWidth="2" fill="none" />
+                                    <circle cx="12" cy="12" r="9" stroke="#067AC3" strokeWidth="2" fill="none" />
                                     {/* Black checkmark */}
                                     <path d="M9 12l2 2 4-4" stroke="black" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
                                   </svg>
@@ -1494,7 +1494,7 @@ export default function Home() {
                                     {/* Checkbox with tick mark */}
                                     <svg className="w-5 h-5 flex-shrink-0 mt-0.5" fill="none" viewBox="0 0 24 24">
                                       {/* Blue circle */}
-                                      <circle cx="12" cy="12" r="9" stroke="#3B5B63" strokeWidth="2" fill="none" />
+                                      <circle cx="12" cy="12" r="9" stroke="#067AC3" strokeWidth="2" fill="none" />
                                       {/* Black checkmark */}
                                       <path d="M9 12l2 2 4-4" stroke="black" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
                                     </svg>
@@ -1639,7 +1639,7 @@ export default function Home() {
                                   cy="181.5"
                                   r="175"
                                   fill="none"
-                                  stroke="#3B5B63"
+                                  stroke="#067AC3"
                                   strokeWidth="4"
                                   strokeDasharray="1100"
                                   strokeDashoffset={1100 - (1100 * timer / 4)}
