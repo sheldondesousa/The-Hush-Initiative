@@ -833,7 +833,7 @@ export default function Home() {
       `}</style>
       <div className="flex min-h-screen flex-col lg:flex-row">
         {/* Sidebar - Desktop */}
-        <aside className="hidden lg:flex w-64 border-r border-gray-300 p-8 flex-col">
+        <aside className="hidden lg:flex w-64 bg-white border-r border-gray-300 p-8 flex-col">
           <nav className="space-y-0">
             <div className="pb-6 border-b border-gray-300">
               <h2 className="text-lg font-semibold text-black">Menu</h2>
