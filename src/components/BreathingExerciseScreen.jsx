@@ -71,25 +71,7 @@ export default function BreathingExerciseScreen() {
     return () => clearInterval(interval);
   }, [isExercising, breathingPhase, currentCycle, cyclesFromInfo]);
 
-  // Get circle color based on breathing phase and timer
-  const getCircleColor = () => {
-    // Base color: #067AC3 with transparency changes
-    const baseOpacity = 0.5;
-    const phase = breathingPhase;
-    let opacity = baseOpacity;
-
-    if (phase === 'inhale') {
-      opacity = baseOpacity + (timer / 4) * 0.4;
-    } else if (phase === 'exhale') {
-      opacity = baseOpacity + ((4 - timer) / 4) * 0.4;
-    } else if (phase === 'hold1' || phase === 'hold2') {
-      opacity = 0.9;
-    }
-
-    return `rgba(6, 122, 195, ${opacity})`;
-  };
-
-  // Calculate circle sizes for animation
+  // Calculate circle sizes and colors for animation
   const getCirclesData = () => {
     const phase = breathingPhase;
     let scale = 1;
@@ -102,12 +84,12 @@ export default function BreathingExerciseScreen() {
       scale = timer <= 2 ? 1 : 0.6;
     }
 
-    const color = getCircleColor();
-
+    // Gradient colors from darkest to lightest
+    // Outermost (largest) circle is darkest, innermost (smallest) is lightest
     return [
-      { key: 'circle3', size: 363 * scale, color, blur: 30 },
-      { key: 'circle2', size: 286 * scale, color, blur: 25 },
-      { key: 'circle1', size: 209 * scale, color, blur: 20 }
+      { key: 'circle3', size: 363 * scale, color: '#15122C', blur: 30 }, // Darkest (outermost)
+      { key: 'circle2', size: 286 * scale, color: '#68379D', blur: 25 }, // Purple (middle)
+      { key: 'circle1', size: 209 * scale, color: '#86EDD2', blur: 20 }  // Lightest (innermost)
     ];
   };
 
@@ -172,7 +154,7 @@ export default function BreathingExerciseScreen() {
                   cy="181.5"
                   r="175"
                   fill="none"
-                  stroke="#067AC3"
+                  stroke="#68379D"
                   strokeWidth="4"
                   strokeDasharray="1100"
                   strokeDashoffset={1100 - (1100 * (5 - timer) / 4)}
