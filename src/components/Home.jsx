@@ -1138,7 +1138,14 @@ export default function Home() {
               </div>
             ) : currentView === 'interactive' ? (
               /* Music Player - iPhone 17 Pro Max dimensions on desktop */
-              <div className="music-player-desktop music-player-frame bg-white border-2 border-white rounded-3xl p-6 flex flex-col w-full lg:flex-shrink-0 relative overflow-hidden">
+              <div
+                className="music-player-desktop music-player-frame border-2 border-white rounded-3xl p-6 flex flex-col w-full lg:flex-shrink-0 relative overflow-hidden"
+                style={
+                  selectedExercise?.name === 'Box Breathing (4-4-4-4)'
+                    ? { background: 'linear-gradient(to bottom, #DAF5FE, #FFF6D6)' }
+                    : { backgroundColor: 'white' }
+                }
+              >
               {/* Album Art & Info - Hide when breathing exercise is selected */}
               {!(selectedOption === 'breathe' && selectedExercise) && (
                 <div className="mb-6">
@@ -1592,14 +1599,7 @@ export default function Home() {
                     </div>
 
                     {/* Breathing Circles Area - 40% */}
-                    <div
-                      className="flex-[0.4] rounded-lg flex flex-col items-center justify-center p-4"
-                      style={
-                        selectedExercise?.name === 'Box Breathing (4-4-4-4)'
-                          ? { background: 'linear-gradient(to bottom, #DAF5FE, #FFF6D6)' }
-                          : { backgroundColor: 'white' }
-                      }
-                    >
+                    <div className="flex-[0.4] rounded-lg flex flex-col items-center justify-center p-4">
                       {/* Show completion screen when exercise is completed */}
                       {exerciseCompleted ? (
                         <div className="flex flex-col items-center justify-center text-center gap-6">
