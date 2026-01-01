@@ -112,7 +112,7 @@ export default function BreathingExerciseScreen() {
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-white">
+    <div className="min-h-screen flex items-center justify-center" style={{ background: 'linear-gradient(to bottom, #F4F9FD, #C3DBEA)' }}>
       <style>{`
         @keyframes subtlePulse {
           0%, 100% {

@@ -841,7 +841,7 @@ export default function Home() {
   };
 
   return (
-    <div className="min-h-screen">
+    <div className="min-h-screen" style={{ background: 'linear-gradient(to bottom, #F4F9FD, #C3DBEA)' }}>
       <style>{`
         @media (min-width: 1024px) {
           .music-player-desktop {

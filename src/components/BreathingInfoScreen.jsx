@@ -36,7 +36,7 @@ Improves focus: Enhances concentration, making it great for high-pressure situat
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-white">
+    <div className="min-h-screen flex items-center justify-center" style={{ background: 'linear-gradient(to bottom, #F4F9FD, #C3DBEA)' }}>
       <div className="w-full max-w-[430px] h-[932px] bg-white flex flex-col p-6">
         {/* Back Button */}
         <button
