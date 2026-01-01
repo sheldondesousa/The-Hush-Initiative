@@ -1142,7 +1142,7 @@ export default function Home() {
                 className="music-player-desktop music-player-frame border-2 border-white rounded-3xl p-6 flex flex-col w-full lg:flex-shrink-0 relative overflow-hidden"
                 style={
                   selectedExercise?.name === 'Box Breathing (4-4-4-4)'
-                    ? { background: 'linear-gradient(to bottom, #E5F8FE 60%, #FFF9E2 100%)' }
+                    ? { background: 'linear-gradient(to bottom, #E6F8FD 50%, #FEF9E4 100%)' }
                     : { backgroundColor: 'white' }
                 }
               >
