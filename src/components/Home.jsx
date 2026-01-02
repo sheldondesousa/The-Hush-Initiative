@@ -1166,22 +1166,6 @@ export default function Home() {
                         <span className="text-2xl font-light text-gray-700">+</span>
                       </button>
 
-                      {/* Personalize Tile - Only for Coherent Breathing */}
-                      {selectedExercise?.name === 'Coherent breathing (5-5)' && (
-                        <button
-                          onClick={() => setShowCustomizationSheet(true)}
-                          className="w-full flex items-center justify-between p-4 border-2 border-gray-300 rounded-xl mb-5 hover:bg-gray-50 transition-colors"
-                        >
-                          <div className="flex items-center gap-3">
-                            <svg className="w-6 h-6 text-gray-700" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
-                              <path strokeLinecap="round" strokeLinejoin="round" d="M12 6V4m0 2a2 2 0 100 4m0-4a2 2 0 110 4m-6 8a2 2 0 100-4m0 4a2 2 0 110-4m0 4v2m0-6V4m6 6v10m6-2a2 2 0 100-4m0 4a2 2 0 110-4m0 4v2m0-6V4" />
-                            </svg>
-                            <span className="text-base font-semibold text-black">Personalize</span>
-                          </div>
-                          <span className="text-2xl font-light text-gray-700">+</span>
-                        </button>
-                      )}
-
                       {/* Preparation Tile - For all breathing exercises */}
                       {(selectedExercise?.name === 'Box Breathing (4-4-4-4)' || selectedExercise?.name === '4-7-8 Breathing' || selectedExercise?.name === 'Coherent breathing (5-5)' || selectedExercise?.name === 'Physiological Sigh' || selectedExercise?.name === 'Alternate Nostril' || selectedExercise?.name === 'Humming Bee') && (
                         <button
@@ -1240,24 +1224,35 @@ export default function Home() {
                           </span>
                           <div className="flex gap-3">
                             {selectedExercise?.name === 'Coherent breathing (5-5)' ? (
-                              // Time options for Coherent Breathing (1 min = 6 cycles, 2 min = 12 cycles, 3 min = 18 cycles)
-                              [
-                                { time: '1 min', cycles: 6 },
-                                { time: '2 min', cycles: 12 },
-                                { time: '3 min', cycles: 18 }
-                              ].map((option) => (
+                              // Time options for Coherent Breathing + Personalize button
+                              <>
+                                {[
+                                  { time: '1 min', cycles: 6 },
+                                  { time: '2 min', cycles: 12 },
+                                  { time: '3 min', cycles: 18 }
+                                ].map((option) => (
+                                  <button
+                                    key={option.cycles}
+                                    onClick={() => setSelectedCycles(option.cycles)}
+                                    className={`px-4 h-12 rounded-full text-base font-bold transition-all whitespace-nowrap ${
+                                      selectedCycles === option.cycles
+                                        ? 'bg-black text-white shadow-lg'
+                                        : 'bg-white text-gray-700 border-2 border-gray-300 hover:bg-gray-50'
+                                    }`}
+                                  >
+                                    {option.time}
+                                  </button>
+                                ))}
+                                {/* Personalize button - icon only */}
                                 <button
-                                  key={option.cycles}
-                                  onClick={() => setSelectedCycles(option.cycles)}
-                                  className={`px-4 h-12 rounded-full text-base font-bold transition-all whitespace-nowrap ${
-                                    selectedCycles === option.cycles
-                                      ? 'bg-black text-white shadow-lg'
-                                      : 'bg-white text-gray-700 border-2 border-gray-300 hover:bg-gray-50'
-                                  }`}
+                                  onClick={() => setShowCustomizationSheet(true)}
+                                  className="w-12 h-12 rounded-full flex items-center justify-center transition-all bg-white text-gray-700 border-2 border-gray-300 hover:bg-gray-50"
                                 >
-                                  {option.time}
+                                  <svg className="w-5 h-5" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
+                                    <path strokeLinecap="round" strokeLinejoin="round" d="M12 6V4m0 2a2 2 0 100 4m0-4a2 2 0 110 4m-6 8a2 2 0 100-4m0 4a2 2 0 110-4m0 4v2m0-6V4m6 6v10m6-2a2 2 0 100-4m0 4a2 2 0 110-4m0 4v2m0-6V4" />
+                                  </svg>
                                 </button>
-                              ))
+                              </>
                             ) : (
                               // Cycle options for other exercises
                               [4, 8, 12].map((cycles) => (
@@ -1965,23 +1960,7 @@ export default function Home() {
                     {/* Navigation Section - 15% (hide when completed) */}
                     {!exerciseCompleted && (
                     <div className="flex-[0.15] flex flex-col items-center justify-end pb-8">
-                      <div className="relative flex items-center justify-center w-full max-w-md px-4">
-                      {/* Personalize Button - Only for Coherent Breathing - Positioned on left */}
-                      {selectedExercise?.name === 'Coherent breathing (5-5)' && (
-                        <button
-                          onClick={(e) => {
-                            e.stopPropagation();
-                            setShowCustomizationSheet(true);
-                          }}
-                          className="absolute left-4 flex flex-col items-center gap-1 hover:opacity-70 transition-opacity"
-                        >
-                          <svg className="w-6 h-6" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
-                            <path strokeLinecap="round" strokeLinejoin="round" d="M12 6V4m0 2a2 2 0 100 4m0-4a2 2 0 110 4m-6 8a2 2 0 100-4m0 4a2 2 0 110-4m0 4v2m0-6V4m6 6v10m6-2a2 2 0 100-4m0 4a2 2 0 110-4m0 4v2m0-6V4" />
-                          </svg>
-                          <span className="text-xs text-gray-700 font-medium">Personalize</span>
-                        </button>
-                      )}
-
+                      <div className="flex items-center justify-center w-full max-w-md px-4">
                       {/* Start/Pause Button - Centered */}
                       <button
                         onClick={(e) => {
