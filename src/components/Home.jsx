@@ -234,6 +234,9 @@ export default function Home() {
   const [showWhenToUseSheet, setShowWhenToUseSheet] = useState(false); // Track when to use bottom sheet visibility
   const [showSafetySheet, setShowSafetySheet] = useState(false); // Track safety bottom sheet visibility
   const [exerciseCompleted, setExerciseCompleted] = useState(false); // Track if exercise completed
+  const [showCustomizationSheet, setShowCustomizationSheet] = useState(false); // Track customization bottom sheet visibility
+  const [coherentDuration, setCoherentDuration] = useState(60); // Duration in seconds (default 1 min)
+  const [coherentBreathTime, setCoherentBreathTime] = useState(5); // Breath time in seconds (default 5s)
 
   // Auto-start countdown when exercise view loads
   useEffect(() => {
@@ -314,23 +317,26 @@ export default function Home() {
       setTimer((prevTimer) => {
         // Handle phase transitions and timer logic based on exercise type
         if (isCoherent) {
-          // Coherent Breathing pattern (5-5)
+          // Coherent Breathing pattern (customizable)
+          const maxTimer = coherentBreathTime * 10; // Convert seconds to 100ms intervals
           if (breathingPhase === 'inhale') {
-            // INHALE: 0-50 (51 counts over 5s)
-            if (prevTimer < 50) {
+            // INHALE: 0 to maxTimer (e.g., 0-50 for 5s)
+            if (prevTimer < maxTimer) {
               return prevTimer + 1;
             } else {
               setBreathingPhase('exhale');
-              return 50; // Start EXHALE at 50
+              return maxTimer; // Start EXHALE at maxTimer
             }
           } else if (breathingPhase === 'exhale') {
-            // EXHALE: 50-0 (51 counts over 5s, descending)
+            // EXHALE: maxTimer to 0 (descending)
             if (prevTimer > 0) {
               return prevTimer - 1;
             } else {
               // Cycle completed, check if we should continue
               const nextCycle = currentCycle + 1;
-              if (nextCycle >= selectedCycles) {
+              // Calculate cycles based on duration and breath time
+              const totalCycles = Math.floor(coherentDuration / (coherentBreathTime * 2));
+              if (nextCycle >= totalCycles) {
                 // Reached target cycles, show completion screen
                 setIsExercising(false);
                 setExerciseCompleted(true);
@@ -724,12 +730,13 @@ export default function Home() {
     return circles.reverse();
   };
 
-  // Get smooth circle data for Coherent Breathing (5-5)
+  // Get smooth circle data for Coherent Breathing (customizable)
   const getCoherentCircleSize = () => {
     if (!isExercising) return 100;
 
-    // Timer ranges from 0-50 for both inhale and exhale
-    const progress = timer / 50; // 0 to 1
+    // Timer ranges from 0 to maxTimer based on custom breath time
+    const maxTimer = coherentBreathTime * 10; // Convert seconds to 100ms intervals
+    const progress = timer / maxTimer; // 0 to 1
     const minSize = 100;
     const maxSize = 340;
 
@@ -1482,6 +1489,82 @@ export default function Home() {
                         </div>
                       </div>
                     )}
+
+                    {/* Customization Bottom Sheet - Only for Coherent Breathing */}
+                    {showCustomizationSheet && selectedExercise?.name === 'Coherent breathing (5-5)' && (
+                      <div
+                        className="absolute inset-0 bg-black bg-opacity-50 z-50 flex items-end"
+                        onClick={() => setShowCustomizationSheet(false)}
+                      >
+                        <div
+                          className="bg-white rounded-t-3xl w-full max-h-[70vh] overflow-y-auto animate-slide-up"
+                          onClick={(e) => e.stopPropagation()}
+                        >
+                          <div className="p-6">
+                            {/* Sheet Handle */}
+                            <div className="w-12 h-1 bg-gray-300 rounded-full mx-auto mb-6"></div>
+
+                            {/* Section Title */}
+                            <h2 className="text-2xl font-bold mb-6 text-black">Personalize</h2>
+
+                            {/* Duration Selector */}
+                            <div className="mb-6">
+                              <label className="text-base font-semibold text-black mb-3 block">Duration</label>
+                              <div className="grid grid-cols-3 gap-2">
+                                {[
+                                  { label: '30s', value: 30 },
+                                  { label: '1 min', value: 60 },
+                                  { label: '2 min', value: 120 },
+                                  { label: '3 min', value: 180 },
+                                  { label: '4 min', value: 240 },
+                                  { label: '5 min', value: 300 }
+                                ].map((option) => (
+                                  <button
+                                    key={option.value}
+                                    onClick={() => setCoherentDuration(option.value)}
+                                    className={`py-2 px-4 rounded-lg text-sm font-semibold transition-all ${
+                                      coherentDuration === option.value
+                                        ? 'bg-black text-white'
+                                        : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
+                                    }`}
+                                  >
+                                    {option.label}
+                                  </button>
+                                ))}
+                              </div>
+                            </div>
+
+                            {/* Inhale-Exhale Timer Selector */}
+                            <div className="mb-6">
+                              <label className="text-base font-semibold text-black mb-3 block">Inhale-Exhale Timer</label>
+                              <div className="grid grid-cols-5 gap-2">
+                                {[3, 4, 5, 6, 7].map((seconds) => (
+                                  <button
+                                    key={seconds}
+                                    onClick={() => setCoherentBreathTime(seconds)}
+                                    className={`py-2 px-4 rounded-lg text-sm font-semibold transition-all ${
+                                      coherentBreathTime === seconds
+                                        ? 'bg-black text-white'
+                                        : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
+                                    }`}
+                                  >
+                                    {seconds}s
+                                  </button>
+                                ))}
+                              </div>
+                            </div>
+
+                            {/* Close Button */}
+                            <button
+                              onClick={() => setShowCustomizationSheet(false)}
+                              className="w-full py-3 bg-gray-100 text-black text-base font-bold rounded-xl hover:bg-gray-200 transition-colors"
+                            >
+                              Done
+                            </button>
+                          </div>
+                        </div>
+                      </div>
+                    )}
                   </div>
                 ) : selectedOption === 'breathe' && selectedExercise ? (
                   /* Breathing Exercise Detail View */
@@ -1500,6 +1583,9 @@ export default function Home() {
                           setBreathingPhase('inhale');
                           setTimer(0);
                           setCurrentCycle(0);
+                          // Reset Coherent breathing customization to defaults
+                          setCoherentDuration(60);
+                          setCoherentBreathTime(5);
                         }}
                         className="flex items-center gap-2 text-sm text-gray-700 hover:text-black transition-colors"
                       >
@@ -1511,8 +1597,20 @@ export default function Home() {
 
                       <h3 className="text-base font-semibold text-black text-center flex-1 px-4">{selectedExercise.name}</h3>
 
-                      {/* Spacer to balance layout */}
-                      <div className="w-14"></div>
+                      {/* Customization Icon - Only for Coherent Breathing */}
+                      {selectedExercise?.name === 'Coherent breathing (5-5)' ? (
+                        <button
+                          onClick={() => setShowCustomizationSheet(true)}
+                          className="w-14 flex items-center justify-end text-gray-700 hover:text-black transition-colors"
+                        >
+                          <svg className="w-6 h-6" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
+                            <path strokeLinecap="round" strokeLinejoin="round" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z" />
+                            <path strokeLinecap="round" strokeLinejoin="round" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+                          </svg>
+                        </button>
+                      ) : (
+                        <div className="w-14"></div>
+                      )}
                       </div>
                     </div>
 
@@ -1523,7 +1621,7 @@ export default function Home() {
                         <div className="text-center">
                           <div className="font-bold text-gray-900" style={{ fontSize: '4.32rem' }}>
                             {selectedExercise?.name === 'Coherent breathing (5-5)'
-                              ? Math.floor(timer / 10) // Convert 0-50 to 0-5 for display
+                              ? Math.floor(timer / 10) // Convert timer to seconds for display
                               : selectedExercise?.name === 'Physiological Sigh'
                                 ? (breathingPhase === 'inhale'
                                     ? Math.ceil((timer + 1) / 10)  // INHALE: 0-39 → 1-4 seconds
@@ -1550,6 +1648,9 @@ export default function Home() {
                                 setTimer(0);
                                 setCurrentCycle(0);
                                 setBreathingPhase('inhale');
+                                // Reset Coherent breathing customization to defaults
+                                setCoherentDuration(60);
+                                setCoherentBreathTime(5);
                               }}
                               className="bg-black text-white py-3 px-6 rounded-lg font-semibold hover:opacity-90 transition-opacity"
                             >
