@@ -1166,6 +1166,22 @@ export default function Home() {
                         <span className="text-2xl font-light text-gray-700">+</span>
                       </button>
 
+                      {/* Personalize Tile - Only for Coherent Breathing */}
+                      {selectedExercise?.name === 'Coherent breathing (5-5)' && (
+                        <button
+                          onClick={() => setShowCustomizationSheet(true)}
+                          className="w-full flex items-center justify-between p-4 border-2 border-gray-300 rounded-xl mb-5 hover:bg-gray-50 transition-colors"
+                        >
+                          <div className="flex items-center gap-3">
+                            <svg className="w-6 h-6 text-gray-700" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
+                              <path strokeLinecap="round" strokeLinejoin="round" d="M12 6V4m0 2a2 2 0 100 4m0-4a2 2 0 110 4m-6 8a2 2 0 100-4m0 4a2 2 0 110-4m0 4v2m0-6V4m6 6v10m6-2a2 2 0 100-4m0 4a2 2 0 110-4m0 4v2m0-6V4" />
+                            </svg>
+                            <span className="text-base font-semibold text-black">Personalize</span>
+                          </div>
+                          <span className="text-2xl font-light text-gray-700">+</span>
+                        </button>
+                      )}
+
                       {/* Preparation Tile - For all breathing exercises */}
                       {(selectedExercise?.name === 'Box Breathing (4-4-4-4)' || selectedExercise?.name === '4-7-8 Breathing' || selectedExercise?.name === 'Coherent breathing (5-5)' || selectedExercise?.name === 'Physiological Sigh' || selectedExercise?.name === 'Alternate Nostril' || selectedExercise?.name === 'Humming Bee') && (
                         <button
