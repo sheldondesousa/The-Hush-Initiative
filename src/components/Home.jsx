@@ -2094,13 +2094,15 @@ export default function Home() {
                                 {/* Blue gradient fill - Left Nostril (even cycles: 0, 2, 4...) */}
                                 {currentCycle % 2 === 0 && (
                                   <div className="absolute" style={{
-                                    bottom: '4px',
+                                    ...(breathingPhase === 'inhale'
+                                      ? { bottom: '4px' }
+                                      : { top: '4px' }),
                                     left: '4px',
                                     width: '173.5px',
-                                    height: breathingPhase === 'inhale'
-                                      ? `${(timer / (alternateNostrilBreathTime * 10)) * 355}px`
-                                      : `${(timer / (alternateNostrilBreathTime * 10)) * 355}px`,
-                                    background: 'linear-gradient(to top, rgba(6, 122, 195, 1) 0%, rgba(6, 122, 195, 0.6) 50%, rgba(6, 122, 195, 0.2) 100%)',
+                                    height: `${(timer / (alternateNostrilBreathTime * 10)) * 355}px`,
+                                    background: breathingPhase === 'inhale'
+                                      ? 'linear-gradient(to top, rgba(6, 122, 195, 1) 0%, rgba(6, 122, 195, 0.6) 50%, rgba(6, 122, 195, 0.2) 100%)'
+                                      : 'linear-gradient(to bottom, rgba(6, 122, 195, 1) 0%, rgba(6, 122, 195, 0.6) 50%, rgba(6, 122, 195, 0.2) 100%)',
                                     borderRadius: '15px',
                                     transition: 'height 100ms linear'
                                   }} />
@@ -2109,11 +2111,11 @@ export default function Home() {
                                 {/* Phase Text - Left Nostril */}
                                 {currentCycle % 2 === 0 && (
                                   <div className="absolute inset-0 flex flex-col items-center justify-center text-center">
-                                    <div className="text-lg font-semibold text-white uppercase tracking-wider">
+                                    <div className="text-lg font-semibold text-gray-900 uppercase tracking-wider">
                                       {breathingPhase === 'inhale' && 'INHALE'}
                                       {breathingPhase === 'exhale' && 'EXHALE'}
                                     </div>
-                                    <div className="text-sm text-white mt-1">
+                                    <div className="text-sm text-gray-700 mt-1">
                                       Left Nostril
                                     </div>
                                   </div>
@@ -2131,13 +2133,15 @@ export default function Home() {
                                 {/* Blue gradient fill - Right Nostril (odd cycles: 1, 3, 5...) */}
                                 {currentCycle % 2 === 1 && (
                                   <div className="absolute" style={{
-                                    bottom: '4px',
+                                    ...(breathingPhase === 'inhale'
+                                      ? { bottom: '4px' }
+                                      : { top: '4px' }),
                                     left: '4px',
                                     width: '173.5px',
-                                    height: breathingPhase === 'inhale'
-                                      ? `${(timer / (alternateNostrilBreathTime * 10)) * 355}px`
-                                      : `${(timer / (alternateNostrilBreathTime * 10)) * 355}px`,
-                                    background: 'linear-gradient(to top, rgba(6, 122, 195, 1) 0%, rgba(6, 122, 195, 0.6) 50%, rgba(6, 122, 195, 0.2) 100%)',
+                                    height: `${(timer / (alternateNostrilBreathTime * 10)) * 355}px`,
+                                    background: breathingPhase === 'inhale'
+                                      ? 'linear-gradient(to top, rgba(6, 122, 195, 1) 0%, rgba(6, 122, 195, 0.6) 50%, rgba(6, 122, 195, 0.2) 100%)'
+                                      : 'linear-gradient(to bottom, rgba(6, 122, 195, 1) 0%, rgba(6, 122, 195, 0.6) 50%, rgba(6, 122, 195, 0.2) 100%)',
                                     borderRadius: '15px',
                                     transition: 'height 100ms linear'
                                   }} />
@@ -2146,11 +2150,11 @@ export default function Home() {
                                 {/* Phase Text - Right Nostril */}
                                 {currentCycle % 2 === 1 && (
                                   <div className="absolute inset-0 flex flex-col items-center justify-center text-center">
-                                    <div className="text-lg font-semibold text-white uppercase tracking-wider">
+                                    <div className="text-lg font-semibold text-gray-900 uppercase tracking-wider">
                                       {breathingPhase === 'inhale' && 'INHALE'}
                                       {breathingPhase === 'exhale' && 'EXHALE'}
                                     </div>
-                                    <div className="text-sm text-white mt-1">
+                                    <div className="text-sm text-gray-700 mt-1">
                                       Right Nostril
                                     </div>
                                   </div>
