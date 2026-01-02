@@ -847,8 +847,8 @@ export default function Home() {
         }
         @keyframes greenFlash {
           0% {
-            stroke: #E5E7EB;
-            stroke-width: 4;
+            stroke: #6EE7B7;
+            stroke-width: 8;
           }
           100% {
             stroke: #6EE7B7;
@@ -856,7 +856,7 @@ export default function Home() {
           }
         }
         .flash-green {
-          animation: greenFlash 1000ms ease-in-out forwards;
+          animation: greenFlash 1000ms linear forwards;
         }
       `}</style>
       <div className="flex min-h-screen flex-col lg:flex-row">
@@ -1876,8 +1876,8 @@ export default function Home() {
                                 fill="none"
                                 stroke="#E5E7EB"
                                 strokeWidth="4"
-                                className={breathingPhase === 'inhale' && timer >= 30 ? 'flash-green' : ''}
-                                key={breathingPhase === 'inhale' && timer >= 30 ? 'green' : 'gray'}
+                                className={breathingPhase === 'inhale' && timer === 30 ? 'flash-green' : ''}
+                                key={breathingPhase === 'inhale' && timer === 30 ? 'green' : 'gray'}
                               />
                             </svg>
 
@@ -1940,6 +1940,22 @@ export default function Home() {
                                 />
                               ))}
                             </div>
+                          </div>
+                        </div>
+                      )}
+
+                      {/* Legend for Physiological Sigh - Show after countdown completes */}
+                      {selectedExercise?.name === 'Physiological Sigh' && isExercising && !exerciseCompleted && countdown === null && (
+                        <div className="flex items-center justify-center gap-6">
+                          {/* Blue Legend */}
+                          <div className="flex items-center gap-2">
+                            <div className="w-4 h-4 rounded-full" style={{ backgroundColor: 'rgba(6, 122, 195, 1)' }}></div>
+                            <span className="text-sm text-gray-700 font-medium">Long breath</span>
+                          </div>
+                          {/* Green Legend */}
+                          <div className="flex items-center gap-2">
+                            <div className="w-4 h-4 rounded-full" style={{ backgroundColor: '#6EE7B7' }}></div>
+                            <span className="text-sm text-gray-700 font-medium">Quick short breath</span>
                           </div>
                         </div>
                       )}
