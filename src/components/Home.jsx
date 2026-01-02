@@ -727,19 +727,25 @@ export default function Home() {
   // Get data for Physiological Sigh circles (4 circles: 3 blue, 1 green)
   const getPhysiologicalCirclesData = () => {
     let circleCount;
+    let opacity = 1;
+    let scale = 1;
+
     if (breathingPhase === 'inhale') {
       // INHALE: Show 1 circle per second (timer 0-4 = 0,1,2,3,4 circles)
       circleCount = timer;
     } else if (breathingPhase === 'exhale') {
-      // EXHALE: Remove circles (timer 8-0)
-      // Map timer 8-0 to circles 4-0
-      circleCount = Math.ceil(timer / 2); // 8,7=4, 6,5=3, 4,3=2, 2,1=1, 0=0
+      // EXHALE: All 4 circles visible, but dissolving linearly over 8 seconds
+      circleCount = 4;
+      // Linear reduction from 100% to 0% over 8 seconds
+      // timer goes from 8 to 0, so opacity should go from 1 to 0
+      opacity = timer / 8; // 8/8=1.0, 7/8=0.875, ..., 1/8=0.125, 0/8=0
+      scale = timer / 8; // Also scale down for visual effect
     } else {
       circleCount = breathingPhase === 'hold1' ? 4 : 0;
     }
 
     const sizes = [160, 220, 280, 340];  // 4 circles with 60px increments
-    const colors = [
+    const baseColors = [
       'rgba(6, 122, 195, 1.0)',   // Blue - circle 1
       'rgba(6, 122, 195, 0.75)',  // Blue - circle 2
       'rgba(6, 122, 195, 0.5)',   // Blue - circle 3
@@ -749,9 +755,23 @@ export default function Home() {
 
     const circles = [];
     for (let i = 0; i < circleCount; i++) {
+      // Apply exhale opacity to the color
+      let finalColor = baseColors[i];
+      if (breathingPhase === 'exhale') {
+        // Parse rgba and apply opacity multiplier
+        const matches = baseColors[i].match(/rgba?\((\d+),\s*(\d+),\s*(\d+),?\s*([\d.]+)?\)/);
+        if (matches) {
+          const r = matches[1];
+          const g = matches[2];
+          const b = matches[3];
+          const originalOpacity = matches[4] ? parseFloat(matches[4]) : 1;
+          finalColor = `rgba(${r}, ${g}, ${b}, ${originalOpacity * opacity})`;
+        }
+      }
+
       circles.push({
-        size: sizes[i],
-        color: colors[i],
+        size: sizes[i] * (breathingPhase === 'exhale' ? scale : 1),
+        color: finalColor,
         blur: blurs[i],
         key: i
       });
