@@ -155,7 +155,7 @@ export default function Home() {
       ]
     },
     'Alternate Nostril': {
-      description: 'Alternate nostril breathing (Nadi Shodhana) is an ancient yogic practice that involves breathing through one nostril at a time while blocking the other. This technique balances the left and right hemispheres of the brain, calms the nervous system, and enhances mental clarity and focus.',
+      description: 'Alternate nostril breathing is an ancient yogic practice that involves breathing through one nostril at a time while blocking the other. This technique balances the left and right hemispheres of the brain, calms the nervous system, and enhances mental clarity and focus.',
       sectionTitle: 'Tips',
       sectionContent: [
         { label: 'Hand Position:', text: 'Use your right thumb to close your right nostril and your right ring finger to close your left nostril. Keep your index and middle fingers folded or resting on your forehead.' },
@@ -238,8 +238,8 @@ export default function Home() {
   const [coherentCycles, setCoherentCycles] = useState(6); // Total cycles (default 6)
   const [coherentBreathTime, setCoherentBreathTime] = useState(5); // Inhale-Exhale time in seconds (default 5s)
   const [showLegend, setShowLegend] = useState(false); // Track legend visibility with delay
-  const [alternateNostrilCycles, setAlternateNostrilCycles] = useState(6); // Total cycles for Alternate Nostril (default 6)
-  const [alternateNostrilBreathTime, setAlternateNostrilBreathTime] = useState(4); // Breath time for Alternate Nostril (default 4s)
+  const [alternateNostrilCycles, setAlternateNostrilCycles] = useState(3); // Total cycles for Alternate Nostril (default 3)
+  const [alternateNostrilBreathTime, setAlternateNostrilBreathTime] = useState(5); // Breath time for Alternate Nostril (default 5s)
 
   // Auto-start countdown when exercise view loads
   useEffect(() => {
@@ -258,6 +258,13 @@ export default function Home() {
   // Set default cycles for Physiological Sigh (3 cycles recommended)
   useEffect(() => {
     if (selectedExercise?.name === 'Physiological Sigh' && selectedCycles === 4) {
+      setSelectedCycles(3);
+    }
+  }, [selectedExercise, selectedCycles]);
+
+  // Set default cycles for Alternate Nostril (3 cycles default)
+  useEffect(() => {
+    if (selectedExercise?.name === 'Alternate Nostril' && selectedCycles === 4) {
       setSelectedCycles(3);
     }
   }, [selectedExercise, selectedCycles]);
@@ -1690,8 +1697,8 @@ export default function Home() {
                             {/* Inhale-Exhale Timer Selector */}
                             <div className="mb-6">
                               <label className="text-base font-semibold text-black mb-3 block">Inhale-Exhale Timer</label>
-                              <div className="grid grid-cols-2 gap-2">
-                                {[4, 6].map((seconds) => (
+                              <div className="grid grid-cols-3 gap-2">
+                                {[4, 5, 6].map((seconds) => (
                                   <button
                                     key={seconds}
                                     onClick={() => setAlternateNostrilBreathTime(seconds)}
@@ -1740,8 +1747,8 @@ export default function Home() {
                           setCoherentCycles(6);
                           setCoherentBreathTime(5);
                           // Reset Alternate Nostril customization to defaults
-                          setAlternateNostrilCycles(6);
-                          setAlternateNostrilBreathTime(4);
+                          setAlternateNostrilCycles(3);
+                          setAlternateNostrilBreathTime(5);
                         }}
                         className="flex items-center gap-2 text-sm text-gray-700 hover:text-black transition-colors"
                       >
@@ -1802,8 +1809,8 @@ export default function Home() {
                                 setCoherentCycles(6);
                                 setCoherentBreathTime(5);
                                 // Reset Alternate Nostril customization to defaults
-                                setAlternateNostrilCycles(6);
-                                setAlternateNostrilBreathTime(4);
+                                setAlternateNostrilCycles(3);
+                                setAlternateNostrilBreathTime(5);
                               }}
                               className="bg-black text-white py-3 px-6 rounded-lg font-semibold hover:opacity-90 transition-opacity"
                             >
@@ -2084,7 +2091,7 @@ export default function Home() {
                                     fill="none" stroke="#E5E7EB" strokeWidth="4" />
                                 </svg>
 
-                                {/* Blue gradient fill - only visible on odd cycles (1, 3, 5...) */}
+                                {/* Blue gradient fill - Left Nostril (even cycles: 0, 2, 4...) */}
                                 {currentCycle % 2 === 0 && (
                                   <div className="absolute" style={{
                                     bottom: '4px',
@@ -2108,7 +2115,7 @@ export default function Home() {
                                     fill="none" stroke="#E5E7EB" strokeWidth="4" />
                                 </svg>
 
-                                {/* Blue gradient fill - only visible on even cycles (2, 4, 6...) */}
+                                {/* Blue gradient fill - Right Nostril (odd cycles: 1, 3, 5...) */}
                                 {currentCycle % 2 === 1 && (
                                   <div className="absolute" style={{
                                     bottom: '4px',
