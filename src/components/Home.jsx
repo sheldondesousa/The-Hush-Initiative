@@ -388,8 +388,8 @@ export default function Home() {
         } else if (isPhysiological) {
           // Physiological Sigh pattern
           if (breathingPhase === 'inhale') {
-            // INHALE: 0-40 (41 counts over 4s)
-            if (prevTimer < 40) {
+            // INHALE: 0-39 (40 counts over 4s)
+            if (prevTimer < 39) {
               return prevTimer + 1;
             } else {
               // Transition to 200ms hold
@@ -399,9 +399,9 @@ export default function Home() {
           } else if (breathingPhase === 'hold1') {
             // HOLD1: 200ms gap after INHALE
             setBreathingPhase('exhale');
-            return 80; // Start EXHALE at 80
+            return 79; // Start EXHALE at 79
           } else if (breathingPhase === 'exhale') {
-            // EXHALE: 80-0 (81 counts over 8s, descending)
+            // EXHALE: 79-0 (80 counts over 8s, descending)
             if (prevTimer > 0) {
               return prevTimer - 1;
             } else {
@@ -751,8 +751,8 @@ export default function Home() {
     const maxSize = 340;
 
     if (breathingPhase === 'inhale') {
-      // INHALE: timer goes from 0-40 (4 seconds)
-      const progress = timer / 40; // 0 to 1
+      // INHALE: timer goes from 0-39 (4 seconds)
+      const progress = timer / 39; // 0 to 1
 
       // Calculate current size with smooth easing
       const easeProgress = progress < 0.5
@@ -761,8 +761,8 @@ export default function Home() {
 
       return minSize + (maxSize - minSize) * easeProgress;
     } else if (breathingPhase === 'exhale') {
-      // EXHALE: timer goes from 80-0 (8 seconds)
-      const progress = timer / 80; // 1 to 0
+      // EXHALE: timer goes from 79-0 (8 seconds)
+      const progress = timer / 79; // 1 to 0
 
       // Calculate current size with smooth easing
       const easeProgress = progress < 0.5
