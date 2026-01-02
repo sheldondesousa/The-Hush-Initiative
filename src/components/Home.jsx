@@ -1574,44 +1574,44 @@ export default function Home() {
                       {/* Conditional Animation based on exercise */}
                       {selectedExercise?.name === 'Box Breathing (4-4-4-4)' ? (
                         <>
-                          {/* Breathing Circle Illustration - Box Breathing Only */}
+                          {/* Breathing Square Illustration - Box Breathing Only */}
                           <div className="flex-1 flex items-center justify-center w-full relative">
-                            {/* Gray Background Circle - Always visible */}
+                            {/* Gray Background Square - Always visible */}
                             <svg
                               className="absolute"
                               width="363"
                               height="363"
-                              style={{ transform: 'rotate(-90deg)' }}
                             >
-                              <circle
-                                cx="181.5"
-                                cy="181.5"
-                                r="175"
+                              <rect
+                                x="4"
+                                y="4"
+                                width="355"
+                                height="355"
                                 fill="none"
                                 stroke="#E5E7EB"
                                 strokeWidth="4"
                               />
                             </svg>
 
-                            {/* Blue Progress Circle - Shows during HOLD phases */}
+                            {/* Blue Progress Square - Shows during HOLD phases */}
                             {(breathingPhase === 'hold1' || breathingPhase === 'hold2') && (
                               <svg
                                 className="absolute"
                                 width="363"
                                 height="363"
-                                style={{ transform: 'rotate(-90deg)' }}
                               >
-                                <circle
-                                  cx="181.5"
-                                  cy="181.5"
-                                  r="175"
+                                <rect
+                                  x="4"
+                                  y="4"
+                                  width="355"
+                                  height="355"
                                   fill="none"
                                   stroke="#067AC3"
                                   strokeWidth="4"
-                                  strokeDasharray="1100"
-                                  strokeDashoffset={1100 - (1100 * timer / 4)}
+                                  strokeDasharray="1420"
+                                  strokeDashoffset={1420 - (1420 * timer / 4)}
                                   className="transition-all duration-1000"
-                                  strokeLinecap="round"
+                                  strokeLinecap="square"
                                 />
                               </svg>
                             )}
@@ -1619,7 +1619,7 @@ export default function Home() {
                             {getCirclesData().map((circle) => (
                               <div
                                 key={circle.key}
-                                className="rounded-full transition-all duration-1000 ease-in-out absolute"
+                                className="transition-all duration-1000 ease-in-out absolute"
                                 style={{
                                   width: `${circle.size}px`,
                                   height: `${circle.size}px`,
@@ -1630,7 +1630,7 @@ export default function Home() {
                               />
                             ))}
 
-                            {/* Phase Text - At Center of Circles */}
+                            {/* Phase Text - At Center of Squares */}
                             <div className="absolute text-center">
                               <div
                                 className={`text-lg font-semibold text-gray-700 uppercase tracking-wider ${
