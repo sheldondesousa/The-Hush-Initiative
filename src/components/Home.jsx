@@ -1830,7 +1830,7 @@ export default function Home() {
                                 fill="none"
                                 stroke="#E5E7EB"
                                 strokeWidth="4"
-                                className={timer === 50 || (timer === 0 && currentCycle > 0) ? 'blink-purple' : ''}
+                                className={timer === (coherentBreathTime * 10) || (timer === 0 && currentCycle > 0) ? 'blink-purple' : ''}
                               />
                             </svg>
 
