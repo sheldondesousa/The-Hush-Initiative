@@ -1294,7 +1294,10 @@ export default function Home() {
                                 {[3, 6, 9].map((cycles) => (
                                   <button
                                     key={cycles}
-                                    onClick={() => setSelectedCycles(cycles)}
+                                    onClick={() => {
+                                      setSelectedCycles(cycles);
+                                      setCoherentCycles(cycles);
+                                    }}
                                     className={`w-12 h-12 rounded-full text-base font-bold transition-all ${
                                       selectedCycles === cycles
                                         ? 'bg-black text-white shadow-lg'
@@ -1320,7 +1323,10 @@ export default function Home() {
                                 {[3, 6, 9].map((cycles) => (
                                   <button
                                     key={cycles}
-                                    onClick={() => setSelectedCycles(cycles)}
+                                    onClick={() => {
+                                      setSelectedCycles(cycles);
+                                      setAlternateNostrilCycles(cycles);
+                                    }}
                                     className={`w-12 h-12 rounded-full text-base font-bold transition-all ${
                                       selectedCycles === cycles
                                         ? 'bg-black text-white shadow-lg'
