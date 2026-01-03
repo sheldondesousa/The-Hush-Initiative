@@ -1646,8 +1646,8 @@ export default function Home() {
                             {/* Inhale-Exhale Timer Selector */}
                             <div className="mb-6">
                               <label className="text-base font-semibold text-black mb-3 block">Inhale-Exhale Timer</label>
-                              <div className="grid grid-cols-2 gap-2">
-                                {[4, 6].map((seconds) => (
+                              <div className="grid grid-cols-3 gap-2">
+                                {[4, 5, 6].map((seconds) => (
                                   <button
                                     key={seconds}
                                     onClick={() => setCoherentBreathTime(seconds)}
