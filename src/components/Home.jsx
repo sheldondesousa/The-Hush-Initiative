@@ -344,7 +344,7 @@ export default function Home() {
       // Alternate Nostril: INHALE=4s (40 counts, 100ms), EXHALE=4s (40 counts, 100ms) customizable
       intervalDuration = 100; // 100ms for smooth gradient animation
     } else if (isHummingBee) {
-      // Humming Bee: INHALE=5s (50 counts, 100ms), EXHALE=5s (50 counts, 100ms)
+      // Humming Bee: INHALE=4s (40 counts, 100ms), EXHALE=8s (80 counts, 100ms)
       intervalDuration = 100; // 100ms for smooth transitions
     } else {
       // Box breathing: all phases use same interval pattern
@@ -507,20 +507,17 @@ export default function Home() {
             }
           }
         } else if (isHummingBee) {
-          // Humming Bee pattern (simple INHALE/EXHALE like Coherent)
-          const breathTime = 5; // 5 seconds each phase
-          const maxTimer = breathTime * 10; // Convert seconds to 100ms intervals
-
+          // Humming Bee pattern (4s INHALE / 8s EXHALE)
           if (breathingPhase === 'inhale') {
-            // INHALE: 0 to maxTimer (0-50 for 5s)
-            if (prevTimer < maxTimer) {
+            // INHALE: 0-40 (4 seconds with 100ms updates)
+            if (prevTimer < 40) {
               return prevTimer + 1;
             } else {
               setBreathingPhase('exhale');
-              return maxTimer; // Start EXHALE at maxTimer
+              return 80; // Start EXHALE at 80
             }
           } else if (breathingPhase === 'exhale') {
-            // EXHALE: maxTimer to 0 (descending)
+            // EXHALE: 80-0 (8 seconds with 100ms updates, descending)
             if (prevTimer > 0) {
               return prevTimer - 1;
             } else {
@@ -888,17 +885,22 @@ export default function Home() {
   const getHummingBeeCircleSize = () => {
     if (!isExercising) return 100;
 
-    // Simple INHALE/EXHALE pattern (5s each, similar to Coherent Breathing)
-    const breathTime = 5; // 5 seconds default
-    const maxTimer = breathTime * 10; // Convert seconds to 100ms intervals
-    const progress = timer / maxTimer; // 0 to 1
     const minSize = 100;
     const maxSize = 340;
 
-    // Linear progression for smooth breathing
-    const currentSize = minSize + (maxSize - minSize) * progress;
+    if (breathingPhase === 'inhale') {
+      // INHALE: 4 seconds (0-4), linear expansion
+      const seconds = timer / 10; // Convert 100ms intervals to seconds
+      const progress = seconds / 4; // 0 to 1
+      return minSize + (maxSize - minSize) * progress;
+    } else if (breathingPhase === 'exhale') {
+      // EXHALE: 8 seconds (8-0), linear compression
+      const seconds = timer / 10; // Convert 100ms intervals to seconds
+      const progress = seconds / 8; // 1 to 0
+      return minSize + (maxSize - minSize) * progress;
+    }
 
-    return currentSize;
+    return minSize;
   };
 
   // Get smooth circle data for Physiological Sigh
@@ -1886,8 +1888,8 @@ export default function Home() {
                                         : Math.ceil(timer / 10))  // EXHALE: 80-0 → 8-0 seconds
                                     : selectedExercise?.name === 'Humming Bee'
                                       ? (breathingPhase === 'inhale'
-                                          ? Math.floor(timer / 10)  // INHALE: 0-50 → 0-5 seconds
-                                          : Math.ceil(timer / 10))  // EXHALE: 50-0 → 5-0 seconds
+                                          ? Math.floor(timer / 10)  // INHALE: 0-40 → 0-4 seconds
+                                          : Math.ceil(timer / 10))  // EXHALE: 80-0 → 8-0 seconds
                                       : timer
                             }
                           </div>
