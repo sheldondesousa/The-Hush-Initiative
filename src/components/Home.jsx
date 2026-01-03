@@ -2092,19 +2092,22 @@ export default function Home() {
                                 </svg>
 
                                 {/* Blue gradient fill - Left Nostril (even cycles: 0, 2, 4...) */}
-                                {currentCycle % 2 === 0 && (
-                                  <div className="absolute" style={{
-                                    bottom: '4px',
-                                    left: '4px',
-                                    width: '173.5px',
-                                    height: `${(timer / (alternateNostrilBreathTime * 10)) * 355}px`,
-                                    background: breathingPhase === 'inhale'
-                                      ? 'linear-gradient(to top, rgba(6, 122, 195, 1) 0%, rgba(6, 122, 195, 0.6) 50%, rgba(6, 122, 195, 0.2) 100%)'
-                                      : 'linear-gradient(to bottom, rgba(6, 122, 195, 1) 0%, rgba(6, 122, 195, 0.6) 50%, rgba(6, 122, 195, 0.2) 100%)',
-                                    borderRadius: '15px',
-                                    transition: 'height 100ms linear'
-                                  }} />
-                                )}
+                                {currentCycle % 2 === 0 && (() => {
+                                  const heightPercent = timer / (alternateNostrilBreathTime * 10);
+                                  const heightPx = heightPercent * 355;
+                                  const isFull = heightPercent >= 0.98; // Consider full at 98%+
+                                  return (
+                                    <div className="absolute" style={{
+                                      bottom: '4px',
+                                      left: '4px',
+                                      width: '173.5px',
+                                      height: `${heightPx}px`,
+                                      background: 'linear-gradient(to top, rgba(6, 122, 195, 1) 0%, rgba(6, 122, 195, 0.6) 50%, rgba(6, 122, 195, 0.2) 100%)',
+                                      borderRadius: isFull ? '15px' : '0 0 15px 15px',
+                                      transition: 'height 100ms linear'
+                                    }} />
+                                  );
+                                })()}
 
                                 {/* Phase Text - Left Nostril */}
                                 {currentCycle % 2 === 0 && (
@@ -2129,19 +2132,22 @@ export default function Home() {
                                 </svg>
 
                                 {/* Blue gradient fill - Right Nostril (odd cycles: 1, 3, 5...) */}
-                                {currentCycle % 2 === 1 && (
-                                  <div className="absolute" style={{
-                                    bottom: '4px',
-                                    left: '4px',
-                                    width: '173.5px',
-                                    height: `${(timer / (alternateNostrilBreathTime * 10)) * 355}px`,
-                                    background: breathingPhase === 'inhale'
-                                      ? 'linear-gradient(to top, rgba(6, 122, 195, 1) 0%, rgba(6, 122, 195, 0.6) 50%, rgba(6, 122, 195, 0.2) 100%)'
-                                      : 'linear-gradient(to bottom, rgba(6, 122, 195, 1) 0%, rgba(6, 122, 195, 0.6) 50%, rgba(6, 122, 195, 0.2) 100%)',
-                                    borderRadius: '15px',
-                                    transition: 'height 100ms linear'
-                                  }} />
-                                )}
+                                {currentCycle % 2 === 1 && (() => {
+                                  const heightPercent = timer / (alternateNostrilBreathTime * 10);
+                                  const heightPx = heightPercent * 355;
+                                  const isFull = heightPercent >= 0.98; // Consider full at 98%+
+                                  return (
+                                    <div className="absolute" style={{
+                                      bottom: '4px',
+                                      left: '4px',
+                                      width: '173.5px',
+                                      height: `${heightPx}px`,
+                                      background: 'linear-gradient(to top, rgba(6, 122, 195, 1) 0%, rgba(6, 122, 195, 0.6) 50%, rgba(6, 122, 195, 0.2) 100%)',
+                                      borderRadius: isFull ? '15px' : '0 0 15px 15px',
+                                      transition: 'height 100ms linear'
+                                    }} />
+                                  );
+                                })()}
 
                                 {/* Phase Text - Right Nostril */}
                                 {currentCycle % 2 === 1 && (
