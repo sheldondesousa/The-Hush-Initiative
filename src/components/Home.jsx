@@ -1824,7 +1824,11 @@ export default function Home() {
                                   ? (breathingPhase === 'inhale'
                                       ? Math.ceil((timer + 1) / 10)  // INHALE: 0-39 → 1-4 seconds
                                       : Math.ceil(timer / 10))       // EXHALE: 79-0 → 8-0 seconds
-                                  : timer
+                                  : selectedExercise?.name === '4-7-8 Breathing'
+                                    ? (breathingPhase === 'inhale'
+                                        ? Math.floor(timer / 10)  // INHALE: 0-40 → 0-4 seconds
+                                        : Math.ceil(timer / 10))  // EXHALE: 80-0 → 8-0 seconds
+                                    : timer
                             }
                           </div>
                         </div>
