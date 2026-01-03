@@ -248,26 +248,38 @@ export default function Home() {
     }
   }, [showingInfo, selectedExercise, selectedOption, countdown, isExercising]);
 
-  // Set default cycles for Coherent Breathing (6 cycles default)
+  // Set default cycles and timers when exercise is selected on info screen
   useEffect(() => {
-    if (selectedExercise?.name === 'Coherent Breathing' && selectedCycles === 4) {
-      setSelectedCycles(6);
+    if (selectedExercise && showingInfo) {
+      // Set defaults based on exercise type
+      switch (selectedExercise.name) {
+        case 'Box Breathing (4-4-4-4)':
+          setSelectedCycles(4);
+          break;
+        case '4-7-8 Breathing':
+          setSelectedCycles(4);
+          break;
+        case 'Coherent Breathing':
+          setSelectedCycles(6);
+          setCoherentCycles(6);
+          setCoherentBreathTime(5); // Reset to default 5s
+          break;
+        case 'Physiological Sigh':
+          setSelectedCycles(3);
+          break;
+        case 'Alternate Nostril':
+          setSelectedCycles(6);
+          setAlternateNostrilCycles(6);
+          setAlternateNostrilBreathTime(5); // Reset to default 5s
+          break;
+        case 'Humming Bee':
+          setSelectedCycles(4);
+          break;
+        default:
+          setSelectedCycles(4);
+      }
     }
-  }, [selectedExercise, selectedCycles]);
-
-  // Set default cycles for Physiological Sigh (3 cycles recommended)
-  useEffect(() => {
-    if (selectedExercise?.name === 'Physiological Sigh' && selectedCycles === 4) {
-      setSelectedCycles(3);
-    }
-  }, [selectedExercise, selectedCycles]);
-
-  // Set default cycles for Alternate Nostril (6 cycles default)
-  useEffect(() => {
-    if (selectedExercise?.name === 'Alternate Nostril' && selectedCycles === 4) {
-      setSelectedCycles(6);
-    }
-  }, [selectedExercise, selectedCycles]);
+  }, [selectedExercise, showingInfo]);
 
   // Countdown effect
   useEffect(() => {
