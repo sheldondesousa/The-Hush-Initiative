@@ -328,10 +328,10 @@ export default function Home() {
     // Dynamic interval based on breathing phase and exercise type
     let intervalDuration;
     if (is478) {
-      // 4-7-8: INHALE=4s (5 counts, 800ms), HOLD=7s (7 counts, 1000ms), EXHALE=8s (8 counts, 1000ms)
-      if (breathingPhase === 'inhale') intervalDuration = 800; // 5 counts * 800ms = 4s
-      else if (breathingPhase === 'hold1') intervalDuration = 1000; // 7 counts * 1000ms = 7s
-      else if (breathingPhase === 'exhale') intervalDuration = 1000; // 8 counts * 1000ms = 8s
+      // 4-7-8: INHALE=4s, HOLD=7s, EXHALE=8s (all phases use 1000ms intervals)
+      if (breathingPhase === 'inhale') intervalDuration = 1000; // 0→1→2→3→4 (4 transitions = 4s)
+      else if (breathingPhase === 'hold1') intervalDuration = 1000; // 0→1→2→3→4→5→6→7 (7 transitions = 7s)
+      else if (breathingPhase === 'exhale') intervalDuration = 1000; // 8→7→6→5→4→3→2→1→0 (8 transitions = 8s)
       else intervalDuration = 1000;
     } else if (isCoherent) {
       // Coherent: INHALE=5s (50 counts, 100ms), EXHALE=5s (50 counts, 100ms) for smooth animation
@@ -392,7 +392,7 @@ export default function Home() {
         } else if (is478) {
           // 4-7-8 Breathing pattern
           if (breathingPhase === 'inhale') {
-            // INHALE: 0-1-2-3-4 (5 counts over 4s)
+            // INHALE: 0-1-2-3-4 (5 counts over 4s, 4 transitions)
             if (prevTimer < 4) {
               return prevTimer + 1;
             } else {
@@ -400,15 +400,15 @@ export default function Home() {
               return 0; // Start HOLD1 at 0
             }
           } else if (breathingPhase === 'hold1') {
-            // HOLD: 0-1-2-3-4-5-6 (7 counts over 7s)
-            if (prevTimer < 6) {
+            // HOLD: 0-1-2-3-4-5-6-7 (8 counts over 7s, 7 transitions)
+            if (prevTimer < 7) {
               return prevTimer + 1;
             } else {
               setBreathingPhase('exhale');
               return 8; // Start EXHALE at 8
             }
           } else if (breathingPhase === 'exhale') {
-            // EXHALE: 8-7-6-5-4-3-2-1-0 (9 counts over 8s, descending)
+            // EXHALE: 8-7-6-5-4-3-2-1-0 (9 counts over 8s, 8 transitions, descending)
             if (prevTimer > 0) {
               return prevTimer - 1;
             } else {
@@ -1965,7 +1965,7 @@ export default function Home() {
                                   stroke="#067AC3"
                                   strokeWidth="4"
                                   strokeDasharray="1131"
-                                  strokeDashoffset={1131 - (1131 * timer / 6)}
+                                  strokeDashoffset={1131 - (1131 * timer / 7)}
                                   style={{ transition: 'stroke-dashoffset 1000ms linear' }}
                                   strokeLinecap="round"
                                 />
@@ -1984,7 +1984,7 @@ export default function Home() {
                                   backgroundColor: circle.size === 100 ? circle.color : 'transparent',
                                   boxShadow: `0 0 ${circle.blur}px ${circle.color}`,
                                   transition: breathingPhase === 'inhale'
-                                    ? 'all 800ms linear'
+                                    ? 'all 1000ms linear'
                                     : breathingPhase === 'exhale'
                                     ? 'all 1000ms linear'
                                     : 'all 1000ms linear'
