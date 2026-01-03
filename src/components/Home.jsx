@@ -344,8 +344,10 @@ export default function Home() {
       // Alternate Nostril: INHALE=4s (40 counts, 100ms), EXHALE=4s (40 counts, 100ms) customizable
       intervalDuration = 100; // 100ms for smooth gradient animation
     } else if (isHummingBee) {
-      // Humming Bee: INHALE=4s (40 counts, 100ms), EXHALE=8s (80 counts, 100ms)
-      intervalDuration = 100; // 100ms for smooth transitions
+      // Humming Bee: INHALE=4s (40 counts, 100ms), HOLD1=200ms, EXHALE=8s (80 counts, 100ms), HOLD2=200ms
+      if (breathingPhase === 'hold1') intervalDuration = 200; // 200ms gap after INHALE
+      else if (breathingPhase === 'hold2') intervalDuration = 200; // 200ms gap after EXHALE
+      else intervalDuration = 100; // 100ms for smooth transitions
     } else {
       // Box breathing: all phases use same interval pattern
       // INHALE and EXHALE: 5 counts (0-4) over 4 seconds = 800ms per count
@@ -507,35 +509,43 @@ export default function Home() {
             }
           }
         } else if (isHummingBee) {
-          // Humming Bee pattern (4s INHALE / 8s EXHALE)
+          // Humming Bee pattern (4s INHALE / 200ms HOLD / 8s EXHALE / 200ms HOLD)
           if (breathingPhase === 'inhale') {
             // INHALE: 0-40 (4 seconds with 100ms updates)
             if (prevTimer < 40) {
               return prevTimer + 1;
             } else {
-              setBreathingPhase('exhale');
-              return 80; // Start EXHALE at 80
+              setBreathingPhase('hold1');
+              return 0;
             }
+          } else if (breathingPhase === 'hold1') {
+            // HOLD1: 200ms gap after INHALE
+            setBreathingPhase('exhale');
+            return 80; // Start EXHALE at 80
           } else if (breathingPhase === 'exhale') {
             // EXHALE: 80-0 (8 seconds with 100ms updates, descending)
             if (prevTimer > 0) {
               return prevTimer - 1;
             } else {
-              // Cycle completed, check if we should continue
-              const nextCycle = currentCycle + 1;
-              if (nextCycle >= selectedCycles) {
-                // Reached target cycles, show completion screen
-                setIsExercising(false);
-                setExerciseCompleted(true);
-                setCurrentCycle(0);
-                setBreathingPhase('inhale');
-                return 0;
-              } else {
-                // Continue to next cycle
-                setCurrentCycle(nextCycle);
-                setBreathingPhase('inhale');
-                return 0;
-              }
+              // EXHALE complete at 0, transition to hold2
+              setBreathingPhase('hold2');
+              return 0;
+            }
+          } else if (breathingPhase === 'hold2') {
+            // HOLD2: 200ms gap after EXHALE
+            const nextCycle = currentCycle + 1;
+            if (nextCycle >= selectedCycles) {
+              // Reached target cycles, show completion screen
+              setIsExercising(false);
+              setExerciseCompleted(true);
+              setCurrentCycle(0);
+              setBreathingPhase('inhale');
+              return 0;
+            } else {
+              // Continue to next cycle
+              setCurrentCycle(nextCycle);
+              setBreathingPhase('inhale');
+              return 0; // Start next INHALE at 0
             }
           }
         } else {
