@@ -1404,14 +1404,6 @@ export default function Home() {
                       <p className="text-xs mt-0.5 opacity-80">days active</p>
                     </div>
                   </div>
-
-                  {/* Breathing Exercises Header */}
-                  <h3 className="font-semibold text-xl text-black mb-1">
-                    Breathing exercises
-                  </h3>
-                  <p className="text-sm text-gray-600">
-                    {currentTracks.length} technique{currentTracks.length !== 1 ? 's' : ''} to try
-                  </p>
                 </div>
               )}
 
@@ -2626,8 +2618,19 @@ export default function Home() {
                   </div>
                 ) : (
                   /* Track List */
-                  <div className={selectedOption === 'breathe' ? 'mt-6' : ''}>
-                    {currentTracks.map((track, index) => (
+                  <>
+                    {selectedOption === 'breathe' && (
+                      <div className="mt-6 mb-4">
+                        <h3 className="font-semibold text-xl text-black mb-1">
+                          Breathing exercises
+                        </h3>
+                        <p className="text-base text-gray-600">
+                          {currentTracks.length} technique{currentTracks.length !== 1 ? 's' : ''} you can try
+                        </p>
+                      </div>
+                    )}
+                    <div>
+                      {currentTracks.map((track, index) => (
                       <button
                         key={track.id}
                         onClick={() => {
@@ -2649,8 +2652,9 @@ export default function Home() {
                         <span className="text-sm text-gray-500">{track.duration}</span>
                       )}
                     </button>
-                    ))}
-                  </div>
+                      ))}
+                    </div>
+                  </>
                 )}
               </div>
 
