@@ -2619,13 +2619,10 @@ export default function Home() {
                   /* Track List */
                   <>
                     {selectedOption === 'breathe' && (
-                      <div className="mt-6 mb-4">
-                        <h3 className="font-semibold text-xl text-black mb-1">
-                          Breathing exercises
+                      <div className="mt-8 mb-4">
+                        <h3 className="font-semibold text-xl text-black">
+                          {currentTracks.length} Breathing exercise{currentTracks.length !== 1 ? 's' : ''} you can try
                         </h3>
-                        <p className="text-base text-gray-600">
-                          {currentTracks.length} technique{currentTracks.length !== 1 ? 's' : ''} you can try
-                        </p>
                       </div>
                     )}
                     <div>
