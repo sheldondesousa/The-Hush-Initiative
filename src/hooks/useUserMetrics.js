@@ -33,12 +33,20 @@ export const useUserMetrics = (userId) => {
           });
         });
 
-        // Calculate Active Days (successful logins)
+        // Calculate Active Days (successful logins THIS MONTH only)
+        const now = new Date();
+        const currentMonth = now.getMonth();
+        const currentYear = now.getFullYear();
+
         const loginEvents = events.filter(e => e.eventType === 'auth' && e.action === 'login');
         const uniqueLoginDays = new Set();
         loginEvents.forEach(event => {
-          const dateStr = event.timestamp.toISOString().split('T')[0];
-          uniqueLoginDays.add(dateStr);
+          const eventDate = event.timestamp;
+          // Only count logins from current month
+          if (eventDate.getMonth() === currentMonth && eventDate.getFullYear() === currentYear) {
+            const dateStr = eventDate.toISOString().split('T')[0];
+            uniqueLoginDays.add(dateStr);
+          }
         });
         const activeDays = uniqueLoginDays.size;
 
