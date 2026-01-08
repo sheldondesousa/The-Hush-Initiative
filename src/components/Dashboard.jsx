@@ -72,7 +72,8 @@ export default function Dashboard() {
               <p className="text-4xl font-bold">...</p>
             ) : (
               <>
-                <p className="text-4xl font-bold">{metrics.activeDays} days this month</p>
+                <p className="text-4xl font-bold">{metrics.activeDays}</p>
+                <p className="text-sm mt-1 opacity-80">days this month</p>
               </>
             )}
           </div>
@@ -94,7 +95,7 @@ export default function Dashboard() {
               <p className="text-4xl font-bold">...</p>
             ) : (
               <>
-                <p className="text-4xl font-bold">{metrics.averageTime} min</p>
+                <p className="text-4xl font-bold">{metrics.averageTime} <span className="text-sm font-normal">min</span></p>
                 <p className="text-sm mt-1 opacity-80">Time per day</p>
               </>
             )}
@@ -107,7 +108,8 @@ export default function Dashboard() {
               <p className="text-4xl font-bold">...</p>
             ) : (
               <>
-                <p className="text-4xl font-bold">{metrics.weeklyProgress} days this week</p>
+                <p className="text-4xl font-bold">{metrics.weeklyProgress}</p>
+                <p className="text-sm mt-1 opacity-80">days this week</p>
               </>
             )}
           </div>
