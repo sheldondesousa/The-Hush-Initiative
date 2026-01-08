@@ -1,6 +1,7 @@
 import { useAuth } from '../contexts/AuthContext';
 import { useNavigate } from 'react-router-dom';
 import { useState, useEffect } from 'react';
+import { trackPageView, trackSession, trackBreathingExercise, trackEvent } from '../services/analytics';
 
 export default function Home() {
   const { logout, currentUser } = useAuth();
@@ -17,6 +18,13 @@ export default function Home() {
     return visuals[randomIndex];
   });
 
+  // Track page view and session start
+  useEffect(() => {
+    const userId = currentUser?.uid;
+    trackPageView('home', userId);
+    trackSession('start', userId);
+  }, [currentUser]);
+
   // Change visual when returning to listing page (when selectedExercise becomes null)
   useEffect(() => {
     if (!selectedExercise) {
@@ -24,6 +32,14 @@ export default function Home() {
       setCurrentVisual(visuals[randomIndex]);
     }
   }, [selectedExercise]);
+
+  // Track exercise selection
+  useEffect(() => {
+    if (selectedExercise) {
+      const userId = currentUser?.uid;
+      trackBreathingExercise(selectedExercise, 'view_info', userId);
+    }
+  }, [selectedExercise, currentUser]);
 
   // Exercise content data
   const exerciseContent = {
@@ -1042,6 +1058,8 @@ export default function Home() {
 
   const handleLogout = async () => {
     try {
+      const userId = currentUser?.uid;
+      await trackSession('end', userId);
       await logout();
       navigate('/login');
     } catch (error) {

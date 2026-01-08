@@ -1,11 +1,14 @@
 import { useState, useEffect } from 'react';
 import { useNavigate, useParams, useLocation } from 'react-router-dom';
+import { useAuth } from '../contexts/AuthContext';
+import { trackBreathingExercise } from '../services/analytics';
 
 export default function BreathingExerciseScreen() {
   const navigate = useNavigate();
   const { type } = useParams();
   const location = useLocation();
   const cyclesFromInfo = location.state?.cycles || 5;
+  const { currentUser } = useAuth();
 
   const [isExercising, setIsExercising] = useState(false);
   const [breathingPhase, setBreathingPhase] = useState('inhale');
@@ -234,16 +237,19 @@ export default function BreathingExerciseScreen() {
           <div className="flex justify-center">
             <button
               onClick={() => {
+                const userId = currentUser?.uid;
                 if (!isExercising) {
                   setIsExercising(true);
                   setBreathingPhase('inhale');
                   setTimer(1);
                   setCurrentCycle(0);
+                  trackBreathingExercise(type, 'start', userId, { cycles: cyclesFromInfo });
                 } else {
                   setIsExercising(false);
                   setBreathingPhase('inhale');
                   setTimer(1);
                   setCurrentCycle(0);
+                  trackBreathingExercise(type, 'stop', userId, { currentCycle, totalCycles: cyclesFromInfo });
                 }
               }}
               className="px-12 py-4 bg-black text-white rounded-xl hover:bg-gray-800 transition-colors font-semibold text-lg"
