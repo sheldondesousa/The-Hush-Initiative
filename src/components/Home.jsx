@@ -43,6 +43,21 @@ export default function Home() {
     }
   }, [selectedExercise, currentUser]);
 
+  // Track exercise completion
+  useEffect(() => {
+    if (exerciseCompleted && selectedExercise) {
+      const userId = currentUser?.uid;
+      const totalCycles = selectedExercise?.name === 'Coherent Breathing' ? coherentCycles :
+                          selectedExercise?.name === 'Alternate Nostril' ? alternateNostrilCycles :
+                          selectedCycles;
+      trackBreathingExercise(selectedExercise?.name || selectedExercise, 'complete', userId, {
+        completedCycles: totalCycles,
+        totalCycles
+      });
+      console.log('🎉 Exercise completed tracked!', { exercise: selectedExercise?.name, cycles: totalCycles });
+    }
+  }, [exerciseCompleted, selectedExercise, currentUser, coherentCycles, alternateNostrilCycles, selectedCycles]);
+
   // Exercise content data
   const exerciseContent = {
     'Box Breathing (4-4-4-4)': {

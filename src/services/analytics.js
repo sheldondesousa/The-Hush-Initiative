@@ -4,15 +4,17 @@ import { db } from '../config/firebase';
 // Track user authentication events
 export const trackAuth = async (eventType, userId, method) => {
   try {
-    await addDoc(collection(db, 'analytics_events'), {
+    console.log('🔐 Tracking auth event:', { eventType, userId, method });
+    const docRef = await addDoc(collection(db, 'analytics_events'), {
       eventType: 'auth',
       action: eventType,
       userId,
       authMethod: method,
       timestamp: serverTimestamp()
     });
+    console.log('✅ Auth event saved with ID:', docRef.id);
   } catch (error) {
-    console.error('Analytics tracking error:', error);
+    console.error('❌ Analytics tracking error:', error);
   }
 };
 
@@ -47,7 +49,8 @@ export const trackSession = async (action, userId) => {
 // Track breathing exercise events
 export const trackBreathingExercise = async (exerciseType, action, userId, metadata = {}) => {
   try {
-    await addDoc(collection(db, 'analytics_events'), {
+    console.log('🏃 Tracking breathing exercise:', { exerciseType, action, userId, metadata });
+    const docRef = await addDoc(collection(db, 'analytics_events'), {
       eventType: 'breathing_exercise',
       exerciseType,
       action,
@@ -55,8 +58,9 @@ export const trackBreathingExercise = async (exerciseType, action, userId, metad
       ...metadata,
       timestamp: serverTimestamp()
     });
+    console.log('✅ Exercise event saved with ID:', docRef.id);
   } catch (error) {
-    console.error('Analytics tracking error:', error);
+    console.error('❌ Analytics tracking error:', error);
   }
 };
 
