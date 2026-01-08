@@ -55,6 +55,11 @@ export default function BreathingExerciseScreen() {
             const nextCycle = currentCycle + 1;
             if (nextCycle >= cyclesFromInfo) {
               // Reached target cycles, stop the exercise
+              const userId = currentUser?.uid;
+              trackBreathingExercise(type, 'complete', userId, {
+                completedCycles: nextCycle,
+                totalCycles: cyclesFromInfo
+              });
               setIsExercising(false);
               setCurrentCycle(0);
               setBreathingPhase('inhale');

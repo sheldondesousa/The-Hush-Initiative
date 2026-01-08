@@ -1561,6 +1561,11 @@ export default function Home() {
                                     onClick={() => {
                                       setSelectedCycles(cycles);
                                       setCoherentCycles(cycles);
+                                      const userId = currentUser?.uid;
+                                      trackEvent('cycle_selected', {
+                                        exercise: 'Coherent Breathing',
+                                        cycles
+                                      }, userId);
                                     }}
                                     className={`w-12 h-12 rounded-full text-base font-bold transition-all ${
                                       selectedCycles === cycles
@@ -1590,6 +1595,11 @@ export default function Home() {
                                     onClick={() => {
                                       setSelectedCycles(cycles);
                                       setAlternateNostrilCycles(cycles);
+                                      const userId = currentUser?.uid;
+                                      trackEvent('cycle_selected', {
+                                        exercise: 'Alternate Nostril',
+                                        cycles
+                                      }, userId);
                                     }}
                                     className={`w-12 h-12 rounded-full text-base font-bold transition-all ${
                                       selectedCycles === cycles
@@ -1615,7 +1625,14 @@ export default function Home() {
                               [4, 8, 12].map((cycles) => (
                                 <button
                                   key={cycles}
-                                  onClick={() => setSelectedCycles(cycles)}
+                                  onClick={() => {
+                                    setSelectedCycles(cycles);
+                                    const userId = currentUser?.uid;
+                                    trackEvent('cycle_selected', {
+                                      exercise: selectedExercise,
+                                      cycles
+                                    }, userId);
+                                  }}
                                   className={`w-12 h-12 rounded-full text-base font-bold transition-all ${
                                     selectedCycles === cycles
                                       ? 'bg-black text-white shadow-lg'
@@ -1882,7 +1899,14 @@ export default function Home() {
                                 {[12, 18, 24, 30].map((cycles) => (
                                   <button
                                     key={cycles}
-                                    onClick={() => setCoherentCycles(cycles)}
+                                    onClick={() => {
+                                      setCoherentCycles(cycles);
+                                      const userId = currentUser?.uid;
+                                      trackEvent('cycle_selected', {
+                                        exercise: 'Coherent Breathing',
+                                        cycles
+                                      }, userId);
+                                    }}
                                     className={`py-2 px-4 rounded-lg text-sm font-semibold transition-all ${
                                       coherentCycles === cycles
                                         ? 'bg-black text-white'
@@ -1951,7 +1975,14 @@ export default function Home() {
                                 {[12, 18, 24, 30].map((cycles) => (
                                   <button
                                     key={cycles}
-                                    onClick={() => setAlternateNostrilCycles(cycles)}
+                                    onClick={() => {
+                                      setAlternateNostrilCycles(cycles);
+                                      const userId = currentUser?.uid;
+                                      trackEvent('cycle_selected', {
+                                        exercise: 'Alternate Nostril',
+                                        cycles
+                                      }, userId);
+                                    }}
                                     className={`py-2 px-4 rounded-lg text-sm font-semibold transition-all ${
                                       alternateNostrilCycles === cycles
                                         ? 'bg-black text-white'
