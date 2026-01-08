@@ -1,9 +1,17 @@
 import { useAuth } from '../contexts/AuthContext';
 import { useNavigate } from 'react-router-dom';
+import { useEffect } from 'react';
+import { trackPageView, trackEvent } from '../services/analytics';
 
 export default function Dashboard() {
   const { currentUser, logout } = useAuth();
   const navigate = useNavigate();
+
+  // Track page view
+  useEffect(() => {
+    const userId = currentUser?.uid;
+    trackPageView('dashboard', userId);
+  }, [currentUser]);
 
   const handleLogout = async () => {
     try {
@@ -12,6 +20,11 @@ export default function Dashboard() {
     } catch (error) {
       console.error('Failed to log out:', error);
     }
+  };
+
+  const handleStartSession = () => {
+    const userId = currentUser?.uid;
+    trackEvent('start_session_clicked', {}, userId);
   };
 
   return (
@@ -100,7 +113,7 @@ export default function Dashboard() {
             <h3 className="text-lg font-semibold text-black mb-4">Your Sessions</h3>
             <div className="bg-gray-50 rounded-lg border-2 border-dashed border-gray-300 p-8 text-center">
               <p className="text-gray-500">No therapy sessions yet</p>
-              <button className="mt-4 px-6 py-2 bg-black text-white rounded-full font-medium hover:bg-gray-800 transition-colors">
+              <button onClick={handleStartSession} className="mt-4 px-6 py-2 bg-black text-white rounded-full font-medium hover:bg-gray-800 transition-colors">
                 Start a Session
               </button>
             </div>
