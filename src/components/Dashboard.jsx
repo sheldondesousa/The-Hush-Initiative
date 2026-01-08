@@ -1,9 +1,11 @@
 import { useAuth } from '../contexts/AuthContext';
 import { useNavigate } from 'react-router-dom';
+import { useUserMetrics } from '../hooks/useUserMetrics';
 
 export default function Dashboard() {
   const { currentUser, logout } = useAuth();
   const navigate = useNavigate();
+  const metrics = useUserMetrics(currentUser?.uid);
 
   const handleLogout = async () => {
     try {
@@ -66,29 +68,48 @@ export default function Dashboard() {
           {/* Active Days Card */}
           <div className="bg-gradient-to-br from-purple-500 to-purple-600 rounded-3xl p-6 text-white shadow-lg">
             <h3 className="text-sm font-medium mb-2 opacity-90">Active Days</h3>
-            <p className="text-4xl font-bold">12</p>
-            <p className="text-sm mt-1 opacity-80">days this month</p>
+            {metrics.loading ? (
+              <p className="text-4xl font-bold">...</p>
+            ) : (
+              <>
+                <p className="text-4xl font-bold">{metrics.activeDays} days this month</p>
+              </>
+            )}
           </div>
 
           {/* Exercises Complete Card */}
           <div className="bg-gradient-to-br from-pink-400 to-pink-500 rounded-3xl p-6 text-white shadow-lg">
             <h3 className="text-sm font-medium mb-2 opacity-90">Exercises Complete</h3>
-            <p className="text-4xl font-bold">28</p>
-            <p className="text-sm mt-1 opacity-80">sessions completed</p>
+            {metrics.loading ? (
+              <p className="text-4xl font-bold">...</p>
+            ) : (
+              <p className="text-4xl font-bold">{metrics.exercisesComplete}</p>
+            )}
           </div>
 
           {/* Average Time Spent Card */}
           <div className="bg-gradient-to-br from-purple-400 to-pink-400 rounded-3xl p-6 text-white shadow-lg">
-            <h3 className="text-sm font-medium mb-2 opacity-90">Average Time Spent</h3>
-            <p className="text-4xl font-bold">15 min</p>
-            <p className="text-sm mt-1 opacity-80">per session</p>
+            <h3 className="text-sm font-medium mb-2 opacity-90">Average Time</h3>
+            {metrics.loading ? (
+              <p className="text-4xl font-bold">...</p>
+            ) : (
+              <>
+                <p className="text-4xl font-bold">{metrics.averageTime} min</p>
+                <p className="text-sm mt-1 opacity-80">Time per day</p>
+              </>
+            )}
           </div>
 
           {/* Weekly Progress Card */}
           <div className="bg-gradient-to-br from-pink-300 to-pink-400 rounded-3xl p-6 text-white shadow-lg">
             <h3 className="text-sm font-medium mb-2 opacity-90">Weekly Progress</h3>
-            <p className="text-4xl font-bold">5</p>
-            <p className="text-sm mt-1 opacity-80">days active this week</p>
+            {metrics.loading ? (
+              <p className="text-4xl font-bold">...</p>
+            ) : (
+              <>
+                <p className="text-4xl font-bold">{metrics.weeklyProgress} days this week</p>
+              </>
+            )}
           </div>
         </div>
       </main>
