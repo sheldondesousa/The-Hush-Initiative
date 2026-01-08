@@ -33,12 +33,17 @@ export const useUserMetrics = (userId) => {
           });
         });
 
+        console.log('📊 Fetched events:', events.length);
+        console.log('📊 Events:', events);
+
         // Calculate Active Days (successful logins THIS MONTH only)
         const now = new Date();
         const currentMonth = now.getMonth();
         const currentYear = now.getFullYear();
 
         const loginEvents = events.filter(e => e.eventType === 'auth' && e.action === 'login');
+        console.log('🔐 Login events:', loginEvents.length, loginEvents);
+
         const uniqueLoginDays = new Set();
         loginEvents.forEach(event => {
           const eventDate = event.timestamp;
@@ -46,14 +51,17 @@ export const useUserMetrics = (userId) => {
           if (eventDate.getMonth() === currentMonth && eventDate.getFullYear() === currentYear) {
             const dateStr = eventDate.toISOString().split('T')[0];
             uniqueLoginDays.add(dateStr);
+            console.log('📅 Login date:', dateStr);
           }
         });
         const activeDays = uniqueLoginDays.size;
+        console.log('✅ Active Days:', activeDays);
 
         // Calculate Exercises Complete
         const completeEvents = events.filter(
           e => e.eventType === 'breathing_exercise' && e.action === 'complete'
         );
+        console.log('🏃 Complete events:', completeEvents.length, completeEvents);
         const exercisesComplete = completeEvents.length;
 
         // Calculate Average Time per day (in minutes)

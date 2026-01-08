@@ -1398,34 +1398,50 @@ export default function Home() {
                     {/* Active Days Card - Darkest */}
                     <div className="rounded-2xl p-4 text-white" style={{ background: 'linear-gradient(to bottom right, #7469B6, #8978C0)' }}>
                       <h3 className="text-xs font-medium mb-1 opacity-90">Active Days</h3>
-                      <p className="text-3xl font-bold">
-                        {metrics.loading ? '...' : `${metrics.activeDays} days this month`}
-                      </p>
+                      {metrics.loading ? (
+                        <p className="text-3xl font-bold">...</p>
+                      ) : (
+                        <>
+                          <p className="text-3xl font-bold">{metrics.activeDays}</p>
+                          <p className="text-xs mt-0.5 opacity-80">days this month</p>
+                        </>
+                      )}
                     </div>
 
                     {/* Exercises Complete Card - Mid-Dark (dark to mid) */}
                     <div className="rounded-2xl p-4 text-white" style={{ background: 'linear-gradient(to bottom right, #7469B6, #AB8CC4)' }}>
                       <h3 className="text-xs font-medium mb-1 opacity-90">Exercises Complete</h3>
-                      <p className="text-3xl font-bold">
-                        {metrics.loading ? '...' : metrics.exercisesComplete}
-                      </p>
+                      {metrics.loading ? (
+                        <p className="text-3xl font-bold">...</p>
+                      ) : (
+                        <p className="text-3xl font-bold">{metrics.exercisesComplete}</p>
+                      )}
                     </div>
 
                     {/* Average Time Spent Card - Mid-Light (mid to light) */}
                     <div className="rounded-2xl p-4 text-white" style={{ background: 'linear-gradient(to bottom right, #AB8CC4, #E1AFD1)' }}>
                       <h3 className="text-xs font-medium mb-1 opacity-90">Average Time</h3>
-                      <p className="text-3xl font-bold">
-                        {metrics.loading ? '...' : `${metrics.averageTime} min`}
-                      </p>
-                      <p className="text-xs mt-0.5 opacity-80">Time per day</p>
+                      {metrics.loading ? (
+                        <p className="text-3xl font-bold">...</p>
+                      ) : (
+                        <>
+                          <p className="text-3xl font-bold">{metrics.averageTime} <span className="text-xs font-normal">min</span></p>
+                          <p className="text-xs mt-0.5 opacity-80">Time per day</p>
+                        </>
+                      )}
                     </div>
 
                     {/* Weekly Progress Card - Lightest */}
                     <div className="rounded-2xl p-4 text-white" style={{ background: 'linear-gradient(to bottom right, #C9A0CE, #E1AFD1)' }}>
                       <h3 className="text-xs font-medium mb-1 opacity-90">Weekly Progress</h3>
-                      <p className="text-3xl font-bold">
-                        {metrics.loading ? '...' : `${metrics.weeklyProgress} days this week`}
-                      </p>
+                      {metrics.loading ? (
+                        <p className="text-3xl font-bold">...</p>
+                      ) : (
+                        <>
+                          <p className="text-3xl font-bold">{metrics.weeklyProgress}</p>
+                          <p className="text-xs mt-0.5 opacity-80">days this week</p>
+                        </>
+                      )}
                     </div>
                   </div>
                 </div>
