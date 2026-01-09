@@ -3129,6 +3129,135 @@ export default function Home() {
                       </p>
                     </section>
                   </div>
+                ) : currentView === 'terms' ? (
+                  <div className="flex flex-col py-6 text-left space-y-6 max-w-3xl mx-auto">
+                    <p className="text-xs text-gray-600 italic">Last updated: January 9, 2026</p>
+
+                    <p className="text-sm text-gray-700 leading-relaxed">
+                      Welcome to our breathing app. Please read these Terms and Conditions ("Terms") carefully before using the app. By accessing or using the app, you agree to be bound by these Terms.
+                    </p>
+
+                    <p className="text-sm text-gray-700 leading-relaxed font-semibold">
+                      If you do not agree to these Terms, please do not use the app.
+                    </p>
+
+                    {/* 1. Who We Are */}
+                    <section>
+                      <h3 className="text-base font-bold text-black mb-3">1. Who We Are</h3>
+                      <p className="text-sm text-gray-700 leading-relaxed">
+                        This app is developed by a small team based in India, offering a minimalist, free breathing tool. We do not serve ads, offer upsells, or sell your data.
+                      </p>
+                    </section>
+
+                    {/* 2. Use of the App */}
+                    <section>
+                      <h3 className="text-base font-bold text-black mb-3">2. Use of the App</h3>
+                      <p className="text-sm text-gray-700 leading-relaxed mb-2">
+                        You may use the app for personal, non-commercial purposes only. You must not:
+                      </p>
+                      <ul className="list-disc list-inside text-sm text-gray-700 leading-relaxed ml-4 mb-3">
+                        <li>Use the app for unlawful or harmful purposes</li>
+                        <li>Attempt to reverse-engineer, copy, or distribute the app or its content</li>
+                        <li>Use automated systems to access the app or collect data</li>
+                      </ul>
+                      <p className="text-sm text-gray-700 leading-relaxed">
+                        We reserve the right to suspend or terminate access if misuse is detected.
+                      </p>
+                    </section>
+
+                    {/* 3. Google Authentication */}
+                    <section>
+                      <h3 className="text-base font-bold text-black mb-3">3. Google Authentication</h3>
+                      <p className="text-sm text-gray-700 leading-relaxed">
+                        The app uses Firebase Authentication for Google sign-in. We do not store your email or personal information outside of Firebase. By using the sign-in feature, you also agree to Google's terms and privacy practices.
+                      </p>
+                    </section>
+
+                    {/* 4. Health Disclaimer */}
+                    <section>
+                      <h3 className="text-base font-bold text-black mb-3">4. Health Disclaimer</h3>
+                      <p className="text-sm text-gray-700 leading-relaxed mb-2">
+                        This app provides general breathing exercises for relaxation and focus. It is not a substitute for professional medical advice or treatment.
+                      </p>
+                      <ul className="list-disc list-inside text-sm text-gray-700 leading-relaxed ml-4">
+                        <li>Use at your own risk.</li>
+                        <li>If you have respiratory, cardiac, or neurological conditions, consult your doctor before using the app.</li>
+                        <li>We are not responsible for any outcomes resulting from the use of the exercises.</li>
+                      </ul>
+                    </section>
+
+                    {/* 5. Intellectual Property */}
+                    <section>
+                      <h3 className="text-base font-bold text-black mb-3">5. Intellectual Property</h3>
+                      <p className="text-sm text-gray-700 leading-relaxed mb-2">
+                        All content in the app—including visuals, sound design, and breathing patterns—is owned by the app creators or used with permission.
+                      </p>
+                      <p className="text-sm text-gray-700 leading-relaxed">
+                        You may not copy, reproduce, distribute, or modify any part of the app without explicit written consent.
+                      </p>
+                    </section>
+
+                    {/* 6. Limitation of Liability */}
+                    <section>
+                      <h3 className="text-base font-bold text-black mb-3">6. Limitation of Liability</h3>
+                      <p className="text-sm text-gray-700 leading-relaxed mb-2">
+                        The app is provided "as is" and "as available" without warranties of any kind.
+                      </p>
+                      <p className="text-sm text-gray-700 leading-relaxed mb-2">
+                        To the fullest extent permitted by law, we disclaim all liability for:
+                      </p>
+                      <ul className="list-disc list-inside text-sm text-gray-700 leading-relaxed ml-4">
+                        <li>Direct, indirect, incidental, or consequential damages</li>
+                        <li>Health-related outcomes</li>
+                        <li>Service interruptions or data loss</li>
+                      </ul>
+                    </section>
+
+                    {/* 7. Privacy */}
+                    <section>
+                      <h3 className="text-base font-bold text-black mb-3">7. Privacy</h3>
+                      <p className="text-sm text-gray-700 leading-relaxed">
+                        Your use of the app is also governed by our{' '}
+                        <button
+                          onClick={() => setCurrentView('privacy')}
+                          className="text-blue-600 hover:text-blue-800 underline cursor-pointer"
+                        >
+                          Privacy Policy
+                        </button>
+                        , which explains how we collect and use data, including through Firebase Analytics and Crashlytics.
+                      </p>
+                    </section>
+
+                    {/* 8. Changes to the Terms */}
+                    <section>
+                      <h3 className="text-base font-bold text-black mb-3">8. Changes to the Terms</h3>
+                      <p className="text-sm text-gray-700 leading-relaxed">
+                        We may update these Terms occasionally. Changes will be posted with an updated effective date. Continued use of the app implies your acceptance of the revised Terms.
+                      </p>
+                    </section>
+
+                    {/* 9. Governing Law */}
+                    <section>
+                      <h3 className="text-base font-bold text-black mb-3">9. Governing Law</h3>
+                      <p className="text-sm text-gray-700 leading-relaxed mb-2">
+                        These Terms are governed by the laws of India, without regard to conflict of law principles.
+                      </p>
+                      <p className="text-sm text-gray-700 leading-relaxed">
+                        Any disputes shall be subject to the exclusive jurisdiction of the courts in India.
+                      </p>
+                    </section>
+
+                    {/* 10. Contact Us */}
+                    <section className="border-t border-gray-300 pt-6">
+                      <h3 className="text-base font-bold text-black mb-3">10. Contact Us</h3>
+                      <p className="text-sm text-gray-700 leading-relaxed mb-2">
+                        If you have any questions about these Terms, please contact us at:
+                      </p>
+                      <p className="text-sm text-gray-700 leading-relaxed">
+                        📧 <span className="font-semibold">myemail@email.com</span>
+                      </p>
+                    </section>
+                  </div>
                 ) : (
                   <div className="flex flex-col items-center justify-center py-12 text-center">
                     <p className="text-gray-400 text-sm">This page is coming soon</p>
