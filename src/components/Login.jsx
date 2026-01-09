@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../contexts/AuthContext';
 import Loader from './Loader';
+import { trackPageView, trackAuth } from '../services/analytics';
 
 export default function Login() {
   const [username, setUsername] = useState('');
@@ -11,6 +12,11 @@ export default function Login() {
 
   const navigate = useNavigate();
   const { signInWithGoogle, currentUser } = useAuth();
+
+  // Track page view on mount
+  useEffect(() => {
+    trackPageView('login');
+  }, []);
 
   // Redirect if already logged in
   useEffect(() => {
@@ -29,7 +35,8 @@ export default function Login() {
     try {
       setError('');
       setLoading(true);
-      await signInWithGoogle();
+      const result = await signInWithGoogle();
+      await trackAuth('login', result.user.uid, 'google');
       // Navigation will happen automatically via useEffect when currentUser updates
     } catch (error) {
       setError('Failed to sign in with Google. Please try again.');
