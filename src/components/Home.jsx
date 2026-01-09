@@ -1182,6 +1182,49 @@ export default function Home() {
         .flash-green {
           animation: greenFlash 1000ms linear forwards;
         }
+        @keyframes breathingSmoke {
+          0% {
+            transform: translateY(20%) scale(1) rotate(0deg);
+            opacity: 0;
+          }
+          30% {
+            opacity: 0.6;
+          }
+          60% {
+            opacity: 0.4;
+          }
+          100% {
+            transform: translateY(-100%) scale(1.5) rotate(10deg);
+            opacity: 0;
+          }
+        }
+        .breathing-smoke {
+          position: absolute;
+          width: 100%;
+          height: 100%;
+          overflow: hidden;
+          border-radius: 1rem;
+        }
+        .breathing-smoke::before,
+        .breathing-smoke::after {
+          content: '';
+          position: absolute;
+          width: 150px;
+          height: 150px;
+          border-radius: 50%;
+          background: radial-gradient(circle, rgba(255,255,255,0.3) 0%, rgba(255,255,255,0) 70%);
+          filter: blur(20px);
+        }
+        .breathing-smoke::before {
+          bottom: -50px;
+          left: 20%;
+          animation: breathingSmoke 6s ease-in-out infinite;
+        }
+        .breathing-smoke::after {
+          bottom: -50px;
+          right: 20%;
+          animation: breathingSmoke 6s ease-in-out 3s infinite;
+        }
       `}</style>
       <div className="flex min-h-screen flex-col lg:flex-row">
         {/* Sidebar - Desktop */}
