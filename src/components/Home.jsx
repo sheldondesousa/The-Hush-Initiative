@@ -2804,9 +2804,156 @@ export default function Home() {
                 </div>
 
                 {/* Content */}
-                <div className="flex flex-col items-center justify-center py-12 text-center">
-                  <p className="text-gray-400 text-sm">This page is coming soon</p>
-                </div>
+                {currentView === 'faqs' ? (
+                  <div className="flex flex-col py-6 text-left space-y-8 max-w-3xl mx-auto">
+                    {/* General Section */}
+                    <section>
+                      <h3 className="text-lg font-bold text-black mb-4">General</h3>
+
+                      <div className="mb-6">
+                        <h4 className="font-semibold text-black mb-2">What is this app?</h4>
+                        <p className="text-gray-700 text-sm leading-relaxed">
+                          This is a minimal, science-backed breathing app designed to help you detach from the noise of modern life. It offers a clean, distraction-free environment to help you reset—on your terms, in your time. No subscriptions, no gamification, no clutter.
+                        </p>
+                      </div>
+
+                      <div className="mb-6">
+                        <h4 className="font-semibold text-black mb-2">Why did you create this app?</h4>
+                        <p className="text-gray-700 text-sm leading-relaxed">
+                          We built this because we couldn't find anything like it. Most apps were too noisy, too feature-heavy, or too focused on engagement. We wanted a simple, effective space for stillness—no voiceovers, no upsells, no pressure. Just sound, breath, and choice.
+                        </p>
+                      </div>
+
+                      <div className="mb-6">
+                        <h4 className="font-semibold text-black mb-2">Who is this app for?</h4>
+                        <p className="text-gray-700 text-sm leading-relaxed">
+                          This is for people who are tired of constant noise—external and internal. If you're looking for a quiet companion that doesn't demand your attention, this is for you. No achievements. No streaks. Just space to breathe.
+                        </p>
+                      </div>
+                    </section>
+
+                    {/* Features Section */}
+                    <section>
+                      <h3 className="text-lg font-bold text-black mb-4">Features</h3>
+
+                      <div className="mb-6">
+                        <h4 className="font-semibold text-black mb-2">What breathing exercises are available?</h4>
+                        <p className="text-gray-700 text-sm leading-relaxed">
+                          The app offers six distinct breathing exercises, each carefully curated to support different needs—whether you want to calm down, refocus, or simply pause.
+                        </p>
+                      </div>
+
+                      <div className="mb-6">
+                        <h4 className="font-semibold text-black mb-2">Can I customize the exercises?</h4>
+                        <p className="text-gray-700 text-sm leading-relaxed">
+                          Yes. Every breathing exercise allows you to choose how many cycles you want to complete. In the Coherent Breathing exercise, you can also adjust the inhale and exhale timer to suit your preferences.
+                        </p>
+                      </div>
+
+                      <div className="mb-6">
+                        <h4 className="font-semibold text-black mb-2">Does the app include guidance or preparation advice?</h4>
+                        <p className="text-gray-700 text-sm leading-relaxed mb-2">
+                          Absolutely. Each exercise comes with a curated list of:
+                        </p>
+                        <ul className="list-disc list-inside text-gray-700 text-sm leading-relaxed ml-4">
+                          <li>Tips</li>
+                          <li>Preparation advice</li>
+                          <li>When to try it</li>
+                          <li>Precautions</li>
+                        </ul>
+                        <p className="text-gray-700 text-sm leading-relaxed mt-2">
+                          This helps you make informed choices without being overwhelmed.
+                        </p>
+                      </div>
+                    </section>
+
+                    {/* Accessibility & Availability Section */}
+                    <section>
+                      <h3 className="text-lg font-bold text-black mb-4">Accessibility & Availability</h3>
+
+                      <div className="mb-6">
+                        <h4 className="font-semibold text-black mb-2">What platforms is the app available on?</h4>
+                        <p className="text-gray-700 text-sm leading-relaxed">
+                          Currently, the app is available only on the web. If demand continues, we'll explore building native mobile apps for iOS and Android.
+                        </p>
+                      </div>
+
+                      <div className="mb-6">
+                        <h4 className="font-semibold text-black mb-2">Do I need to create an account or sign in?</h4>
+                        <p className="text-gray-700 text-sm leading-relaxed">
+                          No account required. We intentionally keep things simple and private.
+                        </p>
+                      </div>
+                    </section>
+
+                    {/* Cost & Monetization Section */}
+                    <section>
+                      <h3 className="text-lg font-bold text-black mb-4">Cost & Monetization</h3>
+
+                      <div className="mb-6">
+                        <h4 className="font-semibold text-black mb-2">Is the app free?</h4>
+                        <p className="text-gray-700 text-sm leading-relaxed">
+                          Yes, the app is 100% free to use. No subscriptions, no hidden fees, no upsells.
+                        </p>
+                      </div>
+
+                      <div className="mb-6">
+                        <h4 className="font-semibold text-black mb-2">Are there plans to monetize the app?</h4>
+                        <p className="text-gray-700 text-sm leading-relaxed">
+                          We're considering adding an optional donation feature to help support hosting and future improvements. If implemented, it will be entirely optional—no pressure, ever.
+                        </p>
+                      </div>
+
+                      <div className="mb-6">
+                        <h4 className="font-semibold text-black mb-2">Will there ever be badges, rewards, or streaks?</h4>
+                        <p className="text-gray-700 text-sm leading-relaxed">
+                          No. That's not what this app is about. We don't believe rest should be gamified.
+                        </p>
+                      </div>
+                    </section>
+
+                    {/* Philosophy & Community Section */}
+                    <section>
+                      <h3 className="text-lg font-bold text-black mb-4">Philosophy & Community</h3>
+
+                      <div className="mb-6">
+                        <h4 className="font-semibold text-black mb-2">What makes this app different from other wellness apps?</h4>
+                        <ul className="list-disc list-inside text-gray-700 text-sm leading-relaxed ml-4 space-y-2">
+                          <li><span className="font-semibold">No distractions:</span> No pop-ups, no guided meditations, no complex dashboards.</li>
+                          <li><span className="font-semibold">Evidence-based:</span> Breathing techniques and sound design are grounded in science, not trends.</li>
+                          <li><span className="font-semibold">Minimalist design:</span> Built to help you detach, not keep you engaged.</li>
+                          <li><span className="font-semibold">No algorithms:</span> We don't track your habits or try to increase "time in app."</li>
+                        </ul>
+                      </div>
+
+                      <div className="mb-6">
+                        <h4 className="font-semibold text-black mb-2">Is this part of a larger movement or community?</h4>
+                        <p className="text-gray-700 text-sm leading-relaxed">
+                          It's not a movement—it's a mindset. A small collective of people who believe the most radical thing we can do is rest our minds. You're invited to use the app however and whenever you need it.
+                        </p>
+                      </div>
+
+                      <div className="mb-6">
+                        <h4 className="font-semibold text-black mb-2">How can I support this project?</h4>
+                        <p className="text-gray-700 text-sm leading-relaxed">
+                          Use it. Share it if you think someone else might need it. And if a donation feature is added in the future, support us if you feel moved to.
+                        </p>
+                      </div>
+                    </section>
+
+                    {/* Still Have Questions Section */}
+                    <section className="border-t border-gray-300 pt-6">
+                      <h3 className="text-lg font-bold text-black mb-4">Still Have Questions?</h3>
+                      <p className="text-gray-700 text-sm leading-relaxed">
+                        Feel free to reach out to us directly through the app. We're always open to feedback and conversation, but we'll never spam you or push notifications.
+                      </p>
+                    </section>
+                  </div>
+                ) : (
+                  <div className="flex flex-col items-center justify-center py-12 text-center">
+                    <p className="text-gray-400 text-sm">This page is coming soon</p>
+                  </div>
+                )}
               </div>
             )}
           </div>
