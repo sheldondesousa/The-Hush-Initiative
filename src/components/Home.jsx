@@ -895,12 +895,12 @@ export default function Home() {
 
   // Get smooth circle data for Coherent Breathing (customizable)
   const getCoherentCircleSize = () => {
-    if (!isExercising) return 100;
+    if (!isExercising || exerciseCompleted) return 0;
 
     // Timer ranges from 0 to maxTimer based on custom breath time
     const maxTimer = coherentBreathTime * 10; // Convert seconds to 100ms intervals
     const progress = timer / maxTimer; // 0 to 1
-    const minSize = 100;
+    const minSize = 0; // Start and end at 0 (no circle)
     const maxSize = 340;
 
     // Calculate current size with smooth easing
@@ -1036,9 +1036,9 @@ export default function Home() {
 
   // Get smooth circle data for Physiological Sigh
   const getPhysiologicalCircleSize = () => {
-    if (!isExercising) return 100;
+    if (!isExercising || exerciseCompleted) return 0;
 
-    const minSize = 100;
+    const minSize = 0; // Start and end at 0 (no circle)
     const maxSize = 340;
 
     if (breathingPhase === 'inhale') {
@@ -1062,7 +1062,7 @@ export default function Home() {
       // HOLD1: Stay at max size after INHALE completes
       return maxSize;
     } else if (breathingPhase === 'exhale') {
-      // EXHALE: timer goes from 79-0 (8 seconds)
+      // EXHALE: timer goes from 79-0 (8 seconds) - shrinks from max to 0
       const progress = timer / 79; // 1 to 0
 
       // Calculate current size with smooth easing
@@ -1072,11 +1072,11 @@ export default function Home() {
 
       return minSize + (maxSize - minSize) * easeProgress;
     } else if (breathingPhase === 'hold2') {
-      // HOLD2: Stay at min size after EXHALE completes
-      return minSize;
+      // HOLD2: Stay at min size after EXHALE completes - now returns 0
+      return 0;
     }
 
-    return minSize;
+    return 0;
   };
 
   const handleLogout = async () => {
