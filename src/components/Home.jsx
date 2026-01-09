@@ -44,26 +44,6 @@ export default function Home() {
     }
   }, [selectedExercise, currentUser]);
 
-  // Track exercise completion (only once per completion)
-  useEffect(() => {
-    if (exerciseCompleted && selectedExercise && !completionTrackedRef.current) {
-      completionTrackedRef.current = true;
-      const userId = currentUser?.uid;
-      const totalCycles = selectedExercise?.name === 'Coherent Breathing' ? coherentCycles :
-                          selectedExercise?.name === 'Alternate Nostril' ? alternateNostrilCycles :
-                          selectedCycles;
-      trackBreathingExercise(selectedExercise?.name || selectedExercise, 'complete', userId, {
-        completedCycles: totalCycles,
-        totalCycles
-      });
-      console.log('🎉 Exercise completed tracked!', { exercise: selectedExercise?.name, cycles: totalCycles });
-    }
-    // Reset ref when exercise completes
-    if (!exerciseCompleted) {
-      completionTrackedRef.current = false;
-    }
-  }, [exerciseCompleted, selectedExercise, currentUser, coherentCycles, alternateNostrilCycles, selectedCycles]);
-
   // Exercise content data
   const exerciseContent = {
     'Box Breathing (4-4-4-4)': {
@@ -279,6 +259,26 @@ export default function Home() {
   const [showLegend, setShowLegend] = useState(false); // Track legend visibility with delay
   const [alternateNostrilCycles, setAlternateNostrilCycles] = useState(6); // Total cycles for Alternate Nostril (default 6)
   const [alternateNostrilBreathTime, setAlternateNostrilBreathTime] = useState(5); // Breath time for Alternate Nostril (default 5s)
+
+  // Track exercise completion (only once per completion)
+  useEffect(() => {
+    if (exerciseCompleted && selectedExercise && !completionTrackedRef.current) {
+      completionTrackedRef.current = true;
+      const userId = currentUser?.uid;
+      const totalCycles = selectedExercise?.name === 'Coherent Breathing' ? coherentCycles :
+                          selectedExercise?.name === 'Alternate Nostril' ? alternateNostrilCycles :
+                          selectedCycles;
+      trackBreathingExercise(selectedExercise?.name || selectedExercise, 'complete', userId, {
+        completedCycles: totalCycles,
+        totalCycles
+      });
+      console.log('🎉 Exercise completed tracked!', { exercise: selectedExercise?.name, cycles: totalCycles });
+    }
+    // Reset ref when exercise completes
+    if (!exerciseCompleted) {
+      completionTrackedRef.current = false;
+    }
+  }, [exerciseCompleted, selectedExercise, currentUser, coherentCycles, alternateNostrilCycles, selectedCycles]);
 
   // Auto-start countdown when exercise view loads
   useEffect(() => {
