@@ -11,7 +11,7 @@ export default function Home() {
   const [menuOpen, setMenuOpen] = useState(false);
   const [selectedOption, setSelectedOption] = useState('breathe');
   const [selectedExercise, setSelectedExercise] = useState(null);
-  const [currentView, setCurrentView] = useState('interactive'); // 'interactive', 'about', 'support', 'faqs', 'terms'
+  const [currentView, setCurrentView] = useState('interactive'); // 'interactive', 'about', 'support', 'faqs', 'privacy', 'terms'
   const completionTrackedRef = useRef(false);
 
   // Random visual for album art placeholder
@@ -1184,6 +1184,12 @@ export default function Home() {
               FAQs
             </button>
             <button
+              onClick={() => setCurrentView('privacy')}
+              className={`block w-full text-left text-base text-black hover:opacity-70 transition-opacity py-6 border-b border-gray-300 ${currentView === 'privacy' ? 'font-bold' : ''}`}
+            >
+              Privacy Policy
+            </button>
+            <button
               onClick={() => setCurrentView('terms')}
               className={`block w-full text-left text-base text-black hover:opacity-70 transition-opacity py-6 border-b border-gray-300 ${currentView === 'terms' ? 'font-bold' : ''}`}
             >
@@ -1257,6 +1263,15 @@ export default function Home() {
                   className={`block w-full text-left text-base text-black hover:opacity-70 transition-opacity py-6 border-b border-gray-300 ${currentView === 'faqs' ? 'font-bold' : ''}`}
                 >
                   FAQs
+                </button>
+                <button
+                  onClick={() => {
+                    setCurrentView('privacy');
+                    setMenuOpen(false);
+                  }}
+                  className={`block w-full text-left text-base text-black hover:opacity-70 transition-opacity py-6 border-b border-gray-300 ${currentView === 'privacy' ? 'font-bold' : ''}`}
+                >
+                  Privacy Policy
                 </button>
                 <button
                   onClick={() => {
@@ -2799,6 +2814,7 @@ export default function Home() {
                   <h2 className="flex-1 text-center text-xl font-semibold text-black pr-12">
                     {currentView === 'support' && 'Support the App'}
                     {currentView === 'faqs' && 'FAQs'}
+                    {currentView === 'privacy' && 'Privacy Policy'}
                     {currentView === 'terms' && 'Terms & Conditions'}
                   </h2>
                 </div>
@@ -2946,6 +2962,170 @@ export default function Home() {
                       <h3 className="text-lg font-bold text-black mb-4">Still Have Questions?</h3>
                       <p className="text-gray-700 text-sm leading-relaxed">
                         Feel free to reach out to us directly through the app. We're always open to feedback and conversation, but we'll never spam you or push notifications.
+                      </p>
+                    </section>
+                  </div>
+                ) : currentView === 'privacy' ? (
+                  <div className="flex flex-col py-6 text-left space-y-6 max-w-3xl mx-auto">
+                    <p className="text-xs text-gray-600 italic">Last updated: January 9, 2026</p>
+
+                    <p className="text-sm text-gray-700 leading-relaxed">
+                      We respect your privacy. This policy explains how we collect, use, and protect your data when you use our breathing app, currently available via web and powered by Firebase services.
+                    </p>
+
+                    {/* 1. Who We Are */}
+                    <section>
+                      <h3 className="text-base font-bold text-black mb-3">1. Who We Are</h3>
+                      <p className="text-sm text-gray-700 leading-relaxed">
+                        This app is developed and operated by a small independent team based in India. Our mission is to offer a minimal, distraction-free space to breathe—without advertising, upsells, or pressure.
+                      </p>
+                    </section>
+
+                    {/* 2. What Data We Collect */}
+                    <section>
+                      <h3 className="text-base font-bold text-black mb-3">2. What Data We Collect</h3>
+                      <p className="text-sm text-gray-700 leading-relaxed mb-4">
+                        We do not collect or store any personal information beyond what is essential for app functionality.
+                      </p>
+                      <p className="text-sm text-gray-700 leading-relaxed mb-3">We collect the following data:</p>
+
+                      <div className="ml-4 mb-4">
+                        <h4 className="text-sm font-semibold text-black mb-2">Authentication Data</h4>
+                        <p className="text-sm text-gray-700 leading-relaxed">
+                          When you log in via Google Authentication, Firebase (a Google service) verifies your identity. We do not store your email address or Google profile data in our own databases.
+                        </p>
+                      </div>
+
+                      <div className="ml-4">
+                        <h4 className="text-sm font-semibold text-black mb-2">App Activity Data</h4>
+                        <p className="text-sm text-gray-700 leading-relaxed mb-2">
+                          We track non-personal, anonymized usage information such as:
+                        </p>
+                        <ul className="list-disc list-inside text-sm text-gray-700 leading-relaxed ml-4 mb-2">
+                          <li>Exercises started</li>
+                          <li>Duration of usage</li>
+                          <li>Frequency and timestamps</li>
+                          <li>Crashes or errors (via Crashlytics)</li>
+                        </ul>
+                        <p className="text-sm text-gray-700 leading-relaxed">
+                          This helps us improve the app and understand what features are most helpful.
+                        </p>
+                      </div>
+                    </section>
+
+                    {/* 3. How We Use Your Data */}
+                    <section>
+                      <h3 className="text-base font-bold text-black mb-3">3. How We Use Your Data</h3>
+                      <p className="text-sm text-gray-700 leading-relaxed mb-2">
+                        We use the above data only for the following purposes:
+                      </p>
+                      <ul className="list-disc list-inside text-sm text-gray-700 leading-relaxed ml-4 mb-3">
+                        <li>To provide and improve app functionality</li>
+                        <li>To monitor app stability and fix issues</li>
+                        <li>To understand overall usage patterns</li>
+                        <li>To ensure login security via Google Authentication</li>
+                      </ul>
+                      <p className="text-sm text-gray-700 leading-relaxed mb-2">We do not:</p>
+                      <ul className="list-disc list-inside text-sm text-gray-700 leading-relaxed ml-4">
+                        <li>Sell your data</li>
+                        <li>Share your data with advertisers</li>
+                        <li>Track you across other sites or apps</li>
+                      </ul>
+                    </section>
+
+                    {/* 4. Third-Party Services */}
+                    <section>
+                      <h3 className="text-base font-bold text-black mb-3">4. Third-Party Services</h3>
+                      <p className="text-sm text-gray-700 leading-relaxed mb-2">
+                        We rely on the following third-party services, which may process limited data:
+                      </p>
+                      <ul className="list-disc list-inside text-sm text-gray-700 leading-relaxed ml-4 mb-3">
+                        <li>Firebase Authentication (Google LLC) – for login via Google</li>
+                        <li>Firebase Analytics – for anonymous usage tracking</li>
+                        <li>Firebase Crashlytics – for crash/error reporting</li>
+                      </ul>
+                      <p className="text-sm text-gray-700 leading-relaxed">
+                        These services are governed by{' '}
+                        <a
+                          href="https://policies.google.com/privacy"
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="text-blue-600 hover:text-blue-800 underline"
+                        >
+                          Google's Privacy Policy
+                        </a>.
+                      </p>
+                    </section>
+
+                    {/* 5. Your Rights */}
+                    <section>
+                      <h3 className="text-base font-bold text-black mb-3">5. Your Rights</h3>
+
+                      <div className="mb-4">
+                        <p className="text-sm font-semibold text-black mb-2">Under GDPR (EU/EEA) and Indian law:</p>
+                        <p className="text-sm text-gray-700 leading-relaxed mb-2">You have the right to:</p>
+                        <ul className="list-disc list-inside text-sm text-gray-700 leading-relaxed ml-4">
+                          <li>Request access to the data we hold (limited to app activity logs)</li>
+                          <li>Request correction or deletion of your data</li>
+                          <li>Withdraw consent at any time (by stopping use of the app)</li>
+                        </ul>
+                      </div>
+
+                      <div className="mb-4">
+                        <p className="text-sm font-semibold text-black mb-2">Under California Consumer Privacy Act (CCPA):</p>
+                        <p className="text-sm text-gray-700 leading-relaxed mb-2">You have the right to:</p>
+                        <ul className="list-disc list-inside text-sm text-gray-700 leading-relaxed ml-4">
+                          <li>Know what data we collect and how we use it</li>
+                          <li>Request deletion of your data</li>
+                          <li>Opt-out of the sale of personal data (we do not sell any data)</li>
+                        </ul>
+                      </div>
+
+                      <p className="text-sm text-gray-700 leading-relaxed">
+                        To exercise your rights, contact us at: <span className="font-semibold">myemail@email.com</span>
+                      </p>
+                    </section>
+
+                    {/* 6. Data Retention */}
+                    <section>
+                      <h3 className="text-base font-bold text-black mb-3">6. Data Retention</h3>
+                      <p className="text-sm text-gray-700 leading-relaxed">
+                        We retain activity logs (anonymized) for up to 12 months, to monitor usage patterns and improve functionality. After this, data may be deleted or aggregated.
+                      </p>
+                    </section>
+
+                    {/* 7. Account Deletion */}
+                    <section>
+                      <h3 className="text-base font-bold text-black mb-3">7. Account Deletion</h3>
+                      <p className="text-sm text-gray-700 leading-relaxed">
+                        We use Google Authentication for login but do not create standalone user accounts. Therefore, there is no separate "account" to delete. However, if you'd like us to remove your activity data, you may contact us using the email below.
+                      </p>
+                    </section>
+
+                    {/* 8. Data Storage Location */}
+                    <section>
+                      <h3 className="text-base font-bold text-black mb-3">8. Data Storage Location</h3>
+                      <p className="text-sm text-gray-700 leading-relaxed">
+                        All data is stored securely using Firebase, hosted on Google Cloud infrastructure. Data may be stored in servers located in the United States, EU, or Asia, subject to Google's data policies.
+                      </p>
+                    </section>
+
+                    {/* 9. Changes to This Policy */}
+                    <section>
+                      <h3 className="text-base font-bold text-black mb-3">9. Changes to This Policy</h3>
+                      <p className="text-sm text-gray-700 leading-relaxed">
+                        We may update this Privacy Policy as our app evolves. We will post the updated version with a new "last updated" date. Continued use of the app implies your acceptance of any changes.
+                      </p>
+                    </section>
+
+                    {/* 10. Contact Us */}
+                    <section className="border-t border-gray-300 pt-6">
+                      <h3 className="text-base font-bold text-black mb-3">10. Contact Us</h3>
+                      <p className="text-sm text-gray-700 leading-relaxed mb-2">
+                        If you have any questions or concerns about your privacy, contact us at:
+                      </p>
+                      <p className="text-sm text-gray-700 leading-relaxed">
+                        📧 <span className="font-semibold">myemail@email.com</span>
                       </p>
                     </section>
                   </div>
