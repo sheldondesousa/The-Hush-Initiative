@@ -1120,7 +1120,7 @@ export default function Home() {
   const DifficultyIndicator = ({ level }) => {
     return (
       <div className="flex items-center gap-2">
-        <span className="text-xs font-bold text-gray-700">Difficulty:</span>
+        <span className="text-xs font-bold text-gray-700">Effort Level:</span>
         <div className="flex gap-1">
           {[1, 2, 3, 4, 5].map((circle) => {
             const isFilled = circle <= Math.floor(level);
@@ -1503,7 +1503,7 @@ export default function Home() {
               >
               {/* Profile & Metrics Section - Show when on breathing exercises listing */}
               {!(selectedOption === 'breathe' && selectedExercise) && selectedOption === 'breathe' && (
-                <div className="mb-6">
+                <div className="mb-6 flex-shrink-0">
                   {/* Profile Section */}
                   <div className="flex items-center gap-3 mb-4">
                     <div className="w-16 h-16 rounded-full bg-gray-200 flex items-center justify-center overflow-hidden flex-shrink-0">
@@ -1591,7 +1591,7 @@ export default function Home() {
 
               {/* Album Art & Info - Show for other options (focus/calm) */}
               {!(selectedOption === 'breathe' && selectedExercise) && selectedOption !== 'breathe' && (
-                <div className="mb-6">
+                <div className="mb-6 flex-shrink-0">
                   <div className="w-full aspect-square bg-gray-200 rounded-lg mb-4 overflow-hidden">
                   </div>
                   <h3 className="font-semibold text-xl text-black mb-1 capitalize">
@@ -1606,7 +1606,7 @@ export default function Home() {
               )}
 
               {/* Track List or Exercise Detail View */}
-              <div className={`flex-1 overflow-hidden ${selectedOption === 'breathe' && selectedExercise ? 'flex' : 'space-y-0 mb-6'}`}>
+              <div className={`flex-1 overflow-hidden min-h-0 ${selectedOption === 'breathe' && selectedExercise ? 'flex' : 'flex flex-col'}`}>
                 {selectedOption === 'breathe' && selectedExercise && showingInfo ? (
                   /* Breathing Exercise Info Screen */
                   <div className="flex flex-col h-full w-full">
@@ -2831,15 +2831,15 @@ export default function Home() {
                   </div>
                 ) : (
                   /* Track List */
-                  <>
+                  <div className="flex flex-col flex-1 min-h-0">
                     {selectedOption === 'breathe' && (
-                      <div className="mt-4 mb-4">
+                      <div className="mt-4 mb-4 flex-shrink-0">
                         <h3 className="font-semibold text-xl text-black">
                           Select from 6 proven techniques
                         </h3>
                       </div>
                     )}
-                    <div className="overflow-y-auto flex-1">
+                    <div className="overflow-y-auto flex-1 min-h-0">
                       {currentTracks.map((track, index) => (
                       <button
                         key={track.id}
@@ -2874,7 +2874,7 @@ export default function Home() {
                     </button>
                       ))}
                     </div>
-                  </>
+                  </div>
                 )}
               </div>
 
