@@ -2419,13 +2419,13 @@ export default function Home() {
                               />
                             </svg>
 
-                            {/* Secondary Colors Gradient Background */}
+                            {/* Secondary Colors Gradient Background - Vertical from bottom to top */}
                             <div
                               className="absolute"
                               style={{
                                 width: '355px',
                                 height: '355px',
-                                background: 'linear-gradient(135deg, rgba(225, 175, 209, 0.8) 0%, rgba(246, 208, 234, 0.75) 50%, rgba(255, 230, 247, 0.7) 100%)',
+                                background: 'linear-gradient(to top, rgba(255, 230, 247, 0.8) 0%, rgba(246, 208, 234, 0.75) 50%, rgba(225, 175, 209, 0.7) 100%)',
                                 borderRadius: '15px'
                               }}
                             />
@@ -2445,6 +2445,9 @@ export default function Home() {
                                 // Fall from 100% to 0% over 4 seconds
                                 mountainHeight = (1 - (timer / 4)) * 100;
                               }
+
+                              const peakHeight = 355 - (mountainHeight * 3.55);
+                              const baseHeight = 355;
 
                               return (
                                 <svg
@@ -2470,12 +2473,12 @@ export default function Home() {
                                     </radialGradient>
                                   </defs>
 
-                                  {/* Bell curve mountain shape */}
+                                  {/* Bell curve mountain shape using cubic bezier for smooth curve */}
                                   <path
                                     d={`
-                                      M 0,355
-                                      Q 88.75,${355 - (mountainHeight * 3.55 * 0.3)} 177.5,${355 - (mountainHeight * 3.55)}
-                                      Q 266.25,${355 - (mountainHeight * 3.55 * 0.3)} 355,355
+                                      M 0,${baseHeight}
+                                      C 59,${baseHeight - (mountainHeight * 3.55 * 0.15)}, 118,${peakHeight + (mountainHeight * 3.55 * 0.05)}, 177.5,${peakHeight}
+                                      C 237,${peakHeight + (mountainHeight * 3.55 * 0.05)}, 296,${baseHeight - (mountainHeight * 3.55 * 0.15)}, 355,${baseHeight}
                                       Z
                                     `}
                                     fill="url(#mountainGradient)"
@@ -2486,9 +2489,9 @@ export default function Home() {
                                   {/* Overlay gradient for depth effect */}
                                   <path
                                     d={`
-                                      M 0,355
-                                      Q 88.75,${355 - (mountainHeight * 3.55 * 0.3)} 177.5,${355 - (mountainHeight * 3.55)}
-                                      Q 266.25,${355 - (mountainHeight * 3.55 * 0.3)} 355,355
+                                      M 0,${baseHeight}
+                                      C 59,${baseHeight - (mountainHeight * 3.55 * 0.15)}, 118,${peakHeight + (mountainHeight * 3.55 * 0.05)}, 177.5,${peakHeight}
+                                      C 237,${peakHeight + (mountainHeight * 3.55 * 0.05)}, 296,${baseHeight - (mountainHeight * 3.55 * 0.15)}, 355,${baseHeight}
                                       Z
                                     `}
                                     fill="url(#mountainOverlay)"
