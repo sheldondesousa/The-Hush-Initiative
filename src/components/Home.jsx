@@ -598,8 +598,8 @@ export default function Home() {
         } else {
           // Box Breathing pattern (4-4-4-4) - second-based counting
           if (breathingPhase === 'inhale') {
-            // INHALE: 0→4 (4 seconds)
-            if (prevTimer < 4) {
+            // INHALE: 0→5 (5 timer values for 4 seconds to reach max at 4)
+            if (prevTimer < 5) {
               return prevTimer + 1;
             } else {
               setBreathingPhase('hold1');
@@ -611,10 +611,10 @@ export default function Home() {
               return prevTimer + 1;
             } else {
               setBreathingPhase('exhale');
-              return 4; // Start EXHALE at 4
+              return 5; // Start EXHALE at 5 to reach 0 at end
             }
           } else if (breathingPhase === 'exhale') {
-            // EXHALE: 4→0 (4 seconds, descending)
+            // EXHALE: 5→0 (descending to reach 0 at 4 seconds)
             if (prevTimer > 0) {
               return prevTimer - 1;
             } else {
@@ -968,15 +968,15 @@ export default function Home() {
     const maxSize = 349; // 355 - 4 (stroke width) - 2 (1px padding each side)
 
     if (breathingPhase === 'inhale') {
-      // INHALE: 0→4 seconds, linear expansion from 0 to max
-      const progress = timer / 4; // 0 to 1
+      // INHALE: 0→5 timer values, reaches max at timer=4 (end of 4 seconds)
+      const progress = Math.min(timer / 4, 1); // 0 to 1, capped at 1
       return minSize + (maxSize - minSize) * progress;
     } else if (breathingPhase === 'hold1') {
       // HOLD1: Stay at max size for 4 seconds
       return maxSize;
     } else if (breathingPhase === 'exhale') {
-      // EXHALE: 4→0 seconds, linear compression from max to 0
-      const progress = timer / 4; // 1 to 0
+      // EXHALE: 5→0 timer values, reaches min at timer=0 (end of 4 seconds)
+      const progress = Math.min(timer / 4, 1); // 1.25 to 0, capped at 1
       return minSize + (maxSize - minSize) * progress;
     } else if (breathingPhase === 'hold2') {
       // HOLD2: Stay at min size (0) for 4 seconds
@@ -2360,7 +2360,7 @@ export default function Home() {
                                 width: `${getBoxBreathingSquareSize()}px`,
                                 height: `${getBoxBreathingSquareSize()}px`,
                                 background: 'radial-gradient(circle, rgba(6, 122, 195, 1) 0%, rgba(6, 122, 195, 0.6) 50%, rgba(6, 122, 195, 0.2) 100%)',
-                                boxShadow: '0 0 30px rgba(6, 122, 195, 0.5)',
+                                boxShadow: '0 0 27px rgba(6, 122, 195, 0.45)',
                                 borderRadius: '15px',
                                 transition: 'all 1000ms linear'
                               }}
@@ -2373,7 +2373,7 @@ export default function Home() {
                                   (breathingPhase === 'hold1' || breathingPhase === 'hold2') ? 'pulse-hold' : ''
                                 }`}
                               >
-                                {breathingPhase === 'inhale' && 'Breathe In'}
+                                {breathingPhase === 'inhale' && countdown === null && 'Breathe In'}
                                 {breathingPhase === 'hold1' && 'HOLD'}
                                 {breathingPhase === 'exhale' && 'Breathe Out'}
                                 {breathingPhase === 'hold2' && 'HOLD'}
