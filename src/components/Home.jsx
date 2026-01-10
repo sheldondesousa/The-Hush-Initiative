@@ -2399,6 +2399,46 @@ export default function Home() {
                       {/* Conditional Animation based on exercise */}
                       {selectedExercise?.name === 'Box Breathing (4-4-4-4)' ? (
                         <>
+                          {/* Phase Tabs */}
+                          <div className="flex justify-center gap-2 mb-6">
+                            <div
+                              className={`px-6 py-2 rounded-lg font-medium transition-all ${
+                                breathingPhase === 'inhale'
+                                  ? 'bg-white text-black shadow-md'
+                                  : 'bg-transparent text-gray-400'
+                              }`}
+                            >
+                              In 4s
+                            </div>
+                            <div
+                              className={`px-6 py-2 rounded-lg font-medium transition-all ${
+                                breathingPhase === 'hold1'
+                                  ? 'bg-white text-black shadow-md'
+                                  : 'bg-transparent text-gray-400'
+                              }`}
+                            >
+                              Hold 4s
+                            </div>
+                            <div
+                              className={`px-6 py-2 rounded-lg font-medium transition-all ${
+                                breathingPhase === 'exhale'
+                                  ? 'bg-white text-black shadow-md'
+                                  : 'bg-transparent text-gray-400'
+                              }`}
+                            >
+                              Out 4s
+                            </div>
+                            <div
+                              className={`px-6 py-2 rounded-lg font-medium transition-all ${
+                                breathingPhase === 'hold2'
+                                  ? 'bg-white text-black shadow-md'
+                                  : 'bg-transparent text-gray-400'
+                              }`}
+                            >
+                              Hold 4s
+                            </div>
+                          </div>
+
                           {/* Breathing Square Illustration - Box Breathing Only */}
                           <div className="flex-1 flex items-center justify-center w-full relative">
                             {/* Gray Border Square */}
@@ -2473,12 +2513,12 @@ export default function Home() {
                                     </radialGradient>
                                   </defs>
 
-                                  {/* Bell curve mountain shape using cubic bezier for smooth curve */}
+                                  {/* Bell curve mountain shape using cubic bezier for smooth, rounded curve */}
                                   <path
                                     d={`
                                       M 0,${baseHeight}
-                                      C 59,${baseHeight - (mountainHeight * 3.55 * 0.15)}, 118,${peakHeight + (mountainHeight * 3.55 * 0.05)}, 177.5,${peakHeight}
-                                      C 237,${peakHeight + (mountainHeight * 3.55 * 0.05)}, 296,${baseHeight - (mountainHeight * 3.55 * 0.15)}, 355,${baseHeight}
+                                      C 59,${baseHeight - (mountainHeight * 3.55 * 0.15)}, 89,${peakHeight + (mountainHeight * 3.55 * 0.15)}, 177.5,${peakHeight}
+                                      C 266,${peakHeight + (mountainHeight * 3.55 * 0.15)}, 296,${baseHeight - (mountainHeight * 3.55 * 0.15)}, 355,${baseHeight}
                                       Z
                                     `}
                                     fill="url(#mountainGradient)"
@@ -2490,8 +2530,8 @@ export default function Home() {
                                   <path
                                     d={`
                                       M 0,${baseHeight}
-                                      C 59,${baseHeight - (mountainHeight * 3.55 * 0.15)}, 118,${peakHeight + (mountainHeight * 3.55 * 0.05)}, 177.5,${peakHeight}
-                                      C 237,${peakHeight + (mountainHeight * 3.55 * 0.05)}, 296,${baseHeight - (mountainHeight * 3.55 * 0.15)}, 355,${baseHeight}
+                                      C 59,${baseHeight - (mountainHeight * 3.55 * 0.15)}, 89,${peakHeight + (mountainHeight * 3.55 * 0.15)}, 177.5,${peakHeight}
+                                      C 266,${peakHeight + (mountainHeight * 3.55 * 0.15)}, 296,${baseHeight - (mountainHeight * 3.55 * 0.15)}, 355,${baseHeight}
                                       Z
                                     `}
                                     fill="url(#mountainOverlay)"
@@ -2499,6 +2539,33 @@ export default function Home() {
                                       transition: 'all 1000ms ease-out'
                                     }}
                                   />
+
+                                  {/* Star effect at peak when maximum height reached */}
+                                  {mountainHeight >= 95 && (
+                                    <g transform={`translate(${177.5 + 50}, ${peakHeight - 10})`}>
+                                      {/* Sparkle/Star effect */}
+                                      <circle cx="0" cy="0" r="3" fill="#FFE6F7" opacity="0.9">
+                                        <animate attributeName="opacity" values="0.9;0.3;0.9" dur="1s" repeatCount="indefinite" />
+                                      </circle>
+                                      <circle cx="0" cy="0" r="6" fill="#F6D0EA" opacity="0.5">
+                                        <animate attributeName="opacity" values="0.5;0.1;0.5" dur="1s" repeatCount="indefinite" />
+                                        <animate attributeName="r" values="6;8;6" dur="1s" repeatCount="indefinite" />
+                                      </circle>
+                                      {/* Star rays */}
+                                      <line x1="-8" y1="0" x2="8" y2="0" stroke="#FFE6F7" strokeWidth="1.5" opacity="0.8">
+                                        <animate attributeName="opacity" values="0.8;0.3;0.8" dur="1s" repeatCount="indefinite" />
+                                      </line>
+                                      <line x1="0" y1="-8" x2="0" y2="8" stroke="#FFE6F7" strokeWidth="1.5" opacity="0.8">
+                                        <animate attributeName="opacity" values="0.8;0.3;0.8" dur="1s" repeatCount="indefinite" />
+                                      </line>
+                                      <line x1="-6" y1="-6" x2="6" y2="6" stroke="#F6D0EA" strokeWidth="1" opacity="0.6">
+                                        <animate attributeName="opacity" values="0.6;0.2;0.6" dur="1s" repeatCount="indefinite" />
+                                      </line>
+                                      <line x1="6" y1="-6" x2="-6" y2="6" stroke="#F6D0EA" strokeWidth="1" opacity="0.6">
+                                        <animate attributeName="opacity" values="0.6;0.2;0.6" dur="1s" repeatCount="indefinite" />
+                                      </line>
+                                    </g>
+                                  )}
                                 </svg>
                               );
                             })()}
