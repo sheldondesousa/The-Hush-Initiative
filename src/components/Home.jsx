@@ -1283,42 +1283,42 @@ export default function Home() {
         }
         @keyframes orb-pulse {
           0%, 100% {
-            transform: scale(2.2);
-            opacity: 0.5;
-          }
-          33% {
-            transform: scale(2.6);
+            transform: scale(1.7);
             opacity: 0.6;
           }
+          33% {
+            transform: scale(2);
+            opacity: 0.7;
+          }
           66% {
-            transform: scale(2.4);
-            opacity: 0.45;
+            transform: scale(1.85);
+            opacity: 0.65;
           }
         }
         @keyframes orb-glow {
           0%, 100% {
-            filter: brightness(1.1) saturate(1.1) blur(8px);
+            filter: brightness(1.1) saturate(1.2) blur(10px);
           }
           50% {
-            filter: brightness(1.4) saturate(1.3) blur(12px);
+            filter: brightness(1.4) saturate(1.4) blur(12px);
           }
         }
         @keyframes smoke-trail {
           0% {
-            transform: scale(3.5);
-            opacity: 0.25;
+            transform: scale(2.5);
+            opacity: 0.4;
           }
           40% {
-            transform: scale(4);
-            opacity: 0.35;
+            transform: scale(2.8);
+            opacity: 0.5;
           }
           70% {
-            transform: scale(4.5);
-            opacity: 0.2;
+            transform: scale(3.2);
+            opacity: 0.3;
           }
           100% {
-            transform: scale(5);
-            opacity: 0.1;
+            transform: scale(3.5);
+            opacity: 0.15;
           }
         }
         @keyframes text-breathe {
@@ -2399,68 +2399,68 @@ export default function Home() {
                                     top: `${orbPos.y}px`,
                                     transform: 'translate(-50%, -50%)',
                                     transition: 'left 1000ms linear, top 1000ms linear',
-                                    width: '100px',
-                                    height: '100px',
+                                    width: '60px',
+                                    height: '60px',
                                     pointerEvents: 'none'
                                   }}
                                 >
-                                  {/* Outer Trail Layer - Farthest from orb */}
+                                  {/* Outer Trail Layer - Farthest from orb (Barely Pink) */}
                                   <div
                                     className="absolute inset-0"
                                     style={{
-                                      background: 'radial-gradient(circle, rgba(255, 230, 247, 0.3) 0%, rgba(246, 208, 234, 0.2) 40%, transparent 80%)',
-                                      filter: 'blur(35px)',
-                                      transform: 'scale(3.5)',
+                                      background: 'radial-gradient(circle, rgba(255, 230, 247, 0.5) 0%, rgba(246, 208, 234, 0.35) 40%, rgba(225, 175, 209, 0.15) 70%, transparent 100%)',
+                                      filter: 'blur(25px)',
+                                      transform: 'scale(2.5)',
                                       animation: 'smoke-trail 3s ease-in-out infinite'
                                     }}
                                   />
-                                  {/* Mid Trail Layer */}
+                                  {/* Mid Trail Layer (Pink Villa) */}
                                   <div
                                     className="absolute inset-0"
                                     style={{
-                                      background: 'radial-gradient(circle, rgba(246, 208, 234, 0.4) 0%, rgba(225, 175, 209, 0.3) 50%, transparent 90%)',
-                                      filter: 'blur(30px)',
-                                      transform: 'scale(2.8)',
+                                      background: 'radial-gradient(circle, rgba(246, 208, 234, 0.6) 0%, rgba(225, 175, 209, 0.45) 50%, rgba(200, 170, 215, 0.2) 80%, transparent 100%)',
+                                      filter: 'blur(20px)',
+                                      transform: 'scale(2)',
                                       animation: 'smoke-trail 2.5s ease-in-out infinite 0.3s'
                                     }}
                                   />
-                                  {/* Inner Trail Layer */}
+                                  {/* Inner Trail Layer (Light Orchid) */}
                                   <div
                                     className="absolute inset-0"
                                     style={{
-                                      background: 'radial-gradient(circle, rgba(225, 175, 209, 0.5) 0%, rgba(200, 170, 215, 0.4) 50%, transparent 85%)',
-                                      filter: 'blur(25px)',
-                                      transform: 'scale(2.2)',
+                                      background: 'radial-gradient(circle, rgba(225, 175, 209, 0.7) 0%, rgba(200, 170, 215, 0.55) 50%, rgba(173, 136, 198, 0.25) 80%, transparent 100%)',
+                                      filter: 'blur(18px)',
+                                      transform: 'scale(1.7)',
                                       animation: 'orb-pulse 2s ease-in-out infinite'
                                     }}
                                   />
-                                  {/* Outer Glow Layer */}
+                                  {/* Outer Glow Layer (African Violet) */}
                                   <div
                                     className="absolute inset-0"
                                     style={{
-                                      background: 'radial-gradient(circle, rgba(200, 170, 215, 0.6) 0%, rgba(173, 136, 198, 0.5) 40%, rgba(145, 120, 190, 0.3) 70%, transparent 100%)',
-                                      filter: 'blur(20px)',
-                                      transform: 'scale(1.8)',
+                                      background: 'radial-gradient(circle, rgba(200, 170, 215, 0.8) 0%, rgba(173, 136, 198, 0.7) 40%, rgba(145, 120, 190, 0.45) 70%, transparent 100%)',
+                                      filter: 'blur(15px)',
+                                      transform: 'scale(1.4)',
                                       animation: 'orb-pulse 2s ease-in-out infinite 0.5s'
                                     }}
                                   />
-                                  {/* Core Energy Layer - Fluid with no sharp edges */}
+                                  {/* Core Energy Layer - Fluid (African Violet to Blue-Violet) */}
                                   <div
                                     className="absolute inset-0"
                                     style={{
-                                      background: 'radial-gradient(circle, rgba(200, 170, 215, 0.95) 0%, rgba(173, 136, 198, 0.9) 30%, rgba(145, 120, 190, 0.7) 60%, rgba(116, 105, 182, 0.4) 90%, transparent 100%)',
-                                      filter: 'blur(12px)',
-                                      transform: 'scale(1.2)',
+                                      background: 'radial-gradient(circle, rgba(200, 170, 215, 1) 0%, rgba(173, 136, 198, 0.95) 30%, rgba(145, 120, 190, 0.8) 60%, rgba(116, 105, 182, 0.5) 90%, transparent 100%)',
+                                      filter: 'blur(10px)',
+                                      transform: 'scale(1.1)',
                                       animation: 'orb-glow 2s ease-in-out infinite'
                                     }}
                                   />
-                                  {/* Inner Core - Brightest point */}
+                                  {/* Inner Core - Brightest point (Light African Violet) */}
                                   <div
                                     className="absolute inset-0"
                                     style={{
-                                      background: 'radial-gradient(circle, rgba(220, 190, 225, 1) 0%, rgba(200, 170, 215, 0.8) 40%, transparent 75%)',
-                                      filter: 'blur(8px)',
-                                      transform: 'scale(0.7)',
+                                      background: 'radial-gradient(circle, rgba(220, 190, 225, 1) 0%, rgba(200, 170, 215, 0.9) 40%, rgba(173, 136, 198, 0.4) 70%, transparent 100%)',
+                                      filter: 'blur(6px)',
+                                      transform: 'scale(0.6)',
                                       animation: 'orb-glow 2s ease-in-out infinite 0.2s'
                                     }}
                                   />
