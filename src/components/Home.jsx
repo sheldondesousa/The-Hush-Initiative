@@ -2425,7 +2425,7 @@ export default function Home() {
                               style={{
                                 width: '355px',
                                 height: '355px',
-                                background: 'linear-gradient(135deg, rgba(225, 175, 209, 0.3) 0%, rgba(246, 208, 234, 0.3) 50%, rgba(255, 230, 247, 0.3) 100%)',
+                                background: 'linear-gradient(135deg, rgba(225, 175, 209, 0.8) 0%, rgba(246, 208, 234, 0.75) 50%, rgba(255, 230, 247, 0.7) 100%)',
                                 borderRadius: '15px'
                               }}
                             />
@@ -2455,12 +2455,19 @@ export default function Home() {
                                   style={{ overflow: 'visible' }}
                                 >
                                   <defs>
-                                    {/* Primary colors gradient for mountain */}
+                                    {/* Primary colors gradient for mountain - top to bottom */}
                                     <linearGradient id="mountainGradient" x1="0%" y1="0%" x2="0%" y2="100%">
-                                      <stop offset="0%" stopColor="#AD88C6" stopOpacity="0.95" />
-                                      <stop offset="50%" stopColor="#7469B6" stopOpacity="0.9" />
-                                      <stop offset="100%" stopColor="#7469B6" stopOpacity="0.85" />
+                                      <stop offset="0%" stopColor="#AD88C6" stopOpacity="1" />
+                                      <stop offset="30%" stopColor="#9B7AB8" stopOpacity="1" />
+                                      <stop offset="70%" stopColor="#7469B6" stopOpacity="1" />
+                                      <stop offset="100%" stopColor="#6B5FA8" stopOpacity="1" />
                                     </linearGradient>
+                                    {/* Radial gradient overlay for depth */}
+                                    <radialGradient id="mountainOverlay" cx="50%" cy="30%">
+                                      <stop offset="0%" stopColor="#C8AAD6" stopOpacity="0.6" />
+                                      <stop offset="50%" stopColor="#AD88C6" stopOpacity="0.3" />
+                                      <stop offset="100%" stopColor="#7469B6" stopOpacity="0" />
+                                    </radialGradient>
                                   </defs>
 
                                   {/* Bell curve mountain shape */}
@@ -2472,6 +2479,19 @@ export default function Home() {
                                       Z
                                     `}
                                     fill="url(#mountainGradient)"
+                                    style={{
+                                      transition: 'all 1000ms ease-out'
+                                    }}
+                                  />
+                                  {/* Overlay gradient for depth effect */}
+                                  <path
+                                    d={`
+                                      M 0,355
+                                      Q 88.75,${355 - (mountainHeight * 3.55 * 0.3)} 177.5,${355 - (mountainHeight * 3.55)}
+                                      Q 266.25,${355 - (mountainHeight * 3.55 * 0.3)} 355,355
+                                      Z
+                                    `}
+                                    fill="url(#mountainOverlay)"
                                     style={{
                                       transition: 'all 1000ms ease-out'
                                     }}
