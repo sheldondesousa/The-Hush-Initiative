@@ -13,6 +13,7 @@ export default function Home() {
   const [selectedExercise, setSelectedExercise] = useState(null);
   const [currentView, setCurrentView] = useState('interactive'); // 'interactive', 'about', 'support', 'faqs', 'privacy', 'terms', 'breathing-info'
   const completionTrackedRef = useRef(false);
+  const phaseHoldRef = useRef(false); // Track if we've held at final timer value for animation completion
 
   // Random visual for album art placeholder
   const visuals = ['Visual1.jpeg', 'Visual2.jpeg', 'Visual3.jpeg', 'Visual4.jpeg'];
@@ -284,6 +285,7 @@ export default function Home() {
   useEffect(() => {
     if (selectedOption === 'breathe' && selectedExercise && !showingInfo && countdown === null && !isExercising) {
       setCountdown(3);
+      phaseHoldRef.current = false; // Reset phase hold flag
     }
   }, [showingInfo, selectedExercise, selectedOption, countdown, isExercising]);
 
@@ -600,8 +602,15 @@ export default function Home() {
           if (breathingPhase === 'inhale') {
             // INHALE: 0→4 (exactly 4 seconds: 0s,1s,2s,3s,4s)
             if (prevTimer < 4) {
+              phaseHoldRef.current = false; // Reset hold flag
               return prevTimer + 1;
+            } else if (prevTimer === 4 && !phaseHoldRef.current) {
+              // Hold at 4 for one extra interval to complete animation
+              phaseHoldRef.current = true;
+              return 4;
             } else {
+              // Animation complete, transition to next phase
+              phaseHoldRef.current = false;
               setBreathingPhase('hold1');
               return 0; // Start HOLD1 at 0
             }
@@ -616,8 +625,15 @@ export default function Home() {
           } else if (breathingPhase === 'exhale') {
             // EXHALE: 4→0 (exactly 4 seconds: 4s,3s,2s,1s,0s)
             if (prevTimer > 0) {
+              phaseHoldRef.current = false; // Reset hold flag
               return prevTimer - 1;
+            } else if (prevTimer === 0 && !phaseHoldRef.current) {
+              // Hold at 0 for one extra interval to complete animation
+              phaseHoldRef.current = true;
+              return 0;
             } else {
+              // Animation complete, transition to next phase
+              phaseHoldRef.current = false;
               setBreathingPhase('hold2');
               return 0; // Start HOLD2 at 0
             }
@@ -634,11 +650,13 @@ export default function Home() {
                 setExerciseCompleted(true);
                 setCurrentCycle(0);
                 setBreathingPhase('inhale');
+                phaseHoldRef.current = false;
                 return 0;
               } else {
                 // Continue to next cycle
                 setCurrentCycle(nextCycle);
                 setBreathingPhase('inhale');
+                phaseHoldRef.current = false;
                 return 0;
               }
             }
@@ -1821,6 +1839,7 @@ export default function Home() {
                         onClick={() => {
                           setShowingInfo(false);
                           setCountdown(3); // Start countdown
+                          phaseHoldRef.current = false; // Reset phase hold flag
                         }}
                         className="w-full py-3 bg-black text-white text-base font-bold rounded-xl hover:bg-gray-800 transition-colors"
                       >
@@ -2803,6 +2822,7 @@ export default function Home() {
                             setCurrentCycle(0);
                             setBreathingPhase('inhale');
                             setTimer(selectedExercise?.name === 'Physiological Sigh' ? 0 : 0);
+                            phaseHoldRef.current = false; // Reset phase hold flag
                           } else if (isPaused) {
                             // Resume from pause
                             setIsPaused(false);
