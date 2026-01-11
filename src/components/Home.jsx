@@ -1620,36 +1620,12 @@ export default function Home() {
                     Take a deep breath and relax
                   </h1>
 
-                  {/* Metric Cards Grid */}
-                  <div className="space-y-3 mb-8">
-                    {/* First Row: Active Days & Exercises Complete */}
-                    <div className="grid grid-cols-2 gap-3">
-                      {/* Active Days Card */}
-                      <div className="rounded-2xl p-4 text-white" style={{ background: 'linear-gradient(to bottom right, #7469B6, #8978C0)' }}>
-                        <h3 className="text-xs font-medium mb-1 opacity-90">Active Days</h3>
-                        {metrics.loading ? (
-                          <p className="text-3xl font-bold">...</p>
-                        ) : (
-                          <p className="text-3xl font-bold">{metrics.activeDays}</p>
-                        )}
-                      </div>
-
-                      {/* Exercises Complete Card */}
-                      <div className="rounded-2xl p-4 text-white" style={{ background: 'linear-gradient(to bottom right, #7469B6, #AB8CC4)' }}>
-                        <h3 className="text-xs font-medium mb-1 opacity-90">Exercises Complete</h3>
-                        {metrics.loading ? (
-                          <p className="text-3xl font-bold">...</p>
-                        ) : (
-                          <p className="text-3xl font-bold">{metrics.exercisesComplete}</p>
-                        )}
-                      </div>
-                    </div>
-
-                    {/* Second Row: Why Breathing Helps - Full Width with Carousel */}
+                  {/* Why Breathing Helps - Full Width with Carousel */}
+                  <div className="mb-6">
                     <button
                       onClick={() => setCurrentView('breathing-info')}
                       className="w-full rounded-2xl p-6 text-white text-left hover:opacity-90 transition-opacity relative overflow-hidden"
-                      style={{ background: 'linear-gradient(to bottom right, #AB8CC4, #E1AFD1)', minHeight: '144px' }}
+                      style={{ background: 'linear-gradient(to bottom right, #AB8CC4, #E1AFD1)', minHeight: '200px' }}
                     >
                       <div className="flex items-start justify-between">
                         <div className="flex-1">
@@ -1674,6 +1650,15 @@ export default function Home() {
                         </div>
                       </div>
                     </button>
+
+                    {/* Carousel Indicators */}
+                    <div className="flex justify-center gap-2 mt-4">
+                      <div className="w-2 h-2 rounded-full" style={{ backgroundColor: '#7469B6' }}></div>
+                      <div className="w-2 h-2 rounded-full" style={{ backgroundColor: '#AD88C6' }}></div>
+                      <div className="w-2 h-2 rounded-full" style={{ backgroundColor: '#E1AFD1' }}></div>
+                      <div className="w-2 h-2 rounded-full" style={{ backgroundColor: '#F7D6EC' }}></div>
+                      <div className="w-2 h-2 rounded-full" style={{ backgroundColor: '#FFE6E6' }}></div>
+                    </div>
                   </div>
                 </div>
               )}
@@ -3036,7 +3021,7 @@ export default function Home() {
                   /* Track List */
                   <div className="flex flex-col flex-1 min-h-0">
                     {selectedOption === 'breathe' && (
-                      <div className="mt-4 mb-4 flex-shrink-0">
+                      <div className="mt-1 mb-4 flex-shrink-0">
                         <h3 className="font-semibold text-xl text-black">
                           Select from 6 proven techniques
                         </h3>
