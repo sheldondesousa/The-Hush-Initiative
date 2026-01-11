@@ -58,8 +58,8 @@ export default function Login() {
         }}
       >
         {/* Left Side - Login Credentials (50%) */}
-        <div className="w-1/2 flex flex-col justify-center px-12" style={{ backgroundColor: 'rgba(255, 255, 255, 0.3)' }}>
-          <div className="max-w-md mx-auto w-full">
+        <div className="w-1/2 flex flex-col justify-center px-12">
+          <div className="max-w-md mx-auto w-full bg-white bg-opacity-90 p-8 rounded-2xl shadow-lg">
             {/* Logo Placeholder */}
             <div className="flex justify-center mb-12">
               <div className="w-64 h-20 border-2 border-dashed border-gray-300 rounded-lg flex items-center justify-center bg-gray-50">
@@ -172,43 +172,57 @@ export default function Login() {
 
         {/* Right Side - Proof Points (50%) */}
         <div className="w-1/2 flex flex-col justify-center px-12">
-          <div className="max-w-md mx-auto w-full">
-            {/* Contrast Overlay Wrapper */}
-            <div className="relative">
-              {/* Dark overlay for contrast */}
-              <div className="absolute inset-0 bg-black bg-opacity-30 backdrop-blur-sm rounded-lg" />
+          <div className="max-w-4xl mx-auto w-full">
+            {/* Title */}
+            <h2 className="text-4xl font-bold text-white text-center mb-12"
+                style={{ textShadow: '0 2px 4px rgba(0,0,0,0.5)' }}>
+              Take a deep breath and relax
+            </h2>
 
-              {/* Content with z-index */}
-              <div className="relative z-10 p-8 space-y-12">
-                {/* Title */}
-                <h2 className="text-3xl font-bold text-white text-center mb-12"
-                    style={{ textShadow: '0 2px 4px rgba(0,0,0,0.5)' }}>
-                  Take a deep breath and relax
-                </h2>
+            {/* Proof Points - 3 Blocks Side by Side */}
+            <div className="grid grid-cols-3 gap-6">
+              {/* Proof Point 1 */}
+              <div className="bg-white bg-opacity-20 backdrop-blur-sm rounded-xl p-6 text-center">
+                <p className="text-sm leading-relaxed text-white mb-3"
+                   style={{ textShadow: '0 2px 4px rgba(0,0,0,0.5)' }}>
+                  Trusted by over
+                </p>
+                <p className="text-5xl font-bold text-white mb-2"
+                   style={{ textShadow: '0 2px 4px rgba(0,0,0,0.5)' }}>
+                  500,000
+                </p>
+                <p className="text-sm text-white"
+                   style={{ textShadow: '0 2px 4px rgba(0,0,0,0.5)' }}>
+                  users worldwide
+                </p>
+              </div>
 
-                {/* Proof Point 1 */}
-                <div className="pb-8 border-b border-white border-opacity-40">
-                  <p className="text-xl leading-relaxed text-white"
-                     style={{ textShadow: '0 2px 4px rgba(0,0,0,0.5)' }}>
-                    Trusted by over <span className="text-5xl font-bold block mt-2">500,000</span> users like you worldwide.
-                  </p>
-                </div>
+              {/* Proof Point 2 */}
+              <div className="bg-white bg-opacity-20 backdrop-blur-sm rounded-xl p-6 text-center">
+                <p className="text-5xl font-bold text-white mb-3"
+                   style={{ textShadow: '0 2px 4px rgba(0,0,0,0.5)' }}>
+                  93%
+                </p>
+                <p className="text-sm leading-relaxed text-white"
+                   style={{ textShadow: '0 2px 4px rgba(0,0,0,0.5)' }}>
+                  of users report feeling calmer after their first session
+                </p>
+              </div>
 
-                {/* Proof Point 2 */}
-                <div className="pb-8 border-b border-white border-opacity-40">
-                  <p className="text-xl leading-relaxed text-white"
-                     style={{ textShadow: '0 2px 4px rgba(0,0,0,0.5)' }}>
-                    <span className="text-5xl font-bold block mb-2">93%</span> of users report feeling calmer after their first session.
-                  </p>
-                </div>
-
-                {/* Proof Point 3 */}
-                <div>
-                  <p className="text-xl leading-relaxed text-white"
-                     style={{ textShadow: '0 2px 4px rgba(0,0,0,0.5)' }}>
-                    Average session time: <span className="text-5xl font-bold block mt-2">5 minutes</span> — just enough to reset your mind.
-                  </p>
-                </div>
+              {/* Proof Point 3 */}
+              <div className="bg-white bg-opacity-20 backdrop-blur-sm rounded-xl p-6 text-center">
+                <p className="text-sm leading-relaxed text-white mb-3"
+                   style={{ textShadow: '0 2px 4px rgba(0,0,0,0.5)' }}>
+                  Average session time
+                </p>
+                <p className="text-5xl font-bold text-white mb-2"
+                   style={{ textShadow: '0 2px 4px rgba(0,0,0,0.5)' }}>
+                  5 min
+                </p>
+                <p className="text-sm text-white"
+                   style={{ textShadow: '0 2px 4px rgba(0,0,0,0.5)' }}>
+                  enough to reset your mind
+                </p>
               </div>
             </div>
           </div>
