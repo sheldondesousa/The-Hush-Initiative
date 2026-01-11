@@ -3152,7 +3152,7 @@ export default function Home() {
                     >
                       <div className="text-left flex-1">
                         <div className="flex items-center gap-2 flex-wrap">
-                          <p className="text-lg font-medium text-black">{track.name}</p>
+                          <p className="text-base font-semibold text-black">{track.name}</p>
                           {track.name === 'Box Breathing (4-4-4-4)' && (
                             <span className="px-2 py-0.5 bg-green-100 text-green-700 text-xs font-semibold rounded-full">
                               Beginner-friendly

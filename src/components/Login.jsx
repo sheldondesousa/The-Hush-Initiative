@@ -51,7 +51,7 @@ export default function Login() {
       <div
         className="min-h-screen flex"
         style={{
-          backgroundImage: 'url(/Visual5 - Login.jpeg)',
+          backgroundImage: 'url(/LoginScreen.jpeg)',
           backgroundSize: 'cover',
           backgroundPosition: 'center',
           backgroundRepeat: 'no-repeat'
