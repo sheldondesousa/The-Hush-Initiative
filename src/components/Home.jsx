@@ -15,12 +15,79 @@ export default function Home() {
   const completionTrackedRef = useRef(false);
   const phaseHoldRef = useRef(false); // Track if we've held at final timer value for animation completion
 
+  // Carousel state
+  const [carouselIndex, setCarouselIndex] = useState(0);
+  const [touchStart, setTouchStart] = useState(null);
+  const [touchEnd, setTouchEnd] = useState(null);
+
   // Random visual for album art placeholder
   const visuals = ['Visual1.jpeg', 'Visual2.jpeg', 'Visual3.jpeg', 'Visual4.jpeg'];
   const [currentVisual, setCurrentVisual] = useState(() => {
     const randomIndex = Math.floor(Math.random() * visuals.length);
     return visuals[randomIndex];
   });
+
+  // Carousel content array
+  const carouselCards = [
+    {
+      title: 'The Power of Your Breath',
+      content: "Our breath is the fastest way to change how you feel—anytime, anywhere. When you intentionally guide your breath, your nervous system listens. Heart rate slows. The mind becomes clearer. Stress loosens its grip.",
+      gradient: 'linear-gradient(135deg, #7469B6, #AD88C6)'
+    },
+    {
+      title: 'Why It Works So Quickly',
+      content: "Slow, rhythmic breathing activates your body's natural 'rest and restore' response. It lowers stress, improves focus, supports better sleep, and builds emotional resilience. Even five minutes can create noticeable shifts.",
+      gradient: 'linear-gradient(135deg, #AD88C6, #E1AFD1)'
+    },
+    {
+      title: 'Proven Techniques',
+      content: "Experience Box Breathing for focus, 4-7-8 Breathing for sleep, Cyclic Sighing for mood resets, and Alternate Nostril Breathing for balance. The visuals do the counting—you simply breathe.",
+      gradient: 'linear-gradient(135deg, #E1AFD1, #F7D6EC)'
+    },
+    {
+      title: 'Make It a Habit',
+      content: "Use the app as a pause between moments: morning grounding, a midday reset, or nighttime wind-down. Pair it with something you already do and let repetition work its quiet magic.",
+      gradient: 'linear-gradient(135deg, #F7D6EC, #FFE6E6)'
+    },
+    {
+      title: 'Start Your Journey',
+      content: "One breath won't change your life. But a few mindful breaths, practiced daily, can change how your life feels. Fewer reactive moments, more clarity, deeper rest—calm on demand.",
+      gradient: 'linear-gradient(135deg, #FFE6E6, #FFF0F0)'
+    }
+  ];
+
+  // Carousel touch handlers
+  const handleTouchStart = (e) => {
+    setTouchEnd(null);
+    setTouchStart(e.targetTouches[0].clientX);
+  };
+
+  const handleTouchMove = (e) => {
+    setTouchEnd(e.targetTouches[0].clientX);
+  };
+
+  const handleTouchEnd = () => {
+    if (!touchStart || !touchEnd) return;
+    const distance = touchStart - touchEnd;
+    const isLeftSwipe = distance > 50;
+    const isRightSwipe = distance < -50;
+
+    if (isLeftSwipe && carouselIndex < 4) {
+      setCarouselIndex(carouselIndex + 1);
+    }
+    if (isRightSwipe && carouselIndex > 0) {
+      setCarouselIndex(carouselIndex - 1);
+    }
+  };
+
+  // Carousel navigation functions
+  const goToPrevCard = () => {
+    if (carouselIndex > 0) setCarouselIndex(carouselIndex - 1);
+  };
+
+  const goToNextCard = () => {
+    if (carouselIndex < 4) setCarouselIndex(carouselIndex + 1);
+  };
 
   // Track page view and session start
   useEffect(() => {
@@ -1161,7 +1228,7 @@ export default function Home() {
   const DifficultyIndicator = ({ level }) => {
     return (
       <div className="flex items-center gap-2">
-        <span className="text-xs font-bold text-gray-700">Effort Level:</span>
+        <span className="text-xs font-bold text-gray-500">Effort</span>
         <div className="flex gap-1">
           {[1, 2, 3, 4, 5].map((circle) => {
             const isFilled = circle <= Math.floor(level);
@@ -1620,17 +1687,33 @@ export default function Home() {
                     Take a deep breath and relax
                   </h1>
 
-                  {/* Why Breathing Helps - Full Width with Carousel */}
+                  {/* Why Breathing Helps - Working Carousel */}
                   <div className="mb-6">
-                    <button
-                      onClick={() => setCurrentView('breathing-info')}
-                      className="w-full rounded-2xl p-6 text-white text-left hover:opacity-90 transition-opacity relative overflow-hidden"
-                      style={{ background: 'linear-gradient(to bottom right, #AB8CC4, #E1AFD1)', minHeight: '200px' }}
+                    <div
+                      onTouchStart={handleTouchStart}
+                      onTouchMove={handleTouchMove}
+                      onTouchEnd={handleTouchEnd}
+                      className="w-full rounded-2xl p-6 text-white text-left relative overflow-hidden transition-all duration-300"
+                      style={{ background: carouselCards[carouselIndex].gradient, minHeight: '200px' }}
                     >
+                      {/* Left Chevron - Show on cards 2-5 */}
+                      {carouselIndex > 0 && (
+                        <button
+                          onClick={goToPrevCard}
+                          className="absolute left-2 top-1/2 -translate-y-1/2 z-10 p-2 rounded-full bg-white bg-opacity-20 hover:bg-opacity-30 transition-all"
+                          aria-label="Previous card"
+                        >
+                          <svg className="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
+                          </svg>
+                        </button>
+                      )}
+
+                      {/* Card Content */}
                       <div className="flex items-start justify-between">
-                        <div className="flex-1">
-                          <h3 className="text-base font-bold mb-2">Why Intentional Breathing Helps</h3>
-                          <p className="text-xs font-light opacity-90">Swipe to learn more</p>
+                        <div className="flex-1 px-8">
+                          <h3 className="text-base font-bold mb-3">{carouselCards[carouselIndex].title}</h3>
+                          <p className="text-xs font-light opacity-90 leading-relaxed">{carouselCards[carouselIndex].content}</p>
                         </div>
                         <div className="ml-4">
                           {/* White line illustration SVG */}
@@ -1649,15 +1732,35 @@ export default function Home() {
                           </svg>
                         </div>
                       </div>
-                    </button>
 
-                    {/* Carousel Indicators */}
+                      {/* Right Chevron - Show on cards 1-4 */}
+                      {carouselIndex < 4 && (
+                        <button
+                          onClick={goToNextCard}
+                          className="absolute right-2 top-1/2 -translate-y-1/2 z-10 p-2 rounded-full bg-white bg-opacity-20 hover:bg-opacity-30 transition-all"
+                          aria-label="Next card"
+                        >
+                          <svg className="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+                          </svg>
+                        </button>
+                      )}
+                    </div>
+
+                    {/* Interactive Carousel Indicators */}
                     <div className="flex justify-center gap-2 mt-4">
-                      <div className="w-2 h-2 rounded-full" style={{ backgroundColor: '#7469B6' }}></div>
-                      <div className="w-2 h-2 rounded-full" style={{ backgroundColor: '#AD88C6' }}></div>
-                      <div className="w-2 h-2 rounded-full" style={{ backgroundColor: '#E1AFD1' }}></div>
-                      <div className="w-2 h-2 rounded-full" style={{ backgroundColor: '#F7D6EC' }}></div>
-                      <div className="w-2 h-2 rounded-full" style={{ backgroundColor: '#FFE6E6' }}></div>
+                      {[0, 1, 2, 3, 4].map((index) => (
+                        <button
+                          key={index}
+                          onClick={() => setCarouselIndex(index)}
+                          className="w-2 h-2 rounded-full transition-all"
+                          style={{
+                            backgroundColor: index === carouselIndex ? ['#7469B6', '#AD88C6', '#E1AFD1', '#F7D6EC', '#FFE6E6'][index] : '#D1D5DB',
+                            transform: index === carouselIndex ? 'scale(1.2)' : 'scale(1)'
+                          }}
+                          aria-label={`Go to card ${index + 1}`}
+                        />
+                      ))}
                     </div>
                   </div>
                 </div>
@@ -3041,12 +3144,12 @@ export default function Home() {
                         className="w-full flex items-start py-4 border-b border-gray-200 hover:bg-gray-50 hover:opacity-70 transition-all group"
                     >
                       <div className="text-left flex-1">
-                        <p className="text-sm font-medium text-black">{track.name}</p>
+                        <p className="text-base font-medium text-black">{track.name}</p>
                         {selectedOption === 'breathe' && (() => {
                           const metadata = getExerciseMetadata(track.name);
                           return (
                             <>
-                              <p className="text-xs text-gray-500 mt-1">
+                              <p className="text-gray-500 mt-1" style={{ fontSize: '13px' }}>
                                 <span className="font-bold">Best for:</span> {metadata.bestFor} · <span className="font-bold">Ideal time:</span> {metadata.idealSession}
                               </p>
                               <div className="mt-2">

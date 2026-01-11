@@ -172,26 +172,44 @@ export default function Login() {
 
         {/* Right Side - Proof Points (50%) */}
         <div className="w-1/2 flex flex-col justify-center px-12">
-          <div className="max-w-md mx-auto w-full space-y-12">
-            {/* Proof Point 1 */}
-            <div className="pb-8 border-b border-white border-opacity-40">
-              <p className="text-lg leading-relaxed text-white">
-                Trusted by over <span className="text-4xl font-bold block mt-2">500,000</span> users like you worldwide.
-              </p>
-            </div>
+          <div className="max-w-md mx-auto w-full">
+            {/* Contrast Overlay Wrapper */}
+            <div className="relative">
+              {/* Dark overlay for contrast */}
+              <div className="absolute inset-0 bg-black bg-opacity-30 backdrop-blur-sm rounded-lg" />
 
-            {/* Proof Point 2 */}
-            <div className="pb-8 border-b border-white border-opacity-40">
-              <p className="text-lg leading-relaxed text-white">
-                <span className="text-4xl font-bold block mb-2">93%</span> of users report feeling calmer after their first session.
-              </p>
-            </div>
+              {/* Content with z-index */}
+              <div className="relative z-10 p-8 space-y-12">
+                {/* Title */}
+                <h2 className="text-3xl font-bold text-white text-center mb-12"
+                    style={{ textShadow: '0 2px 4px rgba(0,0,0,0.5)' }}>
+                  Take a deep breath and relax
+                </h2>
 
-            {/* Proof Point 3 */}
-            <div>
-              <p className="text-lg leading-relaxed text-white">
-                Average session time: <span className="text-4xl font-bold block mt-2">5 minutes</span> — just enough to reset your mind.
-              </p>
+                {/* Proof Point 1 */}
+                <div className="pb-8 border-b border-white border-opacity-40">
+                  <p className="text-xl leading-relaxed text-white"
+                     style={{ textShadow: '0 2px 4px rgba(0,0,0,0.5)' }}>
+                    Trusted by over <span className="text-5xl font-bold block mt-2">500,000</span> users like you worldwide.
+                  </p>
+                </div>
+
+                {/* Proof Point 2 */}
+                <div className="pb-8 border-b border-white border-opacity-40">
+                  <p className="text-xl leading-relaxed text-white"
+                     style={{ textShadow: '0 2px 4px rgba(0,0,0,0.5)' }}>
+                    <span className="text-5xl font-bold block mb-2">93%</span> of users report feeling calmer after their first session.
+                  </p>
+                </div>
+
+                {/* Proof Point 3 */}
+                <div>
+                  <p className="text-xl leading-relaxed text-white"
+                     style={{ textShadow: '0 2px 4px rgba(0,0,0,0.5)' }}>
+                    Average session time: <span className="text-5xl font-bold block mt-2">5 minutes</span> — just enough to reset your mind.
+                  </p>
+                </div>
+              </div>
             </div>
           </div>
         </div>
