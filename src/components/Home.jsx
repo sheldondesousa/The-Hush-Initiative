@@ -3154,14 +3154,7 @@ export default function Home() {
                         className="w-full flex items-start py-4 border-b border-gray-200 hover:bg-gray-50 hover:opacity-70 transition-all group"
                     >
                       <div className="text-left flex-1">
-                        <div className="flex items-center gap-2 flex-wrap">
-                          <p className="text-base font-semibold text-black">{track.name}</p>
-                          {track.name === 'Box Breathing (4-4-4-4)' && (
-                            <span className="px-2 py-0.5 bg-green-100 text-green-700 text-xs font-semibold rounded-full">
-                              Beginner-friendly
-                            </span>
-                          )}
-                        </div>
+                        <p className="text-base font-semibold text-black">{track.name}</p>
                         {selectedOption === 'breathe' && (() => {
                           const metadata = getExerciseMetadata(track.name);
                           return (
@@ -3184,7 +3177,7 @@ export default function Home() {
 
                       {/* Right Side - Duration or Chevron */}
                       {selectedOption === 'breathe' ? (
-                        <div className="flex items-center ml-4">
+                        <div className="flex items-center ml-4 self-center">
                           <svg className="w-5 h-5 text-gray-400 group-hover:text-gray-600 transition-colors" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
                           </svg>
