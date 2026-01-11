@@ -62,7 +62,7 @@ export default function Login() {
           <div className="max-w-md mx-auto w-full bg-white bg-opacity-75 backdrop-blur-md p-8 rounded-2xl shadow-lg">
             {/* Logo */}
             <div className="flex justify-center mb-12">
-              <img src="/Hush-Logo.png" alt="Hush" className="h-16" />
+              <img src="/Hush-Logo.png" alt="Hush" style={{ height: '51px' }} />
             </div>
 
             {/* Heading */}
