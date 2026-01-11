@@ -3132,7 +3132,7 @@ export default function Home() {
                   <div className="flex flex-col flex-1 min-h-0">
                     {selectedOption === 'breathe' && (
                       <div className="mt-1 mb-4 flex-shrink-0">
-                        <h3 className="font-semibold text-xl text-black">
+                        <h3 className="font-semibold text-2xl text-black">
                           Select from 6 proven techniques
                         </h3>
                       </div>
@@ -3152,7 +3152,7 @@ export default function Home() {
                     >
                       <div className="text-left flex-1">
                         <div className="flex items-center gap-2 flex-wrap">
-                          <p className="text-base font-medium text-black">{track.name}</p>
+                          <p className="text-lg font-medium text-black">{track.name}</p>
                           {track.name === 'Box Breathing (4-4-4-4)' && (
                             <span className="px-2 py-0.5 bg-green-100 text-green-700 text-xs font-semibold rounded-full">
                               Beginner-friendly
@@ -3167,12 +3167,12 @@ export default function Home() {
                                 <p>
                                   <span className="font-bold">Helps with:</span> {metadata.bestFor}
                                 </p>
-                                <p>
-                                  <span className="font-bold">Ideal time:</span> {metadata.idealSession}
-                                </p>
-                              </div>
-                              <div className="mt-2">
-                                <DifficultyIndicator level={getDifficultyLevel(track.name)} />
+                                <div className="flex items-center gap-3 mt-1">
+                                  <p>
+                                    <span className="font-bold">Ideal time:</span> {metadata.idealSession}
+                                  </p>
+                                  <DifficultyIndicator level={getDifficultyLevel(track.name)} />
+                                </div>
                               </div>
                             </>
                           );
