@@ -30,8 +30,8 @@ export default function Home() {
   // Carousel content array
   const carouselCards = [
     {
-      title: 'The Power of Your Breath',
-      content: "Our breath is the fastest way to change how you feel—anytime, anywhere. When you intentionally guide your breath, your nervous system listens. Heart rate slows. The mind becomes clearer. Stress loosens its grip.",
+      title: 'The Power Of Intentional Breathing',
+      content: "Our breath is the fastest way to change how you feel, anytime, anywhere. When you intentionally guide your breath, your nervous system listens.",
       backgroundColor: '#7469B6',
       textColor: '#FFFFFF'
     },
@@ -43,13 +43,13 @@ export default function Home() {
     },
     {
       title: 'Proven Techniques',
-      content: "Experience Box Breathing for focus, 4-7-8 Breathing for sleep, Cyclic Sighing for mood resets, and Alternate Nostril Breathing for balance. The visuals do the counting—you simply breathe.",
+      content: "Experience Box Breathing for focus, 4-7-8 Breathing for sleep, Physiological Sighing for mood resets, and Alternate Nostril Breathing for balance.",
       backgroundColor: '#E1AFD1',
       textColor: '#000000'
     },
     {
-      title: 'Make It a Habit',
-      content: "Use the app as a pause between moments: morning grounding, a midday reset, or nighttime wind-down. Pair it with something you already do and let repetition work its quiet magic.",
+      title: 'When It Becomes A Habit',
+      content: "Use the app as a pause: morning grounding, a midday reset, or a nighttime wind-down. Pair it with something you already do and let repetition work its quiet magic.",
       backgroundColor: '#F7D6EC',
       textColor: '#000000'
     },
@@ -1729,8 +1729,11 @@ export default function Home() {
                               style={{ color: carouselCards[carouselIndex].textColor }}>
                             {carouselCards[carouselIndex].title}
                           </h3>
-                          <p className="text-xs font-light opacity-90 leading-relaxed"
-                             style={{ color: carouselCards[carouselIndex].textColor }}>
+                          <p className="font-light opacity-90 leading-relaxed"
+                             style={{
+                               color: carouselCards[carouselIndex].textColor,
+                               fontSize: '13px'
+                             }}>
                             {carouselCards[carouselIndex].content}
                           </p>
                         </div>
