@@ -9,9 +9,20 @@ export default function Login() {
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
+  const [isReturningUser, setIsReturningUser] = useState(false);
 
   const navigate = useNavigate();
   const { signInWithGoogle, currentUser } = useAuth();
+
+  // Check if user has visited before
+  useEffect(() => {
+    const hasVisited = localStorage.getItem('hasVisitedLogin');
+    if (hasVisited) {
+      setIsReturningUser(true);
+    } else {
+      localStorage.setItem('hasVisitedLogin', 'true');
+    }
+  }, []);
 
   // Track page view on mount
   useEffect(() => {
@@ -179,49 +190,69 @@ export default function Login() {
 
             {/* Proof Points - 3 Blocks Side by Side */}
             <div className="grid grid-cols-3 gap-6">
-              {/* Proof Point 1 */}
-              <div className="bg-white bg-opacity-20 backdrop-blur-sm rounded-xl p-6 text-center">
-                <p className="text-sm leading-relaxed text-white mb-3"
-                   style={{ textShadow: '0 2px 4px rgba(0,0,0,0.5)' }}>
-                  Trusted by over
-                </p>
-                <p className="text-5xl font-bold text-white mb-2"
-                   style={{ textShadow: '0 2px 4px rgba(0,0,0,0.5)' }}>
-                  500,000
-                </p>
-                <p className="text-sm text-white"
-                   style={{ textShadow: '0 2px 4px rgba(0,0,0,0.5)' }}>
-                  users worldwide
-                </p>
-              </div>
+              {!isReturningUser ? (
+                <>
+                  {/* Version A - First Time Users */}
+                  {/* Proof Point 1 */}
+                  <div className="bg-white bg-opacity-20 backdrop-blur-sm rounded-xl p-6 text-center">
+                    <p className="text-sm leading-relaxed text-white mb-3"
+                       style={{ textShadow: '0 2px 4px rgba(0,0,0,0.5)' }}>
+                      Trusted by over
+                    </p>
+                    <p className="text-5xl font-bold text-white mb-2"
+                       style={{ textShadow: '0 2px 4px rgba(0,0,0,0.5)' }}>
+                      500,000
+                    </p>
+                    <p className="text-sm text-white"
+                       style={{ textShadow: '0 2px 4px rgba(0,0,0,0.5)' }}>
+                      users worldwide
+                    </p>
+                  </div>
 
-              {/* Proof Point 2 */}
-              <div className="bg-white bg-opacity-20 backdrop-blur-sm rounded-xl p-6 text-center">
-                <p className="text-5xl font-bold text-white mb-3"
-                   style={{ textShadow: '0 2px 4px rgba(0,0,0,0.5)' }}>
-                  93%
-                </p>
-                <p className="text-sm leading-relaxed text-white"
-                   style={{ textShadow: '0 2px 4px rgba(0,0,0,0.5)' }}>
-                  of users report feeling calmer after their first session
-                </p>
-              </div>
+                  {/* Proof Point 2 */}
+                  <div className="bg-white bg-opacity-20 backdrop-blur-sm rounded-xl p-6 text-center">
+                    <p className="text-sm leading-relaxed text-white mb-3"
+                       style={{ textShadow: '0 2px 4px rgba(0,0,0,0.5)' }}>
+                      After just one session <span className="font-bold">93%</span> of users report feeling calmer
+                    </p>
+                  </div>
 
-              {/* Proof Point 3 */}
-              <div className="bg-white bg-opacity-20 backdrop-blur-sm rounded-xl p-6 text-center">
-                <p className="text-sm leading-relaxed text-white mb-3"
-                   style={{ textShadow: '0 2px 4px rgba(0,0,0,0.5)' }}>
-                  Average session time
-                </p>
-                <p className="text-5xl font-bold text-white mb-2"
-                   style={{ textShadow: '0 2px 4px rgba(0,0,0,0.5)' }}>
-                  5 min
-                </p>
-                <p className="text-sm text-white"
-                   style={{ textShadow: '0 2px 4px rgba(0,0,0,0.5)' }}>
-                  enough to reset your mind
-                </p>
-              </div>
+                  {/* Proof Point 3 */}
+                  <div className="bg-white bg-opacity-20 backdrop-blur-sm rounded-xl p-6 text-center">
+                    <p className="text-sm leading-relaxed text-white"
+                       style={{ textShadow: '0 2px 4px rgba(0,0,0,0.5)' }}>
+                      All it takes is <span className="font-bold">5 minutes</span> of intentional breathing
+                    </p>
+                  </div>
+                </>
+              ) : (
+                <>
+                  {/* Version B - Returning Users */}
+                  {/* Proof Point 1 */}
+                  <div className="bg-white bg-opacity-20 backdrop-blur-sm rounded-xl p-6 text-center">
+                    <p className="text-sm leading-relaxed text-white"
+                       style={{ textShadow: '0 2px 4px rgba(0,0,0,0.5)' }}>
+                      This year users logged <span className="font-bold">1 million+</span> mindful minutes
+                    </p>
+                  </div>
+
+                  {/* Proof Point 2 */}
+                  <div className="bg-white bg-opacity-20 backdrop-blur-sm rounded-xl p-6 text-center">
+                    <p className="text-sm leading-relaxed text-white"
+                       style={{ textShadow: '0 2px 4px rgba(0,0,0,0.5)' }}>
+                      Users experience a <span className="font-bold">28%</span> average reduction in stress levels after 7 days
+                    </p>
+                  </div>
+
+                  {/* Proof Point 3 */}
+                  <div className="bg-white bg-opacity-20 backdrop-blur-sm rounded-xl p-6 text-center">
+                    <p className="text-sm leading-relaxed text-white"
+                       style={{ textShadow: '0 2px 4px rgba(0,0,0,0.5)' }}>
+                      Built on <span className="font-bold">6</span> science-inspired techniques
+                    </p>
+                  </div>
+                </>
+              )}
             </div>
           </div>
         </div>
