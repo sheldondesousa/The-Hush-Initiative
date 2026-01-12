@@ -81,6 +81,11 @@ export default function Login() {
               Let's get started
             </h1>
 
+            {/* Subheading */}
+            <h2 className="text-2xl font-bold text-center mb-8 text-black">
+              Take a deep breath and relax
+            </h2>
+
             {/* Error Message */}
             {error && (
               <div className="mb-6 p-4 bg-red-50 border border-red-200 rounded-xl">
@@ -182,12 +187,6 @@ export default function Login() {
         {/* Right Side - Proof Points (50%) */}
         <div className="w-1/2 flex flex-col justify-center px-12">
           <div className="max-w-4xl mx-auto w-full">
-            {/* Title */}
-            <h2 className="text-4xl font-bold text-white text-center mb-12"
-                style={{ textShadow: '0 2px 4px rgba(0,0,0,0.5)' }}>
-              Take a deep breath and relax
-            </h2>
-
             {/* Proof Points - 3 Blocks Side by Side */}
             <div className="grid grid-cols-3 gap-6">
               {!isReturningUser ? (
@@ -195,43 +194,34 @@ export default function Login() {
                   {/* Version A - First Time Users */}
                   {/* Proof Point 1 */}
                   <div className="bg-white bg-opacity-20 backdrop-blur-sm rounded-xl p-6 text-center aspect-square flex flex-col justify-center">
-                    <p className="text-sm leading-relaxed text-white mb-3">
-                      Trusted by over
-                    </p>
-                    <p className="text-5xl font-bold text-white mb-2"
-                       style={{ textShadow: '0 2px 4px rgba(0,0,0,0.5)' }}>
+                    <p className="text-base font-bold text-white mb-2"
+                       style={{ textShadow: '0 2px 4px rgba(0,0,0,0.5)', fontSize: '53px' }}>
                       500,000
                     </p>
-                    <p className="text-sm text-white">
-                      users worldwide
+                    <p className="text-base text-white">
+                      users worldwide trust Hush to manage stress
                     </p>
                   </div>
 
                   {/* Proof Point 2 */}
                   <div className="bg-white bg-opacity-20 backdrop-blur-sm rounded-xl p-6 text-center aspect-square flex flex-col justify-center">
-                    <p className="text-sm leading-relaxed text-white mb-3">
-                      After just one session
-                    </p>
-                    <p className="text-5xl font-bold text-white mb-2"
-                       style={{ textShadow: '0 2px 4px rgba(0,0,0,0.5)' }}>
+                    <p className="text-base font-bold text-white mb-2"
+                       style={{ textShadow: '0 2px 4px rgba(0,0,0,0.5)', fontSize: '53px' }}>
                       93%
                     </p>
-                    <p className="text-sm text-white">
-                      of users report feeling calmer
+                    <p className="text-base text-white">
+                      of users report feeling calmer after just one session
                     </p>
                   </div>
 
                   {/* Proof Point 3 */}
                   <div className="bg-white bg-opacity-20 backdrop-blur-sm rounded-xl p-6 text-center aspect-square flex flex-col justify-center">
-                    <p className="text-sm leading-relaxed text-white mb-3">
-                      All it takes is
-                    </p>
-                    <p className="text-5xl font-bold text-white mb-2"
-                       style={{ textShadow: '0 2px 4px rgba(0,0,0,0.5)' }}>
+                    <p className="text-base font-bold text-white mb-2"
+                       style={{ textShadow: '0 2px 4px rgba(0,0,0,0.5)', fontSize: '53px' }}>
                       5 minutes
                     </p>
-                    <p className="text-sm text-white">
-                      of intentional breathing
+                    <p className="text-base text-white">
+                      of intentional breathing helps restores calm
                     </p>
                   </div>
                 </>
@@ -240,43 +230,34 @@ export default function Login() {
                   {/* Version B - Returning Users */}
                   {/* Proof Point 1 */}
                   <div className="bg-white bg-opacity-20 backdrop-blur-sm rounded-xl p-6 text-center aspect-square flex flex-col justify-center">
-                    <p className="text-sm leading-relaxed text-white mb-3">
-                      This year users logged
-                    </p>
-                    <p className="text-5xl font-bold text-white mb-2"
-                       style={{ textShadow: '0 2px 4px rgba(0,0,0,0.5)' }}>
+                    <p className="text-base font-bold text-white mb-2"
+                       style={{ textShadow: '0 2px 4px rgba(0,0,0,0.5)', fontSize: '53px' }}>
                       1 million+
                     </p>
-                    <p className="text-sm text-white">
-                      mindful minutes
+                    <p className="text-base text-white">
+                      mindful minutes logged by users this year
                     </p>
                   </div>
 
                   {/* Proof Point 2 */}
                   <div className="bg-white bg-opacity-20 backdrop-blur-sm rounded-xl p-6 text-center aspect-square flex flex-col justify-center">
-                    <p className="text-sm leading-relaxed text-white mb-3">
-                      Users experience an avg of
-                    </p>
-                    <p className="text-5xl font-bold text-white mb-2"
-                       style={{ textShadow: '0 2px 4px rgba(0,0,0,0.5)' }}>
+                    <p className="text-base font-bold text-white mb-2"
+                       style={{ textShadow: '0 2px 4px rgba(0,0,0,0.5)', fontSize: '53px' }}>
                       28%
                     </p>
-                    <p className="text-sm text-white">
-                      reduction in stress levels after 7 days
+                    <p className="text-base text-white">
+                      avg reduction in stress levels reported by users after 7 days
                     </p>
                   </div>
 
                   {/* Proof Point 3 */}
                   <div className="bg-white bg-opacity-20 backdrop-blur-sm rounded-xl p-6 text-center aspect-square flex flex-col justify-center">
-                    <p className="text-sm leading-relaxed text-white mb-3">
-                      Our breathing exercises are built on
-                    </p>
-                    <p className="text-5xl font-bold text-white mb-2"
-                       style={{ textShadow: '0 2px 4px rgba(0,0,0,0.5)' }}>
+                    <p className="text-base font-bold text-white mb-2"
+                       style={{ textShadow: '0 2px 4px rgba(0,0,0,0.5)', fontSize: '53px' }}>
                       6
                     </p>
-                    <p className="text-sm text-white">
-                      science-inspired techniques
+                    <p className="text-base text-white">
+                      science-inspired techniques to address calm, focus, and stress
                     </p>
                   </div>
                 </>
