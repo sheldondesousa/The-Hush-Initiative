@@ -194,49 +194,43 @@ export default function Login() {
                 <>
                   {/* Version A - First Time Users */}
                   {/* Proof Point 1 */}
-                  <div className="bg-white bg-opacity-20 backdrop-blur-sm rounded-xl p-6 text-center">
-                    <p className="text-sm leading-relaxed text-white mb-3"
-                       style={{ textShadow: '0 2px 4px rgba(0,0,0,0.5)' }}>
+                  <div className="bg-white bg-opacity-20 backdrop-blur-sm rounded-xl p-6 text-center aspect-square flex flex-col justify-center">
+                    <p className="text-sm leading-relaxed text-white mb-3">
                       Trusted by over
                     </p>
                     <p className="text-5xl font-bold text-white mb-2"
                        style={{ textShadow: '0 2px 4px rgba(0,0,0,0.5)' }}>
                       500,000
                     </p>
-                    <p className="text-sm text-white"
-                       style={{ textShadow: '0 2px 4px rgba(0,0,0,0.5)' }}>
+                    <p className="text-sm text-white">
                       users worldwide
                     </p>
                   </div>
 
                   {/* Proof Point 2 */}
-                  <div className="bg-white bg-opacity-20 backdrop-blur-sm rounded-xl p-6 text-center">
-                    <p className="text-sm leading-relaxed text-white mb-3"
-                       style={{ textShadow: '0 2px 4px rgba(0,0,0,0.5)' }}>
+                  <div className="bg-white bg-opacity-20 backdrop-blur-sm rounded-xl p-6 text-center aspect-square flex flex-col justify-center">
+                    <p className="text-sm leading-relaxed text-white mb-3">
                       After just one session
                     </p>
                     <p className="text-5xl font-bold text-white mb-2"
                        style={{ textShadow: '0 2px 4px rgba(0,0,0,0.5)' }}>
                       93%
                     </p>
-                    <p className="text-sm text-white"
-                       style={{ textShadow: '0 2px 4px rgba(0,0,0,0.5)' }}>
+                    <p className="text-sm text-white">
                       of users report feeling calmer
                     </p>
                   </div>
 
                   {/* Proof Point 3 */}
-                  <div className="bg-white bg-opacity-20 backdrop-blur-sm rounded-xl p-6 text-center">
-                    <p className="text-sm leading-relaxed text-white mb-3"
-                       style={{ textShadow: '0 2px 4px rgba(0,0,0,0.5)' }}>
+                  <div className="bg-white bg-opacity-20 backdrop-blur-sm rounded-xl p-6 text-center aspect-square flex flex-col justify-center">
+                    <p className="text-sm leading-relaxed text-white mb-3">
                       All it takes is
                     </p>
                     <p className="text-5xl font-bold text-white mb-2"
                        style={{ textShadow: '0 2px 4px rgba(0,0,0,0.5)' }}>
                       5 minutes
                     </p>
-                    <p className="text-sm text-white"
-                       style={{ textShadow: '0 2px 4px rgba(0,0,0,0.5)' }}>
+                    <p className="text-sm text-white">
                       of intentional breathing
                     </p>
                   </div>
@@ -245,49 +239,43 @@ export default function Login() {
                 <>
                   {/* Version B - Returning Users */}
                   {/* Proof Point 1 */}
-                  <div className="bg-white bg-opacity-20 backdrop-blur-sm rounded-xl p-6 text-center">
-                    <p className="text-sm leading-relaxed text-white mb-3"
-                       style={{ textShadow: '0 2px 4px rgba(0,0,0,0.5)' }}>
+                  <div className="bg-white bg-opacity-20 backdrop-blur-sm rounded-xl p-6 text-center aspect-square flex flex-col justify-center">
+                    <p className="text-sm leading-relaxed text-white mb-3">
                       This year users logged
                     </p>
                     <p className="text-5xl font-bold text-white mb-2"
                        style={{ textShadow: '0 2px 4px rgba(0,0,0,0.5)' }}>
                       1 million+
                     </p>
-                    <p className="text-sm text-white"
-                       style={{ textShadow: '0 2px 4px rgba(0,0,0,0.5)' }}>
+                    <p className="text-sm text-white">
                       mindful minutes
                     </p>
                   </div>
 
                   {/* Proof Point 2 */}
-                  <div className="bg-white bg-opacity-20 backdrop-blur-sm rounded-xl p-6 text-center">
-                    <p className="text-sm leading-relaxed text-white mb-3"
-                       style={{ textShadow: '0 2px 4px rgba(0,0,0,0.5)' }}>
+                  <div className="bg-white bg-opacity-20 backdrop-blur-sm rounded-xl p-6 text-center aspect-square flex flex-col justify-center">
+                    <p className="text-sm leading-relaxed text-white mb-3">
                       Users experience an avg of
                     </p>
                     <p className="text-5xl font-bold text-white mb-2"
                        style={{ textShadow: '0 2px 4px rgba(0,0,0,0.5)' }}>
                       28%
                     </p>
-                    <p className="text-sm text-white"
-                       style={{ textShadow: '0 2px 4px rgba(0,0,0,0.5)' }}>
+                    <p className="text-sm text-white">
                       reduction in stress levels after 7 days
                     </p>
                   </div>
 
                   {/* Proof Point 3 */}
-                  <div className="bg-white bg-opacity-20 backdrop-blur-sm rounded-xl p-6 text-center">
-                    <p className="text-sm leading-relaxed text-white mb-3"
-                       style={{ textShadow: '0 2px 4px rgba(0,0,0,0.5)' }}>
+                  <div className="bg-white bg-opacity-20 backdrop-blur-sm rounded-xl p-6 text-center aspect-square flex flex-col justify-center">
+                    <p className="text-sm leading-relaxed text-white mb-3">
                       Our breathing exercises are built on
                     </p>
                     <p className="text-5xl font-bold text-white mb-2"
                        style={{ textShadow: '0 2px 4px rgba(0,0,0,0.5)' }}>
                       6
                     </p>
-                    <p className="text-sm text-white"
-                       style={{ textShadow: '0 2px 4px rgba(0,0,0,0.5)' }}>
+                    <p className="text-sm text-white">
                       science-inspired techniques
                     </p>
                   </div>
