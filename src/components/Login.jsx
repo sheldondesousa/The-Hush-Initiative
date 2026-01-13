@@ -62,10 +62,7 @@ export default function Login() {
       <div
         className="min-h-screen flex"
         style={{
-          backgroundImage: 'url(/Visual5%20-%20Login.jpeg)',
-          backgroundSize: 'cover',
-          backgroundPosition: 'center',
-          backgroundRepeat: 'no-repeat'
+          background: 'linear-gradient(135deg, #746DB6 0%, #AD88C6 25%, #E1AFD1 50%, #F7D6EC 75%, #FFE6E6 100%)'
         }}
       >
         {/* Left Side - Login Credentials (50%) */}
@@ -184,8 +181,8 @@ export default function Login() {
           <div className="max-w-4xl mx-auto w-full">
             {/* Title - Aligned with logo */}
             <div className="flex justify-center mb-12" style={{ height: '43px' }}>
-              <h2 className="font-bold text-white flex items-center"
-                  style={{ fontSize: '53px' }}>
+              <h2 className="font-bold flex items-center"
+                  style={{ fontSize: '53px', color: '#746DB6' }}>
                 Take a deep breath and relax
               </h2>
             </div>
@@ -196,7 +193,7 @@ export default function Login() {
                 <>
                   {/* Version A - First Time Users */}
                   {/* Proof Point 1 */}
-                  <div className="bg-white bg-opacity-20 backdrop-blur-sm rounded-xl p-6 text-center flex flex-col justify-start" style={{ minHeight: '280px', height: '280px' }}>
+                  <div className="rounded-xl p-6 text-center flex flex-col justify-start" style={{ minHeight: '280px', height: '280px', backgroundColor: '#746DB6' }}>
                     <p className="font-bold text-white"
                        style={{ fontSize: '38px', marginBottom: '16px', whiteSpace: 'nowrap' }}>
                       500,000
@@ -208,25 +205,25 @@ export default function Login() {
                   </div>
 
                   {/* Proof Point 2 */}
-                  <div className="bg-white bg-opacity-20 backdrop-blur-sm rounded-xl p-6 text-center flex flex-col justify-start" style={{ minHeight: '280px', height: '280px' }}>
-                    <p className="font-bold text-white"
+                  <div className="rounded-xl p-6 text-center flex flex-col justify-start" style={{ minHeight: '280px', height: '280px', backgroundColor: '#E1AFD1' }}>
+                    <p className="font-bold text-black"
                        style={{ fontSize: '38px', marginBottom: '16px', whiteSpace: 'nowrap' }}>
                       93%
                     </p>
-                    <div className="w-full border-t border-white mb-4"></div>
-                    <p className="text-base font-bold text-white">
+                    <div className="w-full border-t border-black mb-4"></div>
+                    <p className="text-base font-bold text-black">
                       of users report feeling calmer after just one session
                     </p>
                   </div>
 
                   {/* Proof Point 3 */}
-                  <div className="bg-white bg-opacity-20 backdrop-blur-sm rounded-xl p-6 text-center flex flex-col justify-start" style={{ minHeight: '280px', height: '280px' }}>
-                    <p className="font-bold text-white"
+                  <div className="rounded-xl p-6 text-center flex flex-col justify-start" style={{ minHeight: '280px', height: '280px', backgroundColor: '#FFE6E6' }}>
+                    <p className="font-bold text-black"
                        style={{ fontSize: '38px', marginBottom: '16px', whiteSpace: 'nowrap' }}>
                       5 minutes
                     </p>
-                    <div className="w-full border-t border-white mb-4"></div>
-                    <p className="text-base font-bold text-white">
+                    <div className="w-full border-t border-black mb-4"></div>
+                    <p className="text-base font-bold text-black">
                       of intentional breathing helps restores calm
                     </p>
                   </div>
@@ -235,7 +232,7 @@ export default function Login() {
                 <>
                   {/* Version B - Returning Users */}
                   {/* Proof Point 1 */}
-                  <div className="bg-white bg-opacity-20 backdrop-blur-sm rounded-xl p-6 text-center flex flex-col justify-start" style={{ minHeight: '280px', height: '280px' }}>
+                  <div className="rounded-xl p-6 text-center flex flex-col justify-start" style={{ minHeight: '280px', height: '280px', backgroundColor: '#746DB6' }}>
                     <p className="font-bold text-white"
                        style={{ fontSize: '38px', marginBottom: '16px', whiteSpace: 'nowrap' }}>
                       1.2M+
@@ -247,25 +244,25 @@ export default function Login() {
                   </div>
 
                   {/* Proof Point 2 */}
-                  <div className="bg-white bg-opacity-20 backdrop-blur-sm rounded-xl p-6 text-center flex flex-col justify-start" style={{ minHeight: '280px', height: '280px' }}>
-                    <p className="font-bold text-white"
+                  <div className="rounded-xl p-6 text-center flex flex-col justify-start" style={{ minHeight: '280px', height: '280px', backgroundColor: '#E1AFD1' }}>
+                    <p className="font-bold text-black"
                        style={{ fontSize: '38px', marginBottom: '16px', whiteSpace: 'nowrap' }}>
                       28%
                     </p>
-                    <div className="w-full border-t border-white mb-4"></div>
-                    <p className="text-base font-bold text-white">
+                    <div className="w-full border-t border-black mb-4"></div>
+                    <p className="text-base font-bold text-black">
                       avg reduction in stress levels reported by users after 7 days
                     </p>
                   </div>
 
                   {/* Proof Point 3 */}
-                  <div className="bg-white bg-opacity-20 backdrop-blur-sm rounded-xl p-6 text-center flex flex-col justify-start" style={{ minHeight: '280px', height: '280px' }}>
-                    <p className="font-bold text-white"
+                  <div className="rounded-xl p-6 text-center flex flex-col justify-start" style={{ minHeight: '280px', height: '280px', backgroundColor: '#FFE6E6' }}>
+                    <p className="font-bold text-black"
                        style={{ fontSize: '38px', marginBottom: '16px', whiteSpace: 'nowrap' }}>
                       Six
                     </p>
-                    <div className="w-full border-t border-white mb-4"></div>
-                    <p className="text-base font-bold text-white">
+                    <div className="w-full border-t border-black mb-4"></div>
+                    <p className="text-base font-bold text-black">
                       science-inspired techniques for calm, focus, and stress
                     </p>
                   </div>
