@@ -182,7 +182,7 @@ export default function Login() {
             {/* Title - Aligned with logo */}
             <div className="flex justify-center mb-12" style={{ height: '43px' }}>
               <h2 className="font-bold flex items-center"
-                  style={{ fontSize: '53px', color: '#000000' }}>
+                  style={{ fontSize: '51px', color: '#000000' }}>
                 Take a deep breath and relax
               </h2>
             </div>
