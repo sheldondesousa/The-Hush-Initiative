@@ -198,7 +198,7 @@ export default function Login() {
                   {/* Proof Point 1 */}
                   <div className="bg-white bg-opacity-20 backdrop-blur-sm rounded-xl p-6 text-center flex flex-col justify-center" style={{ minHeight: '280px', height: '280px' }}>
                     <p className="font-bold text-white"
-                       style={{ fontSize: '44px', marginBottom: '12px' }}>
+                       style={{ fontSize: '38px', marginBottom: '12px', whiteSpace: 'nowrap' }}>
                       500,000
                     </p>
                     <p className="text-base font-bold text-white">
@@ -209,7 +209,7 @@ export default function Login() {
                   {/* Proof Point 2 */}
                   <div className="bg-white bg-opacity-20 backdrop-blur-sm rounded-xl p-6 text-center flex flex-col justify-center" style={{ minHeight: '280px', height: '280px' }}>
                     <p className="font-bold text-white"
-                       style={{ fontSize: '44px', marginBottom: '12px' }}>
+                       style={{ fontSize: '38px', marginBottom: '12px', whiteSpace: 'nowrap' }}>
                       93%
                     </p>
                     <p className="text-base font-bold text-white">
@@ -220,7 +220,7 @@ export default function Login() {
                   {/* Proof Point 3 */}
                   <div className="bg-white bg-opacity-20 backdrop-blur-sm rounded-xl p-6 text-center flex flex-col justify-center" style={{ minHeight: '280px', height: '280px' }}>
                     <p className="font-bold text-white"
-                       style={{ fontSize: '44px', marginBottom: '12px' }}>
+                       style={{ fontSize: '38px', marginBottom: '12px', whiteSpace: 'nowrap' }}>
                       5 minutes
                     </p>
                     <p className="text-base font-bold text-white">
@@ -234,7 +234,7 @@ export default function Login() {
                   {/* Proof Point 1 */}
                   <div className="bg-white bg-opacity-20 backdrop-blur-sm rounded-xl p-6 text-center flex flex-col justify-center" style={{ minHeight: '280px', height: '280px' }}>
                     <p className="font-bold text-white"
-                       style={{ fontSize: '44px', marginBottom: '12px' }}>
+                       style={{ fontSize: '38px', marginBottom: '12px', whiteSpace: 'nowrap' }}>
                       1 million+
                     </p>
                     <p className="text-base font-bold text-white">
@@ -245,7 +245,7 @@ export default function Login() {
                   {/* Proof Point 2 */}
                   <div className="bg-white bg-opacity-20 backdrop-blur-sm rounded-xl p-6 text-center flex flex-col justify-center" style={{ minHeight: '280px', height: '280px' }}>
                     <p className="font-bold text-white"
-                       style={{ fontSize: '44px', marginBottom: '12px' }}>
+                       style={{ fontSize: '38px', marginBottom: '12px', whiteSpace: 'nowrap' }}>
                       28%
                     </p>
                     <p className="text-base font-bold text-white">
@@ -256,7 +256,7 @@ export default function Login() {
                   {/* Proof Point 3 */}
                   <div className="bg-white bg-opacity-20 backdrop-blur-sm rounded-xl p-6 text-center flex flex-col justify-center" style={{ minHeight: '280px', height: '280px' }}>
                     <p className="font-bold text-white"
-                       style={{ fontSize: '44px', marginBottom: '12px' }}>
+                       style={{ fontSize: '38px', marginBottom: '12px', whiteSpace: 'nowrap' }}>
                       Six
                     </p>
                     <p className="text-base font-bold text-white">
