@@ -13,6 +13,12 @@ export default function Home() {
   const [selectedExercise, setSelectedExercise] = useState(null);
   const [currentView, setCurrentView] = useState('interactive'); // 'interactive', 'about', 'support', 'faqs', 'privacy', 'terms', 'breathing-info'
   const completionTrackedRef = useRef(false);
+  const phaseHoldRef = useRef(false); // Track if we've held at final timer value for animation completion
+
+  // Carousel state
+  const [carouselIndex, setCarouselIndex] = useState(0);
+  const [touchStart, setTouchStart] = useState(null);
+  const [touchEnd, setTouchEnd] = useState(null);
 
   // Random visual for album art placeholder
   const visuals = ['Visual1.jpeg', 'Visual2.jpeg', 'Visual3.jpeg', 'Visual4.jpeg'];
@@ -20,6 +26,73 @@ export default function Home() {
     const randomIndex = Math.floor(Math.random() * visuals.length);
     return visuals[randomIndex];
   });
+
+  // Carousel content array
+  const carouselCards = [
+    {
+      title: 'The Power Of Intentional Breathing',
+      content: "Our breath is the fastest way to change how you feel, anytime, anywhere.",
+      backgroundColor: '#7469B6',
+      textColor: '#FFFFFF'
+    },
+    {
+      title: 'Why It Works So Quickly',
+      content: "Slow, rhythmic breathing activates your body's natural 'rest and restore' response. It lowers stress, improves focus, supports better sleep",
+      backgroundColor: '#AD88C6',
+      textColor: '#FFFFFF'
+    },
+    {
+      title: 'Proven Techniques',
+      content: "Experience Box Breathing for focus, 4-7-8 Breathing for sleep, Physiological Sighing for mood resets, and Alternate Nostril Breathing for balance.",
+      backgroundColor: '#E1AFD1',
+      textColor: '#000000'
+    },
+    {
+      title: 'When It Becomes A Habit',
+      content: "Use the app as a pause: morning grounding, a midday reset, or a nighttime wind-down. Even five minutes can create noticeable shifts.",
+      backgroundColor: '#F7D6EC',
+      textColor: '#000000'
+    },
+    {
+      title: 'Start Your Journey',
+      content: "One breath won't change your life. But a few mindful breaths, practiced daily, can change how your life feels.",
+      backgroundColor: '#FFE6E6',
+      textColor: '#000000'
+    }
+  ];
+
+  // Carousel touch handlers
+  const handleTouchStart = (e) => {
+    setTouchEnd(null);
+    setTouchStart(e.targetTouches[0].clientX);
+  };
+
+  const handleTouchMove = (e) => {
+    setTouchEnd(e.targetTouches[0].clientX);
+  };
+
+  const handleTouchEnd = () => {
+    if (!touchStart || !touchEnd) return;
+    const distance = touchStart - touchEnd;
+    const isLeftSwipe = distance > 50;
+    const isRightSwipe = distance < -50;
+
+    if (isLeftSwipe && carouselIndex < 4) {
+      setCarouselIndex(carouselIndex + 1);
+    }
+    if (isRightSwipe && carouselIndex > 0) {
+      setCarouselIndex(carouselIndex - 1);
+    }
+  };
+
+  // Carousel navigation functions
+  const goToPrevCard = () => {
+    if (carouselIndex > 0) setCarouselIndex(carouselIndex - 1);
+  };
+
+  const goToNextCard = () => {
+    if (carouselIndex < 4) setCarouselIndex(carouselIndex + 1);
+  };
 
   // Track page view and session start
   useEffect(() => {
@@ -284,6 +357,7 @@ export default function Home() {
   useEffect(() => {
     if (selectedOption === 'breathe' && selectedExercise && !showingInfo && countdown === null && !isExercising) {
       setCountdown(3);
+      phaseHoldRef.current = false; // Reset phase hold flag
     }
   }, [showingInfo, selectedExercise, selectedOption, countdown, isExercising]);
 
@@ -598,15 +672,22 @@ export default function Home() {
         } else {
           // Box Breathing pattern (4-4-4-4) - second-based counting
           if (breathingPhase === 'inhale') {
-            // INHALE: 0→4 (4 seconds)
+            // INHALE: 0→4 (exactly 4 seconds: 0s,1s,2s,3s,4s)
             if (prevTimer < 4) {
+              phaseHoldRef.current = false; // Reset hold flag
               return prevTimer + 1;
+            } else if (prevTimer === 4 && !phaseHoldRef.current) {
+              // Hold at 4 for one extra interval to complete animation
+              phaseHoldRef.current = true;
+              return 4;
             } else {
+              // Animation complete, transition to next phase
+              phaseHoldRef.current = false;
               setBreathingPhase('hold1');
               return 0; // Start HOLD1 at 0
             }
           } else if (breathingPhase === 'hold1') {
-            // HOLD1: 0→4 (4 seconds)
+            // HOLD1: 0→4 (exactly 4 seconds)
             if (prevTimer < 4) {
               return prevTimer + 1;
             } else {
@@ -614,15 +695,22 @@ export default function Home() {
               return 4; // Start EXHALE at 4
             }
           } else if (breathingPhase === 'exhale') {
-            // EXHALE: 4→0 (4 seconds, descending)
+            // EXHALE: 4→0 (exactly 4 seconds: 4s,3s,2s,1s,0s)
             if (prevTimer > 0) {
+              phaseHoldRef.current = false; // Reset hold flag
               return prevTimer - 1;
+            } else if (prevTimer === 0 && !phaseHoldRef.current) {
+              // Hold at 0 for one extra interval to complete animation
+              phaseHoldRef.current = true;
+              return 0;
             } else {
+              // Animation complete, transition to next phase
+              phaseHoldRef.current = false;
               setBreathingPhase('hold2');
               return 0; // Start HOLD2 at 0
             }
           } else if (breathingPhase === 'hold2') {
-            // HOLD2: 0→4 (4 seconds)
+            // HOLD2: 0→4 (exactly 4 seconds)
             if (prevTimer < 4) {
               return prevTimer + 1;
             } else {
@@ -634,11 +722,13 @@ export default function Home() {
                 setExerciseCompleted(true);
                 setCurrentCycle(0);
                 setBreathingPhase('inhale');
+                phaseHoldRef.current = false;
                 return 0;
               } else {
                 // Continue to next cycle
                 setCurrentCycle(nextCycle);
                 setBreathingPhase('inhale');
+                phaseHoldRef.current = false;
                 return 0;
               }
             }
@@ -960,37 +1050,60 @@ export default function Home() {
     return minSize;
   };
 
-  // Get smooth square size for Box Breathing
-  const getBoxBreathingSquareSize = () => {
-    if (!isExercising) return 0;
+  // Get orb position for Box Breathing (moves along square path)
+  const getBoxBreathingOrbPosition = (timeOffset = 0) => {
+    if (!isExercising) return { x: 0, y: 0 };
 
-    const minSize = 0; // Start from nothing (empty)
-    const maxSize = 349; // 355 - 4 (stroke width) - 2 (1px padding each side)
+    const squareSize = 280; // Size of the square path
+    let adjustedTimer = timer - timeOffset;
+    let currentPhase = breathingPhase;
 
-    if (breathingPhase === 'inhale') {
-      // INHALE: 0→4 seconds, linear expansion from 0 to max
-      const progress = timer / 4; // 0 to 1
-      return minSize + (maxSize - minSize) * progress;
-    } else if (breathingPhase === 'hold1') {
-      // HOLD1: Stay at max size for 4 seconds
-      return maxSize;
-    } else if (breathingPhase === 'exhale') {
-      // EXHALE: 4→0 seconds, linear compression from max to 0
-      const progress = timer / 4; // 1 to 0
-      return minSize + (maxSize - minSize) * progress;
-    } else if (breathingPhase === 'hold2') {
-      // HOLD2: Stay at min size (0) for 4 seconds
-      return minSize;
+    // Adjust phase if timeOffset causes us to look back into previous phase
+    if (adjustedTimer < 0) {
+      adjustedTimer = 4 + adjustedTimer; // Wrap around
+      // Move to previous phase
+      if (currentPhase === 'inhale') currentPhase = 'hold2';
+      else if (currentPhase === 'hold1') currentPhase = 'inhale';
+      else if (currentPhase === 'exhale') currentPhase = 'hold1';
+      else if (currentPhase === 'hold2') currentPhase = 'exhale';
     }
 
-    return minSize;
+    const progress = Math.min(adjustedTimer / 4, 1); // 0 to 1, capped at 1
+
+    if (currentPhase === 'inhale') {
+      // INHALE: Point 1 to Point 2 - top-left to top-right (move RIGHT)
+      return {
+        x: squareSize * progress,
+        y: 0
+      };
+    } else if (currentPhase === 'hold1') {
+      // HOLD1: Point 2 to Point 3 - top-right to bottom-right (move DOWN)
+      return {
+        x: squareSize,
+        y: squareSize * progress
+      };
+    } else if (currentPhase === 'exhale') {
+      // EXHALE: Point 3 to Point 4 - bottom-right to bottom-left (move LEFT)
+      return {
+        x: squareSize * (1 - progress),
+        y: squareSize
+      };
+    } else if (currentPhase === 'hold2') {
+      // HOLD2: Point 4 to Point 1 - bottom-left to top-left (move UP)
+      return {
+        x: 0,
+        y: squareSize * (1 - progress)
+      };
+    }
+
+    return { x: 0, y: 0 };
   };
 
   // Get green circle indicator position for Box Breathing
   const getBoxBreathingIndicatorPosition = () => {
-    const size = 355; // Fixed size of gray outer square marker
-    const radius = 15; // Border radius of the square
-    const centerOffset = 181.5; // Center of the 363px container
+    const size = 280; // Fixed size of gray outer square marker (reduced from 355)
+    const radius = 12; // Border radius of the square (reduced from 15)
+    const centerOffset = 144; // Center of the 288px container (288/2)
     const halfSize = size / 2;
 
     // Only visible during HOLD phases
@@ -1120,7 +1233,7 @@ export default function Home() {
   const DifficultyIndicator = ({ level }) => {
     return (
       <div className="flex items-center gap-2">
-        <span className="text-xs font-bold text-gray-700">Effort Level:</span>
+        <span className="font-bold text-gray-500" style={{ fontSize: '13px' }}>Effort</span>
         <div className="flex gap-1">
           {[1, 2, 3, 4, 5].map((circle) => {
             const isFilled = circle <= Math.floor(level);
@@ -1252,6 +1365,54 @@ export default function Home() {
           bottom: -50px;
           right: 20%;
           animation: breathingSmoke 6s ease-in-out 3s infinite;
+        }
+        @keyframes orb-pulse {
+          0%, 100% {
+            transform: scale(1.3);
+            opacity: 0.7;
+          }
+          33% {
+            transform: scale(1.5);
+            opacity: 0.8;
+          }
+          66% {
+            transform: scale(1.4);
+            opacity: 0.75;
+          }
+        }
+        @keyframes orb-glow {
+          0%, 100% {
+            filter: brightness(1.15) saturate(1.3) blur(8px);
+          }
+          50% {
+            filter: brightness(1.5) saturate(1.5) blur(10px);
+          }
+        }
+        @keyframes smoke-trail {
+          0% {
+            transform: scale(1.6);
+            opacity: 0.5;
+          }
+          40% {
+            transform: scale(1.75);
+            opacity: 0.6;
+          }
+          70% {
+            transform: scale(1.9);
+            opacity: 0.4;
+          }
+          100% {
+            transform: scale(2);
+            opacity: 0.2;
+          }
+        }
+        @keyframes text-breathe {
+          0%, 100% {
+            transform: scale(1);
+          }
+          50% {
+            transform: scale(1.15);
+          }
         }
       `}</style>
       <div className="flex min-h-screen flex-col lg:flex-row">
@@ -1528,63 +1689,89 @@ export default function Home() {
 
                   {/* Motivational Text */}
                   <h1 className="text-4xl font-bold text-black mb-8" style={{ fontFamily: "'SF Pro Display', sans-serif" }}>
-                    Take a deep breath and relax
+                    Take a deep breath<br />and relax
                   </h1>
 
-                  {/* Metric Cards Grid */}
-                  <div className="space-y-3 mb-8">
-                    {/* First Row: Active Days & Exercises Complete */}
-                    <div className="grid grid-cols-2 gap-3">
-                      {/* Active Days Card */}
-                      <div className="rounded-2xl p-4 text-white" style={{ background: 'linear-gradient(to bottom right, #7469B6, #8978C0)' }}>
-                        <h3 className="text-xs font-medium mb-1 opacity-90">Active Days</h3>
-                        {metrics.loading ? (
-                          <p className="text-3xl font-bold">...</p>
-                        ) : (
-                          <p className="text-3xl font-bold">{metrics.activeDays}</p>
-                        )}
+                  {/* Why Breathing Helps - Working Carousel */}
+                  <div className="mb-6">
+                    <div
+                      onTouchStart={handleTouchStart}
+                      onTouchMove={handleTouchMove}
+                      onTouchEnd={handleTouchEnd}
+                      className="w-full rounded-2xl p-6 text-left relative overflow-hidden transition-all duration-300"
+                      style={{
+                        backgroundColor: carouselCards[carouselIndex].backgroundColor,
+                        color: carouselCards[carouselIndex].textColor,
+                        height: '240px'
+                      }}
+                    >
+                      {/* Left Chevron - Show on cards 2-5 */}
+                      {carouselIndex > 0 && (
+                        <button
+                          onClick={goToPrevCard}
+                          className="absolute left-2 top-1/2 -translate-y-1/2 z-10 p-2 rounded-full transition-all"
+                          style={{
+                            backgroundColor: carouselCards[carouselIndex].textColor === '#FFFFFF' ? 'rgba(255,255,255,0.2)' : 'rgba(0,0,0,0.1)',
+                            color: carouselCards[carouselIndex].textColor
+                          }}
+                          aria-label="Previous card"
+                        >
+                          <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
+                          </svg>
+                        </button>
+                      )}
+
+                      {/* Card Content */}
+                      <div className="flex items-center h-full">
+                        <div className="flex-1 px-8">
+                          <h3 className="text-base font-bold mb-3"
+                              style={{ color: carouselCards[carouselIndex].textColor }}>
+                            {carouselCards[carouselIndex].title}
+                          </h3>
+                          <p className="font-normal opacity-90 leading-relaxed"
+                             style={{
+                               color: carouselCards[carouselIndex].textColor,
+                               fontSize: '16px'
+                             }}>
+                            {carouselCards[carouselIndex].content}
+                          </p>
+                        </div>
                       </div>
 
-                      {/* Exercises Complete Card */}
-                      <div className="rounded-2xl p-4 text-white" style={{ background: 'linear-gradient(to bottom right, #7469B6, #AB8CC4)' }}>
-                        <h3 className="text-xs font-medium mb-1 opacity-90">Exercises Complete</h3>
-                        {metrics.loading ? (
-                          <p className="text-3xl font-bold">...</p>
-                        ) : (
-                          <p className="text-3xl font-bold">{metrics.exercisesComplete}</p>
-                        )}
-                      </div>
+                      {/* Right Chevron - Show on cards 1-4 */}
+                      {carouselIndex < 4 && (
+                        <button
+                          onClick={goToNextCard}
+                          className="absolute right-2 top-1/2 -translate-y-1/2 z-10 p-2 rounded-full transition-all"
+                          style={{
+                            backgroundColor: carouselCards[carouselIndex].textColor === '#FFFFFF' ? 'rgba(255,255,255,0.2)' : 'rgba(0,0,0,0.1)',
+                            color: carouselCards[carouselIndex].textColor
+                          }}
+                          aria-label="Next card"
+                        >
+                          <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+                          </svg>
+                        </button>
+                      )}
                     </div>
 
-                    {/* Second Row: Why Breathing Helps - Full Width with Carousel */}
-                    <button
-                      onClick={() => setCurrentView('breathing-info')}
-                      className="w-full rounded-2xl p-6 text-white text-left hover:opacity-90 transition-opacity relative overflow-hidden"
-                      style={{ background: 'linear-gradient(to bottom right, #AB8CC4, #E1AFD1)', minHeight: '144px' }}
-                    >
-                      <div className="flex items-start justify-between">
-                        <div className="flex-1">
-                          <h3 className="text-base font-bold mb-2">Why Intentional Breathing Helps</h3>
-                          <p className="text-xs font-light opacity-90">Swipe to learn more</p>
-                        </div>
-                        <div className="ml-4">
-                          {/* White line illustration SVG */}
-                          <svg width="60" height="100" viewBox="0 0 60 100" fill="none" xmlns="http://www.w3.org/2000/svg">
-                            {/* Abstract flowing lines representing breath/meditation */}
-                            <path d="M10 20 Q 30 10, 50 20 T 10 40" stroke="#FFFFFF" strokeWidth="2" fill="none" opacity="0.9"/>
-                            <path d="M15 35 Q 35 25, 55 35 T 15 55" stroke="#F5F5F5" strokeWidth="1.5" fill="none" opacity="0.7"/>
-                            <path d="M8 50 Q 28 40, 48 50 T 8 70" stroke="#FAFAFA" strokeWidth="2" fill="none" opacity="0.8"/>
-                            <path d="M12 65 Q 32 55, 52 65 T 12 85" stroke="#FFFFFF" strokeWidth="1.5" fill="none" opacity="0.6"/>
-                            {/* Subtle dots */}
-                            <circle cx="30" cy="15" r="2" fill="#FFFFFF" opacity="0.5"/>
-                            <circle cx="45" cy="30" r="1.5" fill="#F5F5F5" opacity="0.4"/>
-                            <circle cx="20" cy="45" r="2" fill="#FFFFFF" opacity="0.6"/>
-                            <circle cx="40" cy="60" r="1.5" fill="#FAFAFA" opacity="0.5"/>
-                            <circle cx="25" cy="75" r="2" fill="#FFFFFF" opacity="0.4"/>
-                          </svg>
-                        </div>
-                      </div>
-                    </button>
+                    {/* Interactive Carousel Indicators */}
+                    <div className="flex justify-center gap-2 mt-4">
+                      {[0, 1, 2, 3, 4].map((index) => (
+                        <button
+                          key={index}
+                          onClick={() => setCarouselIndex(index)}
+                          className="w-2 h-2 rounded-full transition-all"
+                          style={{
+                            backgroundColor: index === carouselIndex ? ['#7469B6', '#AD88C6', '#E1AFD1', '#F7D6EC', '#FFE6E6'][index] : '#D1D5DB',
+                            transform: index === carouselIndex ? 'scale(1.2)' : 'scale(1)'
+                          }}
+                          aria-label={`Go to card ${index + 1}`}
+                        />
+                      ))}
+                    </div>
                   </div>
                 </div>
               )}
@@ -1628,7 +1815,7 @@ export default function Home() {
                     </div>
 
                     {/* Scrollable Content */}
-                    <div className="flex-1 overflow-y-auto px-2">
+                    <div className="flex-1 overflow-y-auto px-2 hide-scrollbar">
                       {/* Title */}
                       <h1 className="text-4xl font-bold mb-4 text-black">
                         {selectedExercise.name.replace(/\s*\([^)]*\)/, '')}
@@ -1819,6 +2006,7 @@ export default function Home() {
                         onClick={() => {
                           setShowingInfo(false);
                           setCountdown(3); // Start countdown
+                          phaseHoldRef.current = false; // Reset phase hold flag
                         }}
                         className="w-full py-3 bg-black text-white text-base font-bold rounded-xl hover:bg-gray-800 transition-colors"
                       >
@@ -2233,34 +2421,44 @@ export default function Home() {
 
                     {/* Timer Section - 15% */}
                     <div className="flex-[0.15] flex items-center justify-center">
-                      {/* Timer Display - Show during INHALE and EXHALE (hide when completed) */}
-                      {!exerciseCompleted && isExercising && (breathingPhase === 'inhale' || breathingPhase === 'exhale') && (
-                        <div className="text-center">
-                          <div className="font-bold text-gray-900" style={{ fontSize: '4.32rem' }}>
-                            {selectedExercise?.name === 'Coherent Breathing'
-                              ? (breathingPhase === 'inhale'
-                                  ? `${Math.floor(timer / 10)}s`  // INHALE: 0s to coherentBreathTime (e.g., 0s-6s)
-                                  : `${Math.ceil(timer / 10)}s`)  // EXHALE: coherentBreathTime to 0s (e.g., 6s-0s)
-                              : selectedExercise?.name === 'Alternate Nostril'
+                      {/* Timer Display - Show during all phases for Box Breathing, INHALE and EXHALE for others */}
+                      {!exerciseCompleted && isExercising && countdown === null && (
+                        selectedExercise?.name === 'Box Breathing (4-4-4-4)' ? (
+                          /* Box Breathing: Show timer for ALL phases including HOLD */
+                          <div className="text-center">
+                            <div className="font-bold text-gray-900" style={{ fontSize: '4.32rem' }}>
+                              {timer}
+                            </div>
+                          </div>
+                        ) : (breathingPhase === 'inhale' || breathingPhase === 'exhale') ? (
+                          /* Other exercises: Show timer only during INHALE and EXHALE */
+                          <div className="text-center">
+                            <div className="font-bold text-gray-900" style={{ fontSize: '4.32rem' }}>
+                              {selectedExercise?.name === 'Coherent Breathing'
                                 ? (breathingPhase === 'inhale'
-                                    ? `${Math.floor(timer / 10)}s`  // INHALE: 0s to alternateNostrilBreathTime (e.g., 0s-4s)
-                                    : `${Math.ceil(timer / 10)}s`)  // EXHALE: alternateNostrilBreathTime to 0s (e.g., 4s-0s)
-                                : selectedExercise?.name === 'Physiological Sigh'
+                                    ? `${Math.floor(timer / 10)}s`  // INHALE: 0s to coherentBreathTime (e.g., 0s-6s)
+                                    : `${Math.ceil(timer / 10)}s`)  // EXHALE: coherentBreathTime to 0s (e.g., 6s-0s)
+                                : selectedExercise?.name === 'Alternate Nostril'
                                   ? (breathingPhase === 'inhale'
-                                      ? `${Math.ceil((timer + 1) / 10)}s`  // INHALE: 0-39 → 1s-4s
-                                      : `${Math.ceil(timer / 10)}s`)       // EXHALE: 79-0 → 8s-0s
-                                  : selectedExercise?.name === '4-7-8 Breathing'
+                                      ? `${Math.floor(timer / 10)}s`  // INHALE: 0s to alternateNostrilBreathTime (e.g., 0s-4s)
+                                      : `${Math.ceil(timer / 10)}s`)  // EXHALE: alternateNostrilBreathTime to 0s (e.g., 4s-0s)
+                                  : selectedExercise?.name === 'Physiological Sigh'
                                     ? (breathingPhase === 'inhale'
-                                        ? `${Math.floor(timer / 10)}s`  // INHALE: 0-40 → 0s-4s
-                                        : `${Math.ceil(timer / 10)}s`)  // EXHALE: 80-0 → 8s-0s
-                                    : selectedExercise?.name === 'Humming Bee'
+                                        ? `${Math.ceil((timer + 1) / 10)}s`  // INHALE: 0-39 → 1s-4s
+                                        : `${Math.ceil(timer / 10)}s`)       // EXHALE: 79-0 → 8s-0s
+                                    : selectedExercise?.name === '4-7-8 Breathing'
                                       ? (breathingPhase === 'inhale'
                                           ? `${Math.floor(timer / 10)}s`  // INHALE: 0-40 → 0s-4s
                                           : `${Math.ceil(timer / 10)}s`)  // EXHALE: 80-0 → 8s-0s
-                                      : `${timer}s`
-                            }
+                                      : selectedExercise?.name === 'Humming Bee'
+                                        ? (breathingPhase === 'inhale'
+                                            ? `${Math.floor(timer / 10)}s`  // INHALE: 0-40 → 0s-4s
+                                            : `${Math.ceil(timer / 10)}s`)  // EXHALE: 80-0 → 8s-0s
+                                        : `${timer}s`
+                              }
+                            </div>
                           </div>
-                        </div>
+                        ) : null
                       )}
                     </div>
 
@@ -2310,10 +2508,11 @@ export default function Home() {
                       {selectedExercise?.name === 'Box Breathing (4-4-4-4)' ? (
                         <>
                           {/* Breathing Square Illustration - Box Breathing Only */}
-                          <div className="flex-1 flex items-center justify-center w-full relative">
-                            {/* Gray Background Square - Always visible */}
+                          <div className="flex-1 flex flex-col items-center justify-center w-full">
+                            <div className="relative" style={{ width: '363px', height: '363px' }}>
+                            {/* Gray Border Square */}
                             <svg
-                              className="absolute"
+                              className="absolute top-0 left-0"
                               width="363"
                               height="363"
                             >
@@ -2329,56 +2528,176 @@ export default function Home() {
                               />
                             </svg>
 
-                            {/* Blue Progress Line - Shows during HOLD phases, starts from top-left */}
-                            {(breathingPhase === 'hold1' || breathingPhase === 'hold2') && (
-                              <svg
-                                className="absolute"
-                                width="363"
-                                height="363"
-                              >
-                                <rect
-                                  x="4"
-                                  y="4"
-                                  width="355"
-                                  height="355"
-                                  rx="15"
-                                  fill="none"
-                                  stroke="#067AC3"
-                                  strokeWidth="4"
-                                  strokeDasharray="1420"
-                                  strokeDashoffset={1420 - (1420 * timer / 4)}
-                                  style={{ transition: 'stroke-dashoffset 1000ms linear' }}
-                                  strokeLinecap="square"
-                                />
-                              </svg>
-                            )}
-
-                            {/* Single Expanding/Compressing Square with Radial Gradient */}
+                            {/* Secondary Colors Gradient Background - Vertical from bottom to top */}
                             <div
                               className="absolute"
                               style={{
-                                width: `${getBoxBreathingSquareSize()}px`,
-                                height: `${getBoxBreathingSquareSize()}px`,
-                                background: 'radial-gradient(circle, rgba(6, 122, 195, 1) 0%, rgba(6, 122, 195, 0.6) 50%, rgba(6, 122, 195, 0.2) 100%)',
-                                boxShadow: '0 0 30px rgba(6, 122, 195, 0.5)',
-                                borderRadius: '15px',
-                                transition: 'all 1000ms linear'
+                                top: '4px',
+                                left: '4px',
+                                width: '355px',
+                                height: '355px',
+                                background: 'linear-gradient(to bottom, rgba(255, 230, 247, 0.8) 0%, rgba(246, 208, 234, 0.75) 50%, rgba(225, 175, 209, 0.7) 100%)',
+                                borderRadius: '15px'
                               }}
                             />
 
+                            {/* Mountain Wave Animation */}
+                            {(() => {
+                              // Calculate mountain height based on phase and timer
+                              let mountainHeight = 0;
+
+                              if (breathingPhase === 'inhale') {
+                                // Rise from 0% to 100% over 4 seconds (timer: 0→4)
+                                mountainHeight = (timer / 4) * 100;
+                              } else if (breathingPhase === 'hold1') {
+                                // Hold at 100% (top) after inhale
+                                mountainHeight = 100;
+                              } else if (breathingPhase === 'exhale') {
+                                // Fall from 100% to 0% over 4 seconds (timer: 4→0, counts down)
+                                mountainHeight = (timer / 4) * 100;
+                              } else if (breathingPhase === 'hold2') {
+                                // Hold at 0% (bottom) after exhale
+                                mountainHeight = 0;
+                              }
+
+                              const peakHeight = 355 - (mountainHeight * 3.55);
+                              const baseHeight = 355;
+
+                              return (
+                                <svg
+                                  className="absolute"
+                                  width="355"
+                                  height="355"
+                                  viewBox="0 0 355 355"
+                                  style={{ top: '4px', left: '4px', overflow: 'visible' }}
+                                >
+                                  <defs>
+                                    {/* Primary colors gradient for mountain - top to bottom with equal weightage */}
+                                    <linearGradient id="mountainGradient" x1="0%" y1="0%" x2="0%" y2="100%">
+                                      <stop offset="0%" stopColor="#AD88C6" stopOpacity="1" />
+                                      <stop offset="50%" stopColor="#7469B6" stopOpacity="1" />
+                                      <stop offset="100%" stopColor="#AD88C6" stopOpacity="1" />
+                                    </linearGradient>
+                                    {/* Radial gradient overlay for depth */}
+                                    <radialGradient id="mountainOverlay" cx="50%" cy="30%">
+                                      <stop offset="0%" stopColor="#C8AAD6" stopOpacity="0.6" />
+                                      <stop offset="50%" stopColor="#AD88C6" stopOpacity="0.3" />
+                                      <stop offset="100%" stopColor="#7469B6" stopOpacity="0" />
+                                    </radialGradient>
+                                  </defs>
+
+                                  {/* Bell curve mountain shape using cubic bezier for smooth, rounded curve */}
+                                  <path
+                                    d={`
+                                      M 0,${baseHeight}
+                                      C 59,${baseHeight - (mountainHeight * 3.55 * 0.15)}, 89,${peakHeight + (mountainHeight * 3.55 * 0.05)}, 177.5,${peakHeight}
+                                      C 266,${peakHeight + (mountainHeight * 3.55 * 0.05)}, 296,${baseHeight - (mountainHeight * 3.55 * 0.15)}, 355,${baseHeight}
+                                      Z
+                                    `}
+                                    fill="url(#mountainGradient)"
+                                    style={{
+                                      transition: 'all 1000ms ease-out'
+                                    }}
+                                  />
+                                  {/* Overlay gradient for depth effect */}
+                                  <path
+                                    d={`
+                                      M 0,${baseHeight}
+                                      C 59,${baseHeight - (mountainHeight * 3.55 * 0.15)}, 89,${peakHeight + (mountainHeight * 3.55 * 0.05)}, 177.5,${peakHeight}
+                                      C 266,${peakHeight + (mountainHeight * 3.55 * 0.05)}, 296,${baseHeight - (mountainHeight * 3.55 * 0.15)}, 355,${baseHeight}
+                                      Z
+                                    `}
+                                    fill="url(#mountainOverlay)"
+                                    style={{
+                                      transition: 'all 1000ms ease-out'
+                                    }}
+                                  />
+
+                                  {/* Star effect at peak when maximum height reached */}
+                                  {mountainHeight >= 95 && (
+                                    <g transform={`translate(${177.5 + 30}, ${peakHeight + 15})`}>
+                                      {/* Sparkle/Star effect */}
+                                      <circle cx="0" cy="0" r="3" fill="#FFE6F7" opacity="0.9">
+                                        <animate attributeName="opacity" values="0.9;0.3;0.9" dur="1s" repeatCount="indefinite" />
+                                      </circle>
+                                      <circle cx="0" cy="0" r="6" fill="#F6D0EA" opacity="0.5">
+                                        <animate attributeName="opacity" values="0.5;0.1;0.5" dur="1s" repeatCount="indefinite" />
+                                        <animate attributeName="r" values="6;8;6" dur="1s" repeatCount="indefinite" />
+                                      </circle>
+                                      {/* Star rays */}
+                                      <line x1="-8" y1="0" x2="8" y2="0" stroke="#FFE6F7" strokeWidth="1.5" opacity="0.8">
+                                        <animate attributeName="opacity" values="0.8;0.3;0.8" dur="1s" repeatCount="indefinite" />
+                                      </line>
+                                      <line x1="0" y1="-8" x2="0" y2="8" stroke="#FFE6F7" strokeWidth="1.5" opacity="0.8">
+                                        <animate attributeName="opacity" values="0.8;0.3;0.8" dur="1s" repeatCount="indefinite" />
+                                      </line>
+                                      <line x1="-6" y1="-6" x2="6" y2="6" stroke="#F6D0EA" strokeWidth="1" opacity="0.6">
+                                        <animate attributeName="opacity" values="0.6;0.2;0.6" dur="1s" repeatCount="indefinite" />
+                                      </line>
+                                      <line x1="6" y1="-6" x2="-6" y2="6" stroke="#F6D0EA" strokeWidth="1" opacity="0.6">
+                                        <animate attributeName="opacity" values="0.6;0.2;0.6" dur="1s" repeatCount="indefinite" />
+                                      </line>
+                                    </g>
+                                  )}
+                                </svg>
+                              );
+                            })()}
+
                             {/* Phase Text - At Center of Square */}
-                            <div className="absolute text-center">
+                            <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 text-center">
                               <div
-                                className={`text-lg font-semibold text-gray-700 uppercase tracking-wider ${
-                                  (breathingPhase === 'hold1' || breathingPhase === 'hold2') ? 'pulse-hold' : ''
-                                }`}
+                                className="text-lg font-semibold text-gray-700 uppercase tracking-wider"
+                                style={{
+                                  animation: 'text-breathe 4s ease-in-out infinite'
+                                }}
                               >
-                                {breathingPhase === 'inhale' && 'Breathe In'}
+                                {breathingPhase === 'inhale' && countdown === null && 'Breathe In'}
                                 {breathingPhase === 'hold1' && 'HOLD'}
                                 {breathingPhase === 'exhale' && 'Breathe Out'}
                                 {breathingPhase === 'hold2' && 'HOLD'}
                               </div>
                             </div>
+                          </div>
+
+                          {/* Phase Tabs - Below animation with spacing */}
+                          <div className="flex justify-center gap-2 mt-8">
+                            <div
+                              className={`px-6 py-2 rounded-lg font-medium transition-all ${
+                                breathingPhase === 'inhale'
+                                  ? 'bg-white text-black shadow-md'
+                                  : 'bg-transparent text-gray-400'
+                              }`}
+                            >
+                              In 4s
+                            </div>
+                            <div
+                              className={`px-6 py-2 rounded-lg font-medium transition-all ${
+                                breathingPhase === 'hold1'
+                                  ? 'bg-white text-black shadow-md'
+                                  : 'bg-transparent text-gray-400'
+                              }`}
+                            >
+                              Hold 4s
+                            </div>
+                            <div
+                              className={`px-6 py-2 rounded-lg font-medium transition-all ${
+                                breathingPhase === 'exhale'
+                                  ? 'bg-white text-black shadow-md'
+                                  : 'bg-transparent text-gray-400'
+                              }`}
+                            >
+                              Out 4s
+                            </div>
+                            <div
+                              className={`px-6 py-2 rounded-lg font-medium transition-all ${
+                                breathingPhase === 'hold2'
+                                  ? 'bg-white text-black shadow-md'
+                                  : 'bg-transparent text-gray-400'
+                              }`}
+                            >
+                              Hold 4s
+                            </div>
+                          </div>
                           </div>
                         </>
                       ) : selectedExercise?.name === '4-7-8 Breathing' ? (
@@ -2717,32 +3036,13 @@ export default function Home() {
                       )}
                     </div>
 
-                    {/* Pattern Info Section - 5% */}
-                    <div className="flex-[0.05] flex items-center justify-center pt-[5px]">
-                      {/* Box Breathing Pattern Tabs */}
-                      {selectedExercise?.name === 'Box Breathing (4-4-4-4)' && !exerciseCompleted && isExercising && (
-                        <div className="flex items-center gap-3 text-sm text-gray-600">
-                          <div className={`pb-1 transition-all ${breathingPhase === 'inhale' ? 'border-b-2 border-gray-900 font-medium' : ''}`}>
-                            In 4s
-                          </div>
-                          <div className="text-gray-300">|</div>
-                          <div className={`pb-1 transition-all ${breathingPhase === 'hold1' ? 'border-b-2 border-gray-900 font-medium' : ''}`}>
-                            Hold 4s
-                          </div>
-                          <div className="text-gray-300">|</div>
-                          <div className={`pb-1 transition-all ${breathingPhase === 'exhale' ? 'border-b-2 border-gray-900 font-medium' : ''}`}>
-                            Out 4s
-                          </div>
-                          <div className="text-gray-300">|</div>
-                          <div className={`pb-1 transition-all ${breathingPhase === 'hold2' ? 'border-b-2 border-gray-900 font-medium' : ''}`}>
-                            Hold 4s
-                          </div>
-                        </div>
-                      )}
+                    {/* Pattern Info Section - 10% */}
+                    <div className="flex-[0.1] flex items-center justify-center pt-[5px]">
+                      {/* Pattern info removed - tabs now shown within the exercise animation area */}
                     </div>
 
-                    {/* Exercise Starting Section - 10% */}
-                    <div className="flex-[0.1] flex items-center justify-center">
+                    {/* Exercise Starting Section - 5% */}
+                    <div className="flex-[0.05] flex items-center justify-center">
                       {/* Countdown Progress Bar - Show during countdown (only on first start, not after completion) */}
                       {countdown !== null && countdown > 0 && !exerciseCompleted && (
                         <div className="w-full max-w-xs px-4">
@@ -2801,6 +3101,7 @@ export default function Home() {
                             setCurrentCycle(0);
                             setBreathingPhase('inhale');
                             setTimer(selectedExercise?.name === 'Physiological Sigh' ? 0 : 0);
+                            phaseHoldRef.current = false; // Reset phase hold flag
                           } else if (isPaused) {
                             // Resume from pause
                             setIsPaused(false);
@@ -2833,13 +3134,13 @@ export default function Home() {
                   /* Track List */
                   <div className="flex flex-col flex-1 min-h-0">
                     {selectedOption === 'breathe' && (
-                      <div className="mt-4 mb-4 flex-shrink-0">
-                        <h3 className="font-semibold text-xl text-black">
+                      <div className="mt-1 mb-4 flex-shrink-0">
+                        <h3 className="font-semibold text-2xl text-black">
                           Select from 6 proven techniques
                         </h3>
                       </div>
                     )}
-                    <div className="overflow-y-auto flex-1 min-h-0">
+                    <div className="overflow-y-auto flex-1 min-h-0 hide-scrollbar">
                       {currentTracks.map((track, index) => (
                       <button
                         key={track.id}
@@ -2853,22 +3154,35 @@ export default function Home() {
                         className="w-full flex items-start py-4 border-b border-gray-200 hover:bg-gray-50 hover:opacity-70 transition-all group"
                     >
                       <div className="text-left flex-1">
-                        <p className="text-sm font-medium text-black">{track.name}</p>
+                        <p className="text-base font-semibold text-black">{track.name}</p>
                         {selectedOption === 'breathe' && (() => {
                           const metadata = getExerciseMetadata(track.name);
                           return (
                             <>
-                              <p className="text-xs text-gray-500 mt-1">
-                                <span className="font-bold">Best for:</span> {metadata.bestFor} · <span className="font-bold">Ideal time:</span> {metadata.idealSession}
-                              </p>
-                              <div className="mt-2">
-                                <DifficultyIndicator level={getDifficultyLevel(track.name)} />
+                              <div className="text-gray-500 mt-1" style={{ fontSize: '13px' }}>
+                                <p>
+                                  <span className="font-bold">Helps with:</span> {metadata.bestFor}
+                                </p>
+                                <div className="flex items-center gap-3 mt-1">
+                                  <p>
+                                    <span className="font-bold">Ideal time:</span> {metadata.idealSession}
+                                  </p>
+                                  <DifficultyIndicator level={getDifficultyLevel(track.name)} />
+                                </div>
                               </div>
                             </>
                           );
                         })()}
                       </div>
-                      {selectedOption !== 'breathe' && (
+
+                      {/* Right Side - Duration or Chevron */}
+                      {selectedOption === 'breathe' ? (
+                        <div className="flex items-center ml-4 self-center">
+                          <svg className="w-5 h-5 text-gray-400 group-hover:text-gray-600 transition-colors" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+                          </svg>
+                        </div>
+                      ) : (
                         <span className="text-sm text-gray-500">{track.duration}</span>
                       )}
                     </button>
