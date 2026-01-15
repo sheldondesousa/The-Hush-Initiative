@@ -1732,7 +1732,7 @@ export default function Home() {
                           <p className="font-light opacity-90 leading-relaxed"
                              style={{
                                color: carouselCards[carouselIndex].textColor,
-                               fontSize: '12px'
+                               fontSize: '16px'
                              }}>
                             {carouselCards[carouselIndex].content}
                           </p>
