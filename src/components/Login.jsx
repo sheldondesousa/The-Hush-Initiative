@@ -183,7 +183,7 @@ export default function Login() {
             <div className="flex justify-center mb-12" style={{ height: '43px' }}>
               <h2 className="font-bold flex items-center"
                   style={{ fontSize: '51px', color: '#000000' }}>
-                Take a deep breath and relax
+                Welcome to The Hush Initiative
               </h2>
             </div>
 
