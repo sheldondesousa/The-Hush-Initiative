@@ -2659,13 +2659,13 @@ export default function Home() {
                             </div>
 
                           {/* Phase Indicator - 3 Boxes */}
-                          <div className="flex justify-center gap-4 mt-8">
+                          <div className="flex justify-between gap-3 mt-8" style={{ width: '360px' }}>
                             {/* Breathe In Box */}
                             <div
                               className="flex flex-col items-center justify-center rounded-lg p-6 transition-all duration-300"
                               style={{
                                 backgroundColor: breathingPhase === 'inhale' ? '#746996' : '#E5E7EB',
-                                minWidth: '140px',
+                                width: '112px',
                                 minHeight: '100px'
                               }}
                             >
@@ -2673,7 +2673,7 @@ export default function Home() {
                                 Breathe In
                               </div>
                               <div className={`text-2xl ${breathingPhase === 'inhale' ? 'text-white' : 'text-gray-400'}`}>
-                                ↓↓
+                                ↑↑
                               </div>
                             </div>
 
@@ -2682,7 +2682,7 @@ export default function Home() {
                               className="flex flex-col items-center justify-center rounded-lg p-6 transition-all duration-300"
                               style={{
                                 backgroundColor: (breathingPhase === 'hold1' || breathingPhase === 'hold2') ? '#E1AFD1' : '#E5E7EB',
-                                minWidth: '140px',
+                                width: '112px',
                                 minHeight: '100px'
                               }}
                             >
@@ -2690,7 +2690,7 @@ export default function Home() {
                                 Hold
                               </div>
                               <div className={`text-2xl ${(breathingPhase === 'hold1' || breathingPhase === 'hold2') ? 'text-gray-800' : 'text-gray-400'}`}>
-                                ‖
+                                ⏸
                               </div>
                             </div>
 
@@ -2699,7 +2699,7 @@ export default function Home() {
                               className="flex flex-col items-center justify-center rounded-lg p-6 transition-all duration-300"
                               style={{
                                 backgroundColor: breathingPhase === 'exhale' ? '#AD88C6' : '#E5E7EB',
-                                minWidth: '140px',
+                                width: '112px',
                                 minHeight: '100px'
                               }}
                             >
@@ -2707,7 +2707,7 @@ export default function Home() {
                                 Breathe Out
                               </div>
                               <div className={`text-2xl ${breathingPhase === 'exhale' ? 'text-white' : 'text-gray-400'}`}>
-                                ↑↑
+                                ↓↓
                               </div>
                             </div>
                           </div>
