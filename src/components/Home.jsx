@@ -2592,13 +2592,13 @@ export default function Home() {
                                     return '#746996'; // Blue Violet
                                   } else if (squareId >= 6 && squareId <= 9) {
                                     // Right side - lit during hold1
-                                    return '#E7AFDF'; // Light Orchid
+                                    return '#F7D6EC'; // Light Orchid
                                   } else if (squareId >= 10 && squareId <= 13) {
                                     // Bottom row - lit during exhale
                                     return '#AD8FC6'; // African Violet
                                   } else if (squareId === 14 || squareId === 15 || squareId === 16 || squareId === 1) {
                                     // Left side - lit during hold2
-                                    return '#E7AFDF'; // Light Orchid (same as hold1)
+                                    return '#F7D6EC'; // Light Orchid (same as hold1)
                                   }
                                   return '#E5E7EB';
                                 };
@@ -2679,7 +2679,7 @@ export default function Home() {
                             <div
                               className="flex flex-col items-center justify-center rounded-lg p-6 transition-all duration-300"
                               style={{
-                                backgroundColor: (breathingPhase === 'hold1' || breathingPhase === 'hold2') ? '#E7AFDF' : '#E5E7EB',
+                                backgroundColor: (breathingPhase === 'hold1' || breathingPhase === 'hold2') ? '#F7D6EC' : '#E5E7EB',
                                 width: '112px',
                                 minHeight: '100px'
                               }}
