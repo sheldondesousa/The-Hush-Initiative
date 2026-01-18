@@ -405,8 +405,8 @@ export default function Home() {
       setIsExercising(true);
       setIsPaused(false);
       setBreathingPhase('inhale');
-      // Box Breathing starts at timer 1, all others start at 0
-      setTimer(selectedExercise?.name === 'Box Breathing (4-4-4-4)' ? 1 : 0);
+      // All exercises start at timer 0
+      setTimer(0);
       setCurrentCycle(0);
       return;
     }
@@ -464,9 +464,9 @@ export default function Home() {
       else if (breathingPhase === 'hold2') intervalDuration = 200; // 200ms gap after EXHALE
       else intervalDuration = 100; // 100ms for smooth transitions
     } else {
-      // Box breathing: all phases use 1000ms interval (1 second per count)
-      // Each phase counts 1→2→3→4 (4 seconds total)
-      intervalDuration = 1000; // 1 second intervals
+      // Box breathing: all phases use 800ms interval to show 0→1→2→3→4 (5 counts) in exactly 4 seconds
+      // Each phase counts 0→1→2→3→4 (4 seconds total: 5 counts × 800ms = 4000ms)
+      intervalDuration = 800; // 800ms intervals
     }
 
     const interval = setInterval(() => {
@@ -672,36 +672,36 @@ export default function Home() {
             }
           }
         } else {
-          // Box Breathing pattern (4-4-4-4) - each phase counts 1→2→3→4 (4 seconds)
+          // Box Breathing pattern (4-4-4-4) - each phase counts 0→1→2→3→4 (4 seconds)
           if (breathingPhase === 'inhale') {
-            // INHALE: 1→2→3→4 (4 seconds total)
+            // INHALE: 0→1→2→3→4 (4 seconds total, 5 counts × 800ms)
             if (prevTimer < 4) {
               return prevTimer + 1;
             } else {
               // Timer reached 4, move to hold1
               setBreathingPhase('hold1');
-              return 1; // Start hold1 at 1
+              return 0; // Start hold1 at 0
             }
           } else if (breathingPhase === 'hold1') {
-            // HOLD1: 1→2→3→4 (4 seconds total)
+            // HOLD1: 0→1→2→3→4 (4 seconds total, 5 counts × 800ms)
             if (prevTimer < 4) {
               return prevTimer + 1;
             } else {
               // Timer reached 4, move to exhale
               setBreathingPhase('exhale');
-              return 1; // Start exhale at 1
+              return 0; // Start exhale at 0
             }
           } else if (breathingPhase === 'exhale') {
-            // EXHALE: 1→2→3→4 (4 seconds total)
+            // EXHALE: 0→1→2→3→4 (4 seconds total, 5 counts × 800ms)
             if (prevTimer < 4) {
               return prevTimer + 1;
             } else {
               // Timer reached 4, move to hold2
               setBreathingPhase('hold2');
-              return 1; // Start hold2 at 1
+              return 0; // Start hold2 at 0
             }
           } else if (breathingPhase === 'hold2') {
-            // HOLD2: 1→2→3→4 (4 seconds total)
+            // HOLD2: 0→1→2→3→4 (4 seconds total, 5 counts × 800ms)
             if (prevTimer < 4) {
               return prevTimer + 1;
             } else {
@@ -713,12 +713,12 @@ export default function Home() {
                 setExerciseCompleted(true);
                 setCurrentCycle(0);
                 setBreathingPhase('inhale');
-                return 1;
+                return 0;
               } else {
                 // Continue to next cycle - move to inhale
                 setCurrentCycle(nextCycle);
                 setBreathingPhase('inhale');
-                return 1; // Start next inhale at 1
+                return 0; // Start next inhale at 0
               }
             }
           }
@@ -2488,7 +2488,7 @@ export default function Home() {
                               onClick={() => {
                                 setExerciseCompleted(false);
                                 setCurrentCycle(0);
-                                setTimer(selectedExercise?.name === 'Box Breathing (4-4-4-4)' ? 1 : 0);
+                                setTimer(0);
                                 setBreathingPhase('inhale');
                                 setIsExercising(true);
                               }}
@@ -2512,15 +2512,15 @@ export default function Home() {
                                 <div
                                   className="flex flex-col items-center justify-center rounded-2xl transition-all duration-300 flex-1 aspect-square max-w-[45vw]"
                                   style={{
-                                    backgroundColor: (countdown === null && breathingPhase === 'inhale') ? '#746996' : '#E5E7EB',
+                                    backgroundColor: (isExercising && countdown === null && breathingPhase === 'inhale') ? '#746996' : '#E5E7EB',
                                     minWidth: '140px',
                                     minHeight: '140px'
                                   }}
                                 >
-                                  <div className={`text-base font-semibold mb-2 text-center leading-tight ${(countdown === null && breathingPhase === 'inhale') ? 'text-white' : 'text-gray-600'}`}>
+                                  <div className={`text-base font-semibold mb-2 text-center leading-tight ${(isExercising && countdown === null && breathingPhase === 'inhale') ? 'text-white' : 'text-gray-600'}`}>
                                     Breathe In
                                   </div>
-                                  <div className={`text-2xl text-center ${(countdown === null && breathingPhase === 'inhale') ? 'text-white' : 'text-gray-400'}`}>
+                                  <div className={`text-2xl text-center ${(isExercising && countdown === null && breathingPhase === 'inhale') ? 'text-white' : 'text-gray-400'}`}>
                                     ↑
                                   </div>
                                 </div>
@@ -2529,16 +2529,16 @@ export default function Home() {
                                 <div
                                   className="flex flex-col items-center justify-center rounded-2xl transition-all duration-300 flex-1 aspect-square max-w-[45vw]"
                                   style={{
-                                    backgroundColor: (countdown === null && breathingPhase === 'hold1') ? '#F7D6EC' : '#E5E7EB',
+                                    backgroundColor: (isExercising && countdown === null && breathingPhase === 'hold1') ? '#F7D6EC' : '#E5E7EB',
                                     minWidth: '140px',
                                     minHeight: '140px'
                                   }}
                                 >
-                                  <div className={`text-base font-semibold mb-2 text-center ${(countdown === null && breathingPhase === 'hold1') ? 'text-gray-800' : 'text-gray-600'}`}>
-                                    Hold
+                                  <div className={`text-base font-semibold mb-2 text-center ${(isExercising && countdown === null && breathingPhase === 'hold1') ? 'text-gray-800' : 'text-gray-600'}`}>
+                                    Hold Breath
                                   </div>
                                   <svg
-                                    className={`${(countdown === null && breathingPhase === 'hold1') ? 'text-gray-800' : 'text-gray-400'}`}
+                                    className={`${(isExercising && countdown === null && breathingPhase === 'hold1') ? 'text-gray-800' : 'text-gray-400'}`}
                                     width="24"
                                     height="24"
                                     viewBox="0 0 24 24"
@@ -2556,16 +2556,16 @@ export default function Home() {
                                 <div
                                   className="flex flex-col items-center justify-center rounded-2xl transition-all duration-300 flex-1 aspect-square max-w-[45vw]"
                                   style={{
-                                    backgroundColor: (countdown === null && breathingPhase === 'hold2') ? '#F7D6EC' : '#E5E7EB',
+                                    backgroundColor: (isExercising && countdown === null && breathingPhase === 'hold2') ? '#F7D6EC' : '#E5E7EB',
                                     minWidth: '140px',
                                     minHeight: '140px'
                                   }}
                                 >
-                                  <div className={`text-base font-semibold mb-2 text-center ${(countdown === null && breathingPhase === 'hold2') ? 'text-gray-800' : 'text-gray-600'}`}>
-                                    Hold
+                                  <div className={`text-base font-semibold mb-2 text-center ${(isExercising && countdown === null && breathingPhase === 'hold2') ? 'text-gray-800' : 'text-gray-600'}`}>
+                                    Hold Breath
                                   </div>
                                   <svg
-                                    className={`${(countdown === null && breathingPhase === 'hold2') ? 'text-gray-800' : 'text-gray-400'}`}
+                                    className={`${(isExercising && countdown === null && breathingPhase === 'hold2') ? 'text-gray-800' : 'text-gray-400'}`}
                                     width="24"
                                     height="24"
                                     viewBox="0 0 24 24"
@@ -2580,15 +2580,15 @@ export default function Home() {
                                 <div
                                   className="flex flex-col items-center justify-center rounded-2xl transition-all duration-300 flex-1 aspect-square max-w-[45vw]"
                                   style={{
-                                    backgroundColor: (countdown === null && breathingPhase === 'exhale') ? '#AD8FC6' : '#E5E7EB',
+                                    backgroundColor: (isExercising && countdown === null && breathingPhase === 'exhale') ? '#AD8FC6' : '#E5E7EB',
                                     minWidth: '140px',
                                     minHeight: '140px'
                                   }}
                                 >
-                                  <div className={`text-base font-semibold mb-2 text-center ${(countdown === null && breathingPhase === 'exhale') ? 'text-white' : 'text-gray-600'}`}>
+                                  <div className={`text-base font-semibold mb-2 text-center ${(isExercising && countdown === null && breathingPhase === 'exhale') ? 'text-white' : 'text-gray-600'}`}>
                                     Breathe Out
                                   </div>
-                                  <div className={`text-2xl text-center ${(countdown === null && breathingPhase === 'exhale') ? 'text-white' : 'text-gray-400'}`}>
+                                  <div className={`text-2xl text-center ${(isExercising && countdown === null && breathingPhase === 'exhale') ? 'text-white' : 'text-gray-400'}`}>
                                     ↓
                                   </div>
                                 </div>
@@ -2943,7 +2943,7 @@ export default function Home() {
                       {countdown !== null && countdown > 0 && !exerciseCompleted && (
                         <div className="w-full max-w-xs px-4">
                           <span className="text-sm text-gray-600 font-medium mb-2 block text-center">
-                            Exercise starting
+                            Exercise starting...
                           </span>
                           {/* Progress Bar Container */}
                           <div className="w-full h-2 bg-gray-200 rounded-full overflow-hidden">
@@ -2954,7 +2954,7 @@ export default function Home() {
                                 <div
                                   key={index}
                                   className={`flex-1 transition-all duration-300 ${
-                                    index >= (3 - countdown) ? 'bg-black' : 'bg-transparent'
+                                    index >= (3 - countdown) ? 'bg-[#E6A8D7]' : 'bg-transparent'
                                   }`}
                                 />
                               ))}
