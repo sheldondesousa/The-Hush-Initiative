@@ -1414,6 +1414,14 @@ export default function Home() {
             transform: scale(1.15);
           }
         }
+        @keyframes magnify-compress {
+          0%, 100% {
+            transform: scale(1);
+          }
+          50% {
+            transform: scale(1.2);
+          }
+        }
       `}</style>
       <div className="flex min-h-screen flex-col lg:flex-row">
         {/* Sidebar - Desktop */}
@@ -2506,181 +2514,154 @@ export default function Home() {
                       {/* Conditional Animation based on exercise */}
                       {selectedExercise?.name === 'Box Breathing (4-4-4-4)' ? (
                         <>
-                          {/* Breathing Square Illustration - Box Breathing Only */}
+                          {/* 16-Square Border Breathing Animation - Box Breathing Only */}
                           <div className="flex-1 flex flex-col items-center justify-center w-full">
-                            <div className="relative" style={{ width: '363px', height: '363px' }}>
-                            {/* Gray Border Square */}
-                            <svg
-                              className="absolute top-0 left-0"
-                              width="363"
-                              height="363"
-                            >
-                              <rect
-                                x="4"
-                                y="4"
-                                width="355"
-                                height="355"
-                                rx="15"
-                                fill="none"
-                                stroke="#E5E7EB"
-                                strokeWidth="4"
-                              />
-                            </svg>
-
-                            {/* Secondary Colors Gradient Background - Vertical from bottom to top */}
-                            <div
-                              className="absolute"
-                              style={{
-                                top: '4px',
-                                left: '4px',
-                                width: '355px',
-                                height: '355px',
-                                background: 'linear-gradient(to bottom, rgba(255, 230, 247, 0.8) 0%, rgba(246, 208, 234, 0.75) 50%, rgba(225, 175, 209, 0.7) 100%)',
-                                borderRadius: '15px'
-                              }}
-                            />
-
-                            {/* Expanding/Contracting Square Animation */}
-                            {(() => {
-                              // Calculate square size based on phase and timer
-                              let squareScale = 0;
-
-                              if (breathingPhase === 'inhale') {
-                                // Expand from 0% to 100% over 4 seconds (timer: 0→4)
-                                squareScale = (timer / 4) * 100;
-                              } else if (breathingPhase === 'hold1') {
-                                // Hold at 100% (full size) after inhale
-                                squareScale = 100;
-                              } else if (breathingPhase === 'exhale') {
-                                // Contract from 100% to 0% over 4 seconds (timer: 4→0, counts down)
-                                squareScale = (timer / 4) * 100;
-                              } else if (breathingPhase === 'hold2') {
-                                // Hold at 0% (small size) after exhale
-                                squareScale = 0;
-                              }
-
-                              // Min size: 60px, Max size: 355px
-                              const minSize = 60;
-                              const maxSize = 355;
-                              const currentSize = minSize + ((maxSize - minSize) * squareScale / 100);
-                              const offset = (355 - currentSize) / 2;
-
-                              return (
-                                <svg
-                                  className="absolute"
-                                  width="355"
-                                  height="355"
-                                  viewBox="0 0 355 355"
-                                  style={{ top: '4px', left: '4px', overflow: 'visible' }}
-                                >
-                                  <defs>
-                                    {/* Primary colors gradient for square - diagonal gradient */}
-                                    <linearGradient id="boxGradient" x1="0%" y1="0%" x2="100%" y2="100%">
-                                      <stop offset="0%" stopColor="#AD88C6" stopOpacity="1" />
-                                      <stop offset="50%" stopColor="#7469B6" stopOpacity="1" />
-                                      <stop offset="100%" stopColor="#AD88C6" stopOpacity="1" />
-                                    </linearGradient>
-                                    {/* Radial gradient overlay for depth */}
-                                    <radialGradient id="boxOverlay" cx="50%" cy="50%">
-                                      <stop offset="0%" stopColor="#C8AAD6" stopOpacity="0.4" />
-                                      <stop offset="50%" stopColor="#AD88C6" stopOpacity="0.2" />
-                                      <stop offset="100%" stopColor="#7469B6" stopOpacity="0" />
-                                    </radialGradient>
-                                  </defs>
-
-                                  {/* Animated Square with rounded corners */}
-                                  <rect
-                                    x={offset}
-                                    y={offset}
-                                    width={currentSize}
-                                    height={currentSize}
-                                    rx="12"
-                                    fill="url(#boxGradient)"
-                                    style={{
-                                      transition: 'all 300ms ease-out'
-                                    }}
-                                  />
-
-                                  {/* Overlay gradient for depth effect */}
-                                  <rect
-                                    x={offset}
-                                    y={offset}
-                                    width={currentSize}
-                                    height={currentSize}
-                                    rx="12"
-                                    fill="url(#boxOverlay)"
-                                    style={{
-                                      transition: 'all 300ms ease-out'
-                                    }}
-                                  />
-
-                                  {/* Sparkle effect at corners when fully expanded */}
-                                  {squareScale >= 95 && (
-                                    <>
-                                      {/* Top-left corner sparkle */}
-                                      <g transform={`translate(${offset + 20}, ${offset + 20})`}>
-                                        <circle cx="0" cy="0" r="2" fill="#FFE6F7" opacity="0.9">
-                                          <animate attributeName="opacity" values="0.9;0.3;0.9" dur="1.5s" repeatCount="indefinite" />
-                                        </circle>
-                                        <circle cx="0" cy="0" r="4" fill="#F6D0EA" opacity="0.5">
-                                          <animate attributeName="opacity" values="0.5;0.1;0.5" dur="1.5s" repeatCount="indefinite" />
-                                          <animate attributeName="r" values="4;6;4" dur="1.5s" repeatCount="indefinite" />
-                                        </circle>
-                                      </g>
-
-                                      {/* Top-right corner sparkle */}
-                                      <g transform={`translate(${offset + currentSize - 20}, ${offset + 20})`}>
-                                        <circle cx="0" cy="0" r="2" fill="#FFE6F7" opacity="0.9">
-                                          <animate attributeName="opacity" values="0.9;0.3;0.9" dur="1.5s" begin="0.5s" repeatCount="indefinite" />
-                                        </circle>
-                                        <circle cx="0" cy="0" r="4" fill="#F6D0EA" opacity="0.5">
-                                          <animate attributeName="opacity" values="0.5;0.1;0.5" dur="1.5s" begin="0.5s" repeatCount="indefinite" />
-                                          <animate attributeName="r" values="4;6;4" dur="1.5s" begin="0.5s" repeatCount="indefinite" />
-                                        </circle>
-                                      </g>
-
-                                      {/* Bottom-right corner sparkle */}
-                                      <g transform={`translate(${offset + currentSize - 20}, ${offset + currentSize - 20})`}>
-                                        <circle cx="0" cy="0" r="2" fill="#FFE6F7" opacity="0.9">
-                                          <animate attributeName="opacity" values="0.9;0.3;0.9" dur="1.5s" begin="1s" repeatCount="indefinite" />
-                                        </circle>
-                                        <circle cx="0" cy="0" r="4" fill="#F6D0EA" opacity="0.5">
-                                          <animate attributeName="opacity" values="0.5;0.1;0.5" dur="1.5s" begin="1s" repeatCount="indefinite" />
-                                          <animate attributeName="r" values="4;6;4" dur="1.5s" begin="1s" repeatCount="indefinite" />
-                                        </circle>
-                                      </g>
-
-                                      {/* Bottom-left corner sparkle */}
-                                      <g transform={`translate(${offset + 20}, ${offset + currentSize - 20})`}>
-                                        <circle cx="0" cy="0" r="2" fill="#FFE6F7" opacity="0.9">
-                                          <animate attributeName="opacity" values="0.9;0.3;0.9" dur="1.5s" begin="0.25s" repeatCount="indefinite" />
-                                        </circle>
-                                        <circle cx="0" cy="0" r="4" fill="#F6D0EA" opacity="0.5">
-                                          <animate attributeName="opacity" values="0.5;0.1;0.5" dur="1.5s" begin="0.25s" repeatCount="indefinite" />
-                                          <animate attributeName="r" values="4;6;4" dur="1.5s" begin="0.25s" repeatCount="indefinite" />
-                                        </circle>
-                                      </g>
-                                    </>
-                                  )}
-                                </svg>
-                              );
-                            })()}
-
-                            {/* Phase Text - At Center of Square */}
-                            <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 text-center">
+                            <div className="relative" style={{ width: '360px', height: '240px' }}>
+                              {/* Background gradient */}
                               <div
-                                className="text-lg font-semibold text-gray-700 uppercase tracking-wider"
+                                className="absolute inset-0"
                                 style={{
-                                  animation: 'text-breathe 4s ease-in-out infinite'
+                                  background: 'linear-gradient(to bottom, rgba(255, 230, 247, 0.3) 0%, rgba(246, 208, 234, 0.25) 50%, rgba(225, 175, 209, 0.2) 100%)',
+                                  borderRadius: '15px'
                                 }}
-                              >
-                                {breathingPhase === 'inhale' && countdown === null && 'Breathe In'}
-                                {breathingPhase === 'hold1' && 'HOLD'}
-                                {breathingPhase === 'exhale' && 'Breathe Out'}
-                                {breathingPhase === 'hold2' && 'HOLD'}
+                              />
+
+                              {(() => {
+                                // Calculate which squares should be highlighted
+                                // 16 squares total: 6 top + 2 right + 6 bottom + 2 left
+                                // Squares progress clockwise starting from position 2
+                                const getActiveSquares = () => {
+                                  const activeSquares = new Set();
+
+                                  // Determine how many squares to light up in current phase
+                                  // Timer goes 0→4, we want to light up 0-4 squares progressively
+                                  const numSquares = Math.min(Math.max(timer, 0), 4);
+
+                                  if (breathingPhase === 'inhale') {
+                                    // Top row: light up squares 2, 3, 4, 5 progressively
+                                    for (let i = 0; i < numSquares; i++) {
+                                      activeSquares.add(2 + i);
+                                    }
+                                  } else if (breathingPhase === 'hold1') {
+                                    // Keep top row lit, light up right side: squares 6, 7, 8, 9
+                                    for (let i = 2; i <= 5; i++) activeSquares.add(i);
+                                    for (let i = 0; i < numSquares; i++) {
+                                      activeSquares.add(6 + i);
+                                    }
+                                  } else if (breathingPhase === 'exhale') {
+                                    // Keep top and right lit, light up bottom: squares 10, 11, 12, 13
+                                    for (let i = 2; i <= 5; i++) activeSquares.add(i);
+                                    for (let i = 6; i <= 9; i++) activeSquares.add(i);
+                                    for (let i = 0; i < numSquares; i++) {
+                                      activeSquares.add(10 + i);
+                                    }
+                                  } else if (breathingPhase === 'hold2') {
+                                    // Keep top, right, bottom lit, light up left: squares 14, 15, 16, 1
+                                    for (let i = 2; i <= 5; i++) activeSquares.add(i);
+                                    for (let i = 6; i <= 9; i++) activeSquares.add(i);
+                                    for (let i = 10; i <= 13; i++) activeSquares.add(i);
+                                    for (let i = 0; i < numSquares; i++) {
+                                      if (i === 3) {
+                                        activeSquares.add(1); // Wrap to square 1 at the end
+                                      } else {
+                                        activeSquares.add(14 + i);
+                                      }
+                                    }
+                                  }
+
+                                  return activeSquares;
+                                };
+
+                                const activeSquares = getActiveSquares();
+                                const squareSize = 45;
+                                const spacing = 8;
+
+                                // Define square positions - 16 squares forming a border
+                                // Layout: 6 top + 2 right + 6 bottom + 2 left = 16 total
+                                // Numbering clockwise starting from top-left
+                                const squares = [
+                                  // Top row (left to right): squares 1-6
+                                  { id: 1, x: 0, y: 0 },
+                                  { id: 2, x: squareSize + spacing, y: 0 },
+                                  { id: 3, x: (squareSize + spacing) * 2, y: 0 },
+                                  { id: 4, x: (squareSize + spacing) * 3, y: 0 },
+                                  { id: 5, x: (squareSize + spacing) * 4, y: 0 },
+                                  { id: 6, x: (squareSize + spacing) * 5, y: 0 },
+                                  // Right side (top to bottom): squares 7-8
+                                  { id: 7, x: (squareSize + spacing) * 5, y: squareSize + spacing },
+                                  { id: 8, x: (squareSize + spacing) * 5, y: (squareSize + spacing) * 2 },
+                                  // Bottom row (right to left): squares 9-14
+                                  { id: 9, x: (squareSize + spacing) * 5, y: (squareSize + spacing) * 3 },
+                                  { id: 10, x: (squareSize + spacing) * 4, y: (squareSize + spacing) * 3 },
+                                  { id: 11, x: (squareSize + spacing) * 3, y: (squareSize + spacing) * 3 },
+                                  { id: 12, x: (squareSize + spacing) * 2, y: (squareSize + spacing) * 3 },
+                                  { id: 13, x: squareSize + spacing, y: (squareSize + spacing) * 3 },
+                                  { id: 14, x: 0, y: (squareSize + spacing) * 3 },
+                                  // Left side (bottom to top): squares 15-16
+                                  { id: 15, x: 0, y: (squareSize + spacing) * 2 },
+                                  { id: 16, x: 0, y: squareSize + spacing },
+                                ];
+
+                                return (
+                                  <svg
+                                    className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2"
+                                    width="360"
+                                    height="240"
+                                    viewBox="0 0 360 240"
+                                  >
+                                    <defs>
+                                      {/* Purple gradient for active squares */}
+                                      <linearGradient id="purpleGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+                                        <stop offset="0%" stopColor="#AD88C6" stopOpacity="1" />
+                                        <stop offset="100%" stopColor="#7469B6" stopOpacity="1" />
+                                      </linearGradient>
+                                    </defs>
+
+                                    {/* Render all 16 squares */}
+                                    {squares.map((square) => (
+                                      <rect
+                                        key={square.id}
+                                        x={square.x + 30}
+                                        y={square.y + 30}
+                                        width={squareSize}
+                                        height={squareSize}
+                                        rx="8"
+                                        fill={activeSquares.has(square.id) ? 'url(#purpleGradient)' : '#E5E7EB'}
+                                        style={{
+                                          transition: 'fill 0.3s ease-in-out'
+                                        }}
+                                      />
+                                    ))}
+                                  </svg>
+                                );
+                              })()}
+
+                              {/* Phase Text - At Center */}
+                              <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 text-center">
+                                {countdown !== null && countdown > 0 ? (
+                                  <div
+                                    className="text-2xl font-bold text-gray-700 uppercase tracking-wider"
+                                    style={{
+                                      animation: 'magnify-compress 1s ease-in-out infinite'
+                                    }}
+                                  >
+                                    Starting...
+                                  </div>
+                                ) : (
+                                  <div
+                                    className="text-2xl font-bold text-gray-700 uppercase tracking-wider"
+                                    style={{
+                                      animation: 'magnify-compress 2s ease-in-out infinite'
+                                    }}
+                                  >
+                                    {breathingPhase === 'inhale' && 'Breathe In'}
+                                    {breathingPhase === 'hold1' && 'Hold'}
+                                    {breathingPhase === 'exhale' && 'Breathe Out'}
+                                    {breathingPhase === 'hold2' && 'Hold'}
+                                  </div>
+                                )}
                               </div>
                             </div>
-                          </div>
 
                           {/* Phase Tabs - Below animation with spacing */}
                           <div className="flex justify-center gap-2 mt-8">
