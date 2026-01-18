@@ -2598,7 +2598,7 @@ export default function Home() {
                                     return '#AD8FC6'; // African Violet
                                   } else if (squareId === 14 || squareId === 15 || squareId === 16 || squareId === 1) {
                                     // Left side - lit during hold2
-                                    return '#FFE6F7'; // Misty Rose
+                                    return '#E7AFDF'; // Light Orchid (same as hold1)
                                   }
                                   return '#E5E7EB';
                                 };
@@ -2614,8 +2614,8 @@ export default function Home() {
                                     {squares.map((square) => (
                                       <rect
                                         key={square.id}
-                                        x={square.x + 25}
-                                        y={square.y + 18}
+                                        x={square.x + 0.5}
+                                        y={square.y + 1.5}
                                         width={squareSize}
                                         height={squareSize}
                                         rx="8"
@@ -2667,8 +2667,8 @@ export default function Home() {
                                 minHeight: '100px'
                               }}
                             >
-                              <div className={`text-sm font-semibold mb-2 text-center ${breathingPhase === 'inhale' ? 'text-white' : 'text-gray-600'}`}>
-                                Breathe In
+                              <div className={`text-sm font-semibold mb-2 text-center leading-tight ${breathingPhase === 'inhale' ? 'text-white' : 'text-gray-600'}`}>
+                                Breathe<br />In
                               </div>
                               <div className={`text-2xl text-center ${breathingPhase === 'inhale' ? 'text-white' : 'text-gray-400'}`}>
                                 ↑↑
