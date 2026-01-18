@@ -671,18 +671,13 @@ export default function Home() {
           }
         } else {
           // Box Breathing pattern (4-4-4-4) - second-based counting
+          // Each phase is exactly 4 seconds: timer counts 1,2,3,4 then transitions
           if (breathingPhase === 'inhale') {
-            // INHALE: 0→4 (exactly 4 seconds: 0s,1s,2s,3s,4s)
+            // INHALE: 0→4 (exactly 4 seconds)
             if (prevTimer < 4) {
-              phaseHoldRef.current = false; // Reset hold flag
               return prevTimer + 1;
-            } else if (prevTimer === 4 && !phaseHoldRef.current) {
-              // Hold at 4 for one extra interval to complete animation
-              phaseHoldRef.current = true;
-              return 4;
             } else {
-              // Animation complete, transition to next phase
-              phaseHoldRef.current = false;
+              // Timer reached 4, transition to next phase
               setBreathingPhase('hold1');
               return 0; // Start HOLD1 at 0
             }
@@ -691,21 +686,16 @@ export default function Home() {
             if (prevTimer < 4) {
               return prevTimer + 1;
             } else {
+              // Timer reached 4, transition to exhale
               setBreathingPhase('exhale');
               return 4; // Start EXHALE at 4
             }
           } else if (breathingPhase === 'exhale') {
-            // EXHALE: 4→0 (exactly 4 seconds: 4s,3s,2s,1s,0s)
+            // EXHALE: 4→0 (exactly 4 seconds)
             if (prevTimer > 0) {
-              phaseHoldRef.current = false; // Reset hold flag
               return prevTimer - 1;
-            } else if (prevTimer === 0 && !phaseHoldRef.current) {
-              // Hold at 0 for one extra interval to complete animation
-              phaseHoldRef.current = true;
-              return 0;
             } else {
-              // Animation complete, transition to next phase
-              phaseHoldRef.current = false;
+              // Timer reached 0, transition to next phase
               setBreathingPhase('hold2');
               return 0; // Start HOLD2 at 0
             }
@@ -714,7 +704,7 @@ export default function Home() {
             if (prevTimer < 4) {
               return prevTimer + 1;
             } else {
-              // Cycle completed, check if we should continue
+              // Timer reached 4, cycle completed
               const nextCycle = currentCycle + 1;
               if (nextCycle >= selectedCycles) {
                 // Reached target cycles, show completion screen
@@ -722,13 +712,11 @@ export default function Home() {
                 setExerciseCompleted(true);
                 setCurrentCycle(0);
                 setBreathingPhase('inhale');
-                phaseHoldRef.current = false;
                 return 0;
               } else {
                 // Continue to next cycle
                 setCurrentCycle(nextCycle);
                 setBreathingPhase('inhale');
-                phaseHoldRef.current = false;
                 return 0;
               }
             }
@@ -2644,7 +2632,7 @@ export default function Home() {
                               })()}
 
                               {/* Phase Text - At Center */}
-                              <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 text-center">
+                              <div className="absolute inset-0 flex items-center justify-center">
                                 {countdown !== null && countdown > 0 ? (
                                   <div
                                     className="text-2xl font-bold text-gray-700 uppercase tracking-wider"
@@ -2670,44 +2658,78 @@ export default function Home() {
                               </div>
                             </div>
 
-                          {/* Phase Tabs - Below animation with spacing */}
-                          <div className="flex justify-center gap-2 mt-8">
-                            <div
-                              className={`px-6 py-2 rounded-lg font-medium transition-all ${
-                                breathingPhase === 'inhale'
-                                  ? 'bg-white text-black shadow-md'
-                                  : 'bg-transparent text-gray-400'
-                              }`}
-                            >
-                              In 4s
-                            </div>
-                            <div
-                              className={`px-6 py-2 rounded-lg font-medium transition-all ${
-                                breathingPhase === 'hold1'
-                                  ? 'bg-white text-black shadow-md'
-                                  : 'bg-transparent text-gray-400'
-                              }`}
-                            >
-                              Hold 4s
-                            </div>
-                            <div
-                              className={`px-6 py-2 rounded-lg font-medium transition-all ${
-                                breathingPhase === 'exhale'
-                                  ? 'bg-white text-black shadow-md'
-                                  : 'bg-transparent text-gray-400'
-                              }`}
-                            >
-                              Out 4s
-                            </div>
-                            <div
-                              className={`px-6 py-2 rounded-lg font-medium transition-all ${
-                                breathingPhase === 'hold2'
-                                  ? 'bg-white text-black shadow-md'
-                                  : 'bg-transparent text-gray-400'
-                              }`}
-                            >
-                              Hold 4s
-                            </div>
+                          {/* Phase Indicator - Box Border Design */}
+                          <div className="flex justify-center mt-8">
+                            {(() => {
+                              const boxSize = 28;
+                              const spacing = 4;
+                              const cornerRadius = 6;
+
+                              // Define 16 boxes in border pattern: 6 top + 2 right + 6 bottom + 2 left
+                              const boxes = [
+                                // Top row (left to right): boxes 0-5
+                                { id: 0, x: 0, y: 0, phase: 'inhale' },
+                                { id: 1, x: boxSize + spacing, y: 0, phase: 'inhale' },
+                                { id: 2, x: (boxSize + spacing) * 2, y: 0, phase: 'inhale' },
+                                { id: 3, x: (boxSize + spacing) * 3, y: 0, phase: 'inhale' },
+                                { id: 4, x: (boxSize + spacing) * 4, y: 0, phase: 'inhale' },
+                                { id: 5, x: (boxSize + spacing) * 5, y: 0, phase: 'inhale' },
+                                // Right side (top to bottom): boxes 6-7
+                                { id: 6, x: (boxSize + spacing) * 5, y: boxSize + spacing, phase: 'hold1' },
+                                { id: 7, x: (boxSize + spacing) * 5, y: (boxSize + spacing) * 2, phase: 'hold1' },
+                                // Bottom row (right to left): boxes 8-13
+                                { id: 8, x: (boxSize + spacing) * 5, y: (boxSize + spacing) * 3, phase: 'exhale' },
+                                { id: 9, x: (boxSize + spacing) * 4, y: (boxSize + spacing) * 3, phase: 'exhale' },
+                                { id: 10, x: (boxSize + spacing) * 3, y: (boxSize + spacing) * 3, phase: 'exhale' },
+                                { id: 11, x: (boxSize + spacing) * 2, y: (boxSize + spacing) * 3, phase: 'exhale' },
+                                { id: 12, x: boxSize + spacing, y: (boxSize + spacing) * 3, phase: 'exhale' },
+                                { id: 13, x: 0, y: (boxSize + spacing) * 3, phase: 'exhale' },
+                                // Left side (bottom to top): boxes 14-15
+                                { id: 14, x: 0, y: (boxSize + spacing) * 2, phase: 'hold2' },
+                                { id: 15, x: 0, y: boxSize + spacing, phase: 'hold2' },
+                              ];
+
+                              const getBoxColor = (box) => {
+                                // Map phase names to colors
+                                const phaseColors = {
+                                  'inhale': '#746996',  // Blue Violet
+                                  'hold1': '#E1AFD1',   // Light Orchid
+                                  'exhale': '#AD88C6',  // African Violet
+                                  'hold2': '#FFE6F7'    // Misty Rose
+                                };
+
+                                // Return phase color if active, otherwise light gray
+                                return box.phase === breathingPhase
+                                  ? phaseColors[box.phase]
+                                  : '#D1D5DB'; // Light gray for inactive
+                              };
+
+                              const totalWidth = (boxSize + spacing) * 6;
+                              const totalHeight = (boxSize + spacing) * 4;
+
+                              return (
+                                <svg
+                                  width={totalWidth}
+                                  height={totalHeight}
+                                  viewBox={`0 0 ${totalWidth} ${totalHeight}`}
+                                >
+                                  {boxes.map((box) => (
+                                    <rect
+                                      key={box.id}
+                                      x={box.x}
+                                      y={box.y}
+                                      width={boxSize}
+                                      height={boxSize}
+                                      rx={cornerRadius}
+                                      fill={getBoxColor(box)}
+                                      style={{
+                                        transition: 'fill 0.3s ease-in-out'
+                                      }}
+                                    />
+                                  ))}
+                                </svg>
+                              );
+                            })()}
                           </div>
                           </div>
                         </>
