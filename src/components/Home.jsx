@@ -2954,7 +2954,7 @@ export default function Home() {
                                 <div
                                   key={index}
                                   className={`flex-1 transition-all duration-300 ${
-                                    index >= (3 - countdown) ? 'bg-[#E6A8D7]' : 'bg-transparent'
+                                    index >= (3 - countdown) ? 'bg-[#9370DB]' : 'bg-transparent'
                                   }`}
                                 />
                               ))}
@@ -3009,7 +3009,7 @@ export default function Home() {
                             setIsPaused(true);
                           }
                         }}
-                        className={`px-8 py-3 rounded-full hover:opacity-90 transition-opacity font-medium text-sm border-2 ${
+                        className={`w-20 h-20 rounded-full hover:opacity-90 transition-opacity font-medium text-sm border-2 flex items-center justify-center ${
                           isPaused || exerciseCompleted
                             ? 'bg-black text-white border-black'
                             : 'bg-transparent text-black border-black'
