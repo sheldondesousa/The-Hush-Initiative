@@ -2735,8 +2735,25 @@ export default function Home() {
                               style={{
                                 width: `${getCoherentCircleSize()}px`,
                                 height: `${getCoherentCircleSize()}px`,
-                                background: 'radial-gradient(circle, rgba(6, 122, 195, 1) 0%, rgba(6, 122, 195, 0.6) 50%, rgba(6, 122, 195, 0.2) 100%)',
-                                boxShadow: '0 0 30px rgba(6, 122, 195, 0.5)',
+                                background: (() => {
+                                  const size = getCoherentCircleSize();
+                                  const intensity = size / 340; // 0 to 1, lighter when smaller, darker when larger
+                                  const baseR = 116, baseG = 105, baseB = 187;
+                                  // Lighter at small size (higher values), darker at large size (base values)
+                                  const r = Math.round(baseR + (255 - baseR) * (1 - intensity));
+                                  const g = Math.round(baseG + (255 - baseG) * (1 - intensity));
+                                  const b = Math.round(baseB + (255 - baseB) * (1 - intensity));
+                                  return `radial-gradient(circle, rgba(${r}, ${g}, ${b}, 1) 0%, rgba(${r}, ${g}, ${b}, 0.6) 50%, rgba(${r}, ${g}, ${b}, 0.2) 100%)`;
+                                })(),
+                                boxShadow: (() => {
+                                  const size = getCoherentCircleSize();
+                                  const intensity = size / 340;
+                                  const baseR = 116, baseG = 105, baseB = 187;
+                                  const r = Math.round(baseR + (255 - baseR) * (1 - intensity));
+                                  const g = Math.round(baseG + (255 - baseG) * (1 - intensity));
+                                  const b = Math.round(baseB + (255 - baseB) * (1 - intensity));
+                                  return `0 0 30px rgba(${r}, ${g}, ${b}, 0.5)`;
+                                })(),
                                 transition: 'all 100ms linear'
                               }}
                             />
