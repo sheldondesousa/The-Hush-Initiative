@@ -2861,16 +2861,40 @@ export default function Home() {
                                   <stop offset="50%" stopColor="#9179BE" /> {/* Blend of African Violet and Blue Violet */}
                                   <stop offset="100%" stopColor="#7469B6" /> {/* Blue Violet */}
                                 </linearGradient>
+
+                                {/* Neomorphism Filter - Inset Shadow Effect */}
+                                <filter id="neomorphism-inset" x="-50%" y="-50%" width="200%" height="200%">
+                                  {/* Inner dark shadow (bottom-right) */}
+                                  <feGaussianBlur in="SourceAlpha" stdDeviation="3" result="blur1"/>
+                                  <feOffset in="blur1" dx="3" dy="3" result="offsetBlur1"/>
+                                  <feFlood floodColor="#D1D5DB" floodOpacity="0.6" result="offsetColor1"/>
+                                  <feComposite in="offsetColor1" in2="offsetBlur1" operator="in" result="innerShadow1"/>
+
+                                  {/* Inner light shadow (top-left) */}
+                                  <feGaussianBlur in="SourceAlpha" stdDeviation="3" result="blur2"/>
+                                  <feOffset in="blur2" dx="-3" dy="-3" result="offsetBlur2"/>
+                                  <feFlood floodColor="#FFFFFF" floodOpacity="0.9" result="offsetColor2"/>
+                                  <feComposite in="offsetColor2" in2="offsetBlur2" operator="in" result="innerShadow2"/>
+
+                                  {/* Combine shadows */}
+                                  <feMerge>
+                                    <feMergeNode in="innerShadow1"/>
+                                    <feMergeNode in="innerShadow2"/>
+                                    <feMergeNode in="SourceGraphic"/>
+                                  </feMerge>
+                                </filter>
                               </defs>
 
-                              {/* Gray Border Circle */}
+                              {/* Neomorphism Border Circle - White with inset shadow */}
                               <circle
                                 cx="181.5"
                                 cy="181.5"
                                 r="175"
                                 fill="none"
-                                stroke="#E5E7EB"
-                                strokeWidth="4"
+                                stroke="#FFFFFF"
+                                strokeWidth="8"
+                                filter="url(#neomorphism-inset)"
+                                style={{ dropShadow: 'inset 0 2px 4px rgba(0,0,0,0.1)' }}
                               />
 
                               {/* Progress Circle (filled) */}
