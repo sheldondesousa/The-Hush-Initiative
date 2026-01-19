@@ -1198,7 +1198,7 @@ export default function Home() {
       return { progress1: 0.75, progress2: 0.25 };
     } else if (breathingPhase === 'exhale') {
       // EXHALE: timer goes from 79-0 (8 seconds) - empty from 100% to 0%
-      const progress = timer / 80; // 1 to 0
+      const progress = timer / 79; // Linear from 1.0 to 0
       // Show both parts proportionally during exhale
       return { progress1: progress * 0.75, progress2: progress * 0.25 };
     } else if (breathingPhase === 'hold2') {
@@ -2847,18 +2847,20 @@ export default function Home() {
                                   <stop offset="100%" stopColor="#FADADD" /> {/* Pale Pink */}
                                 </linearGradient>
                                 {/* Part 2 Gradient: African Violet, Blue Violet */}
-                                <linearGradient id="physiological-gradient-2" x1="0%" y1="0%" x2="100%" y2="100%">
+                                <linearGradient id="physiological-gradient-2" x1="0%" y1="100%" x2="100%" y2="0%">
                                   <stop offset="0%" stopColor="#B284BE" /> {/* African Violet */}
                                   <stop offset="100%" stopColor="#8A2BE2" /> {/* Blue Violet */}
                                 </linearGradient>
                               </defs>
 
-                              {/* Gray Background Circle */}
+                              {/* Gray Border Circle */}
                               <circle
                                 cx="181.5"
                                 cy="181.5"
                                 r="175"
-                                fill="#E5E7EB"
+                                fill="none"
+                                stroke="#E5E7EB"
+                                strokeWidth="4"
                               />
 
                               {/* Progress Circle (filled) */}
@@ -2898,7 +2900,6 @@ export default function Home() {
                                       <path
                                         d={createArcPath(0, progress1 * 360)}
                                         fill="url(#physiological-gradient-1)"
-                                        style={{ transition: 'all 100ms linear' }}
                                       />
                                     )}
 
@@ -2907,7 +2908,6 @@ export default function Home() {
                                       <path
                                         d={createArcPath(270, 270 + progress2 * 360)}
                                         fill="url(#physiological-gradient-2)"
-                                        style={{ transition: 'all 100ms linear' }}
                                       />
                                     )}
                                   </>
