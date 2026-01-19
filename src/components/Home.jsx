@@ -862,14 +862,14 @@ export default function Home() {
     // 8 circles with opacity decrements - app color scheme from darkest to lightest
     const sizes = [100, 140, 180, 220, 260, 300, 340, 360];
     const colors = [
-      'rgba(116, 105, 187, 1.0)',   // 100% opacity - Blue-Violet (darkest - innermost)
-      'rgba(116, 105, 187, 0.9)',   // 90% opacity - Blue-Violet
-      'rgba(169, 139, 203, 0.8)',   // 80% opacity - African Violet
-      'rgba(169, 139, 203, 0.7)',   // 70% opacity - African Violet
-      'rgba(225, 215, 240, 0.6)',   // 60% opacity - Light Orchid
-      'rgba(225, 215, 240, 0.5)',   // 50% opacity - Light Orchid
-      'rgba(247, 213, 236, 0.4)',   // 40% opacity - Light Orchid (lighter)
-      'rgba(247, 213, 236, 0.3)'    // 30% opacity - Light Orchid (lightest - outermost)
+      'rgba(116, 105, 182, 1.0)',   // 100% opacity - Blue-Violet (darkest - innermost)
+      'rgba(116, 105, 182, 0.9)',   // 90% opacity - Blue-Violet
+      'rgba(173, 136, 198, 0.8)',   // 80% opacity - African Violet
+      'rgba(173, 136, 198, 0.7)',   // 70% opacity - African Violet
+      'rgba(225, 175, 209, 0.6)',   // 60% opacity - Light Orchid
+      'rgba(225, 175, 209, 0.5)',   // 50% opacity - Light Orchid
+      'rgba(247, 214, 236, 0.4)',   // 40% opacity - Pale Orchid (lighter)
+      'rgba(247, 214, 236, 0.3)'    // 30% opacity - Pale Orchid (lightest - outermost)
     ];
     const blurs = [20, 21, 22, 23, 24, 25, 26, 27];
 
@@ -2849,17 +2849,17 @@ export default function Home() {
                             >
                               {/* Define gradients */}
                               <defs>
-                                {/* Part 1 Gradient: Misty Rose, Light Orchid, Pale Pink */}
+                                {/* Part 1 Gradient: Misty Rose, Pale Orchid, Light Orchid */}
                                 <linearGradient id="physiological-gradient-1" x1="0%" y1="0%" x2="100%" y2="100%">
-                                  <stop offset="0%" stopColor="#FFE4E1" /> {/* Misty Rose */}
-                                  <stop offset="50%" stopColor="#E6E6FA" /> {/* Lavender (Light Orchid) */}
-                                  <stop offset="100%" stopColor="#FADADD" /> {/* Pale Pink */}
+                                  <stop offset="0%" stopColor="#FFE6E6" /> {/* Misty Rose */}
+                                  <stop offset="50%" stopColor="#F7D6EC" /> {/* Pale Orchid */}
+                                  <stop offset="100%" stopColor="#E1AFD1" /> {/* Light Orchid */}
                                 </linearGradient>
                                 {/* Part 2 Gradient: African Violet, Blue Violet */}
                                 <linearGradient id="physiological-gradient-2" x1="0%" y1="100%" x2="100%" y2="0%">
-                                  <stop offset="0%" stopColor="#B284BE" /> {/* African Violet */}
-                                  <stop offset="50%" stopColor="#9D56A8" /> {/* Blend of African Violet and Blue Violet */}
-                                  <stop offset="100%" stopColor="#8A2BE2" /> {/* Blue Violet */}
+                                  <stop offset="0%" stopColor="#AD88C6" /> {/* African Violet */}
+                                  <stop offset="50%" stopColor="#8EC89E" /> {/* Blend of African Violet and Blue Violet */}
+                                  <stop offset="100%" stopColor="#7469B6" /> {/* Blue Violet */}
                                 </linearGradient>
                               </defs>
 
