@@ -52,7 +52,7 @@ export default function Home() {
     {
       title: 'When It Becomes A Habit',
       content: "Use the app as a pause: morning grounding, a midday reset, or a nighttime wind-down. Even five minutes can create noticeable shifts.",
-      backgroundColor: '#F7D6EC',
+      backgroundColor: '#F6D0EA',
       textColor: '#000000'
     },
     {
@@ -868,8 +868,8 @@ export default function Home() {
       'rgba(173, 136, 198, 0.7)',   // 70% opacity - African Violet
       'rgba(225, 175, 209, 0.6)',   // 60% opacity - Light Orchid
       'rgba(225, 175, 209, 0.5)',   // 50% opacity - Light Orchid
-      'rgba(247, 214, 236, 0.4)',   // 40% opacity - Pale Orchid (lighter)
-      'rgba(247, 214, 236, 0.3)'    // 30% opacity - Pale Orchid (lightest - outermost)
+      'rgba(246, 208, 234, 0.4)',   // 40% opacity - Pale Orchid (lighter)
+      'rgba(246, 208, 234, 0.3)'    // 30% opacity - Pale Orchid (lightest - outermost)
     ];
     const blurs = [20, 21, 22, 23, 24, 25, 26, 27];
 
@@ -1803,7 +1803,7 @@ export default function Home() {
                           onClick={() => setCarouselIndex(index)}
                           className="w-2 h-2 rounded-full transition-all"
                           style={{
-                            backgroundColor: index === carouselIndex ? ['#7469B6', '#AD88C6', '#E1AFD1', '#F7D6EC', '#FFE6E6'][index] : '#D1D5DB',
+                            backgroundColor: index === carouselIndex ? ['#7469B6', '#AD88C6', '#E1AFD1', '#F6D0EA', '#FFE6E6'][index] : '#D1D5DB',
                             transform: index === carouselIndex ? 'scale(1.2)' : 'scale(1)'
                           }}
                           aria-label={`Go to card ${index + 1}`}
@@ -2571,7 +2571,7 @@ export default function Home() {
                                 <div
                                   className="flex flex-col items-center justify-center rounded-2xl transition-all duration-300 flex-1 aspect-square max-w-[45vw]"
                                   style={{
-                                    backgroundColor: (isExercising && countdown === null && breathingPhase === 'hold1') ? '#F7D6EC' : '#E5E7EB',
+                                    backgroundColor: (isExercising && countdown === null && breathingPhase === 'hold1') ? '#F6D0EA' : '#E5E7EB',
                                     minWidth: '178px',
                                     minHeight: '178px'
                                   }}
@@ -2598,7 +2598,7 @@ export default function Home() {
                                 <div
                                   className="flex flex-col items-center justify-center rounded-2xl transition-all duration-300 flex-1 aspect-square max-w-[45vw]"
                                   style={{
-                                    backgroundColor: (isExercising && countdown === null && breathingPhase === 'hold2') ? '#F7D6EC' : '#E5E7EB',
+                                    backgroundColor: (isExercising && countdown === null && breathingPhase === 'hold2') ? '#F6D0EA' : '#E5E7EB',
                                     minWidth: '178px',
                                     minHeight: '178px'
                                   }}
@@ -2749,8 +2749,8 @@ export default function Home() {
                                     { r: 116, g: 105, b: 182 },   // Deep Purple/Blue-Violet (empty)
                                     { r: 173, g: 136, b: 198 },   // Medium Purple/African Violet (25%)
                                     { r: 225, g: 175, b: 209 },   // Light Purple/Light Orchid (50%)
-                                    { r: 247, g: 214, b: 236 },   // Pale Orchid (75%)
-                                    { r: 255, g: 230, b: 230 }    // Pale Pink/Rose (full)
+                                    { r: 246, g: 208, b: 234 },   // Pale Orchid (75%)
+                                    { r: 255, g: 230, b: 230 }    // Pale Pink/Misty Rose (full)
                                   ];
 
                                   // Calculate which color segment we're in and interpolate
@@ -2852,7 +2852,7 @@ export default function Home() {
                                 {/* Part 1 Gradient: Misty Rose, Pale Orchid, Light Orchid */}
                                 <linearGradient id="physiological-gradient-1" x1="0%" y1="0%" x2="100%" y2="100%">
                                   <stop offset="0%" stopColor="#FFE6E6" /> {/* Misty Rose */}
-                                  <stop offset="50%" stopColor="#F7D6EC" /> {/* Pale Orchid */}
+                                  <stop offset="50%" stopColor="#F6D0EA" /> {/* Pale Orchid */}
                                   <stop offset="100%" stopColor="#E1AFD1" /> {/* Light Orchid */}
                                 </linearGradient>
                                 {/* Part 2 Gradient: African Violet, Blue Violet */}
