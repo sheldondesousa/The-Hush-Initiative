@@ -2858,6 +2858,7 @@ export default function Home() {
                                 {/* Part 2 Gradient: African Violet, Blue Violet */}
                                 <linearGradient id="physiological-gradient-2" x1="0%" y1="100%" x2="100%" y2="0%">
                                   <stop offset="0%" stopColor="#B284BE" /> {/* African Violet */}
+                                  <stop offset="50%" stopColor="#9D56A8" /> {/* Blend of African Violet and Blue Violet */}
                                   <stop offset="100%" stopColor="#8A2BE2" /> {/* Blue Violet */}
                                 </linearGradient>
                               </defs>
@@ -3148,8 +3149,8 @@ export default function Home() {
                           </div>
                           {/* Part 2 Gradient Legend (25% - Last 1 second) */}
                           <div className="flex items-center gap-2">
-                            <div className="w-4 h-4 rounded-full" style={{ background: 'linear-gradient(135deg, #B284BE 0%, #8A2BE2 100%)' }}></div>
-                            <span className="text-sm text-gray-700 font-medium">Quick short breath (3-4s)</span>
+                            <div className="w-4 h-4 rounded-full" style={{ background: 'linear-gradient(135deg, #B284BE 0%, #9D56A8 50%, #8A2BE2 100%)' }}></div>
+                            <span className="text-sm text-gray-700 font-medium">Quick short breath (1s)</span>
                           </div>
                         </div>
                       )}
