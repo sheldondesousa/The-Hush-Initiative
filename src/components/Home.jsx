@@ -2862,39 +2862,62 @@ export default function Home() {
                                   <stop offset="100%" stopColor="#7469B6" /> {/* Blue Violet */}
                                 </linearGradient>
 
-                                {/* Neomorphism Filter - Inset Shadow Effect */}
-                                <filter id="neomorphism-inset" x="-50%" y="-50%" width="200%" height="200%">
-                                  {/* Inner dark shadow (bottom-right) */}
-                                  <feGaussianBlur in="SourceAlpha" stdDeviation="3" result="blur1"/>
-                                  <feOffset in="blur1" dx="3" dy="3" result="offsetBlur1"/>
-                                  <feFlood floodColor="#D1D5DB" floodOpacity="0.6" result="offsetColor1"/>
-                                  <feComposite in="offsetColor1" in2="offsetBlur1" operator="in" result="innerShadow1"/>
+                                {/* Neomorphism Filter - Border with beveled effect */}
+                                <filter id="neomorphism-border" x="-50%" y="-50%" width="200%" height="200%">
+                                  {/* Outer glow/highlight (top-left) */}
+                                  <feGaussianBlur in="SourceAlpha" stdDeviation="4" result="blur1"/>
+                                  <feOffset in="blur1" dx="-2" dy="-2" result="offsetBlur1"/>
+                                  <feFlood floodColor="#FFFFFF" floodOpacity="0.8" result="offsetColor1"/>
+                                  <feComposite in="offsetColor1" in2="offsetBlur1" operator="in" result="outerGlow"/>
 
-                                  {/* Inner light shadow (top-left) */}
+                                  {/* Inner shadow (bottom-right) */}
                                   <feGaussianBlur in="SourceAlpha" stdDeviation="3" result="blur2"/>
-                                  <feOffset in="blur2" dx="-3" dy="-3" result="offsetBlur2"/>
-                                  <feFlood floodColor="#FFFFFF" floodOpacity="0.9" result="offsetColor2"/>
-                                  <feComposite in="offsetColor2" in2="offsetBlur2" operator="in" result="innerShadow2"/>
+                                  <feOffset in="blur2" dx="3" dy="3" result="offsetBlur2"/>
+                                  <feFlood floodColor="#D1D5DB" floodOpacity="0.7" result="offsetColor2"/>
+                                  <feComposite in="offsetColor2" in2="offsetBlur2" operator="in" result="innerShadow"/>
 
-                                  {/* Combine shadows */}
+                                  {/* Combine for beveled border */}
                                   <feMerge>
-                                    <feMergeNode in="innerShadow1"/>
-                                    <feMergeNode in="innerShadow2"/>
+                                    <feMergeNode in="outerGlow"/>
+                                    <feMergeNode in="innerShadow"/>
                                     <feMergeNode in="SourceGraphic"/>
+                                  </feMerge>
+                                </filter>
+
+                                {/* Animation Inset Filter - Makes fills appear nested */}
+                                <filter id="animation-inset" x="-50%" y="-50%" width="200%" height="200%">
+                                  {/* Dark shadow on edges to create depth */}
+                                  <feGaussianBlur in="SourceAlpha" stdDeviation="4" result="blur"/>
+                                  <feOffset in="blur" dx="0" dy="0" result="offsetBlur"/>
+                                  <feFlood floodColor="#000000" floodOpacity="0.25" result="shadowColor"/>
+                                  <feComposite in="shadowColor" in2="offsetBlur" operator="in" result="shadow"/>
+
+                                  {/* Inner dark edge (creates the inset feeling) */}
+                                  <feMorphology in="SourceAlpha" operator="erode" radius="1" result="eroded"/>
+                                  <feGaussianBlur in="eroded" stdDeviation="2" result="innerBlur"/>
+                                  <feOffset in="innerBlur" dx="1" dy="1" result="innerOffset"/>
+                                  <feFlood floodColor="#000000" floodOpacity="0.3" result="innerColor"/>
+                                  <feComposite in="innerColor" in2="innerOffset" operator="in" result="innerShadow"/>
+
+                                  {/* Combine shadows with original graphic */}
+                                  <feMerge>
+                                    <feMergeNode in="shadow"/>
+                                    <feMergeNode in="SourceGraphic"/>
+                                    <feMergeNode in="innerShadow"/>
                                   </feMerge>
                                 </filter>
                               </defs>
 
-                              {/* Neomorphism Border Circle - White with inset shadow */}
+                              {/* Neomorphism Border Circle - White with beveled effect */}
                               <circle
                                 cx="181.5"
                                 cy="181.5"
                                 r="175"
                                 fill="none"
                                 stroke="#FFFFFF"
-                                strokeWidth="8"
-                                filter="url(#neomorphism-inset)"
-                                style={{ dropShadow: 'inset 0 2px 4px rgba(0,0,0,0.1)' }}
+                                strokeWidth="12"
+                                filter="url(#neomorphism-border)"
+                                opacity="0.95"
                               />
 
                               {/* Progress Circle (filled) */}
@@ -2934,6 +2957,7 @@ export default function Home() {
                                       <path
                                         d={createArcPath(0, progress1 * 360)}
                                         fill="url(#physiological-gradient-1)"
+                                        filter="url(#animation-inset)"
                                       />
                                     )}
 
@@ -2942,6 +2966,7 @@ export default function Home() {
                                       <path
                                         d={createArcPath(270, 270 + progress2 * 360)}
                                         fill="url(#physiological-gradient-2)"
+                                        filter="url(#animation-inset)"
                                       />
                                     )}
                                   </>
