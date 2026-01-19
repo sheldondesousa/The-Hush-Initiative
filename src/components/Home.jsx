@@ -438,7 +438,8 @@ export default function Home() {
   useEffect(() => {
     const is478 = selectedExercise?.name === '4-7-8 Breathing';
     const isCoherent = selectedExercise?.name === 'Coherent Breathing';
-    if ((is478 || isCoherent) && isExercising && countdown === null && !exerciseCompleted) {
+    const isPhysiological = selectedExercise?.name === 'Physiological Sigh';
+    if ((is478 || isCoherent || isPhysiological) && isExercising && countdown === null && !exerciseCompleted) {
       const timer = setTimeout(() => {
         setAnimationReady(true);
       }, 300);
@@ -1181,15 +1182,15 @@ export default function Home() {
     if (!isExercising || exerciseCompleted) return { progress1: 0, progress2: 0 };
 
     if (breathingPhase === 'inhale') {
-      // INHALE: timer goes from 0-39 (4 seconds total)
+      // INHALE: timer goes from 0-39 (4 seconds total) - smooth and linear
       // First 3 seconds (0-29): Fill 75% of circle with Part 1 gradient
       // Last 1 second (30-39): Fill remaining 25% with Part 2 gradient
       if (timer <= 29) {
-        // 0-3 seconds: progress from 0% to 75%
+        // 0-3 seconds: progress from 0% to 75% (linear)
         const progress = ((timer + 1) / 30) * 0.75; // 0.025 to 0.75
         return { progress1: progress, progress2: 0 };
       } else {
-        // 3-4 seconds: progress from 75% to 100%
+        // 3-4 seconds: progress from 75% to 100% (linear)
         const progress = ((timer - 29) / 10) * 0.25; // 0.025 to 0.25
         return { progress1: 0.75, progress2: progress };
       }
@@ -1197,10 +1198,18 @@ export default function Home() {
       // HOLD1: Stay at 100%
       return { progress1: 0.75, progress2: 0.25 };
     } else if (breathingPhase === 'exhale') {
-      // EXHALE: timer goes from 79-0 (8 seconds) - empty from 100% to 0%
-      const progress = timer / 79; // Linear from 1.0 to 0
-      // Show both parts proportionally during exhale
-      return { progress1: progress * 0.75, progress2: progress * 0.25 };
+      // EXHALE: timer goes from 79-0 (8 seconds) - exact reverse of inhale
+      // First 2 seconds (79-60): Empty Part 2 from 25% to 0% (last 25% from breathe in)
+      // Next 6 seconds (59-0): Empty Part 1 from 75% to 0% (remaining 75%)
+      if (timer > 59) {
+        // First 2 seconds of exhale: Empty Part 2 (linear decrement)
+        const progress2 = ((timer - 59) / 20) * 0.25; // 0.25 to 0.0125
+        return { progress1: 0.75, progress2: progress2 };
+      } else {
+        // Last 6 seconds of exhale: Empty Part 1 (linear decrement)
+        const progress1 = ((timer + 1) / 60) * 0.75; // 0.75 to 0.0125
+        return { progress1: progress1, progress2: 0 };
+      }
     } else if (breathingPhase === 'hold2') {
       // HOLD2: Stay at 0%
       return { progress1: 0, progress2: 0 };
@@ -2920,8 +2929,8 @@ export default function Home() {
                               <div
                                 className={`text-lg font-semibold text-black uppercase tracking-wider`}
                               >
-                                {breathingPhase === 'inhale' && 'Breathe In'}
-                                {breathingPhase === 'exhale' && 'Breathe Out'}
+                                {breathingPhase === 'inhale' && animationReady && 'Breathe In'}
+                                {breathingPhase === 'exhale' && animationReady && 'Breathe Out'}
                               </div>
                             </div>
                           </div>
