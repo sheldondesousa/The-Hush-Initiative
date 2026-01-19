@@ -2858,7 +2858,7 @@ export default function Home() {
                                 {/* Part 2 Gradient: African Violet, Blue Violet */}
                                 <linearGradient id="physiological-gradient-2" x1="0%" y1="100%" x2="100%" y2="0%">
                                   <stop offset="0%" stopColor="#AD88C6" /> {/* African Violet */}
-                                  <stop offset="50%" stopColor="#8EC89E" /> {/* Blend of African Violet and Blue Violet */}
+                                  <stop offset="50%" stopColor="#9179BE" /> {/* Blend of African Violet and Blue Violet */}
                                   <stop offset="100%" stopColor="#7469B6" /> {/* Blue Violet */}
                                 </linearGradient>
                               </defs>
