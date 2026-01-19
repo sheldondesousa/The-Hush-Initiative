@@ -2679,16 +2679,18 @@ export default function Home() {
                             )}
 
                             {/* Single Expanding/Compressing Circle with Radial Gradient */}
-                            <div
-                              className="rounded-full absolute"
-                              style={{
-                                width: `${get478CircleSize()}px`,
-                                height: `${get478CircleSize()}px`,
-                                background: 'radial-gradient(circle, rgba(116, 105, 187, 1) 0%, rgba(116, 105, 187, 0.6) 50%, rgba(116, 105, 187, 0.2) 100%)',
-                                boxShadow: '0 0 30px rgba(116, 105, 187, 0.5)',
-                                transition: 'all 100ms linear'
-                              }}
-                            />
+                            {animationReady && (
+                              <div
+                                className="rounded-full absolute"
+                                style={{
+                                  width: `${get478CircleSize()}px`,
+                                  height: `${get478CircleSize()}px`,
+                                  background: 'radial-gradient(circle, rgba(116, 105, 187, 1) 0%, rgba(116, 105, 187, 0.6) 50%, rgba(116, 105, 187, 0.2) 100%)',
+                                  boxShadow: '0 0 30px rgba(116, 105, 187, 0.5)',
+                                  transition: 'all 100ms linear'
+                                }}
+                              />
+                            )}
 
                             {/* Phase Text - At Center of Circles */}
                             <div className="absolute text-center">
