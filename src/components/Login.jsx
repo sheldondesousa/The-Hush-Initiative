@@ -62,7 +62,7 @@ export default function Login() {
       <div
         className="min-h-screen flex"
         style={{
-          background: 'linear-gradient(135deg, #746DB6 0%, #AD88C6 25%, #E1AFD1 50%, #F7D6EC 75%, #FFE6E6 100%)'
+          background: 'linear-gradient(135deg, #7469B6 0%, #AD88C6 25%, #E1AFD1 50%, #F6D0EA 75%, #FFE6E6 100%)'
         }}
       >
         {/* Left Side - Login Credentials (50%) */}

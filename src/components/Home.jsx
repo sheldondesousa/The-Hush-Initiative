@@ -12,8 +12,10 @@ export default function Home() {
   const [selectedOption, setSelectedOption] = useState('breathe');
   const [selectedExercise, setSelectedExercise] = useState(null);
   const [currentView, setCurrentView] = useState('interactive'); // 'interactive', 'about', 'support', 'faqs', 'privacy', 'terms', 'breathing-info'
+  const [profileImageError, setProfileImageError] = useState(false);
   const completionTrackedRef = useRef(false);
   const phaseHoldRef = useRef(false); // Track if we've held at final timer value for animation completion
+  const nextPhaseRef = useRef(null); // Track target phase for Box Breathing transitions
 
   // Carousel state
   const [carouselIndex, setCarouselIndex] = useState(0);
@@ -50,7 +52,7 @@ export default function Home() {
     {
       title: 'When It Becomes A Habit',
       content: "Use the app as a pause: morning grounding, a midday reset, or a nighttime wind-down. Even five minutes can create noticeable shifts.",
-      backgroundColor: '#F7D6EC',
+      backgroundColor: '#F6D0EA',
       textColor: '#000000'
     },
     {
@@ -106,6 +108,8 @@ export default function Home() {
     if (!selectedExercise) {
       const randomIndex = Math.floor(Math.random() * visuals.length);
       setCurrentVisual(visuals[randomIndex]);
+      // Reset profile image error state to retry loading image
+      setProfileImageError(false);
     }
   }, [selectedExercise]);
 
@@ -330,6 +334,7 @@ export default function Home() {
   const [coherentCycles, setCoherentCycles] = useState(6); // Total cycles (default 6)
   const [coherentBreathTime, setCoherentBreathTime] = useState(5); // Inhale-Exhale time in seconds (default 5s)
   const [showLegend, setShowLegend] = useState(false); // Track legend visibility with delay
+  const [animationReady, setAnimationReady] = useState(false); // Track when animation should start (after 300ms delay)
   const [alternateNostrilCycles, setAlternateNostrilCycles] = useState(6); // Total cycles for Alternate Nostril (default 6)
   const [alternateNostrilBreathTime, setAlternateNostrilBreathTime] = useState(5); // Breath time for Alternate Nostril (default 5s)
 
@@ -404,7 +409,8 @@ export default function Home() {
       setIsExercising(true);
       setIsPaused(false);
       setBreathingPhase('inhale');
-      setTimer(selectedExercise?.name === 'Physiological Sigh' ? 0 : 0);
+      // Box Breathing starts at timer 1, all other exercises start at 0
+      setTimer(selectedExercise?.name === 'Box Breathing (4-4-4-4)' ? 1 : 0);
       setCurrentCycle(0);
       return;
     }
@@ -427,6 +433,21 @@ export default function Home() {
       setShowLegend(false);
     }
   }, [isExercising, countdown, exerciseCompleted]);
+
+  // Show animation with 300ms delay after countdown completes for 4-7-8 Breathing and Coherent Breathing
+  useEffect(() => {
+    const is478 = selectedExercise?.name === '4-7-8 Breathing';
+    const isCoherent = selectedExercise?.name === 'Coherent Breathing';
+    const isPhysiological = selectedExercise?.name === 'Physiological Sigh';
+    if ((is478 || isCoherent || isPhysiological) && isExercising && countdown === null && !exerciseCompleted) {
+      const timer = setTimeout(() => {
+        setAnimationReady(true);
+      }, 300);
+      return () => clearTimeout(timer);
+    } else {
+      setAnimationReady(false);
+    }
+  }, [isExercising, countdown, exerciseCompleted, selectedExercise]);
 
   // Breathing animation cycle effect
   useEffect(() => {
@@ -462,9 +483,15 @@ export default function Home() {
       else if (breathingPhase === 'hold2') intervalDuration = 200; // 200ms gap after EXHALE
       else intervalDuration = 100; // 100ms for smooth transitions
     } else {
-      // Box breathing: all phases use 1000ms interval for second-based counting
-      // INHALE: 0→4 (4 seconds), HOLD1: 0→4 (4 seconds), EXHALE: 4→0 (4 seconds), HOLD2: 0→4 (4 seconds)
-      intervalDuration = 1000; // 1 second intervals
+      // Box breathing: use dynamic interval for phases and transitions
+      // Main phases (inhale, hold1, exhale, hold2): 1000ms interval to show 1→2→3→4 (4 counts) in exactly 4 seconds
+      // Transition phases: 300ms gap between main phases
+      if (breathingPhase === 'transitionAfterInhale' || breathingPhase === 'transitionAfterHold1' ||
+          breathingPhase === 'transitionAfterExhale' || breathingPhase === 'transitionAfterHold2') {
+        intervalDuration = 300; // 300ms transition gap
+      } else {
+        intervalDuration = 1000; // 1000ms intervals for main phases (1→2→3→4)
+      }
     }
 
     const interval = setInterval(() => {
@@ -670,51 +697,52 @@ export default function Home() {
             }
           }
         } else {
-          // Box Breathing pattern (4-4-4-4) - second-based counting
+          // Box Breathing pattern (4-4-4-4) - each phase counts 1→2→3→4 (4 seconds at 1s intervals)
           if (breathingPhase === 'inhale') {
-            // INHALE: 0→4 (exactly 4 seconds: 0s,1s,2s,3s,4s)
+            // INHALE: 1→2→3→4 (4 seconds total, 4 counts × 1000ms)
             if (prevTimer < 4) {
-              phaseHoldRef.current = false; // Reset hold flag
               return prevTimer + 1;
-            } else if (prevTimer === 4 && !phaseHoldRef.current) {
-              // Hold at 4 for one extra interval to complete animation
-              phaseHoldRef.current = true;
-              return 4;
             } else {
-              // Animation complete, transition to next phase
-              phaseHoldRef.current = false;
-              setBreathingPhase('hold1');
-              return 0; // Start HOLD1 at 0
+              // Timer reached 4, transition to hold1 with 300ms gap
+              setBreathingPhase('transitionAfterInhale');
+              return 4; // Keep showing 4 during transition
             }
+          } else if (breathingPhase === 'transitionAfterInhale') {
+            // 300ms transition gap, then move to hold1
+            setBreathingPhase('hold1');
+            return 1; // Start hold1 at 1
           } else if (breathingPhase === 'hold1') {
-            // HOLD1: 0→4 (exactly 4 seconds)
+            // HOLD1: 1→2→3→4 (4 seconds total, 4 counts × 1000ms)
             if (prevTimer < 4) {
               return prevTimer + 1;
             } else {
-              setBreathingPhase('exhale');
-              return 4; // Start EXHALE at 4
+              // Timer reached 4, transition to exhale with 300ms gap
+              setBreathingPhase('transitionAfterHold1');
+              return 4; // Keep showing 4 during transition
             }
+          } else if (breathingPhase === 'transitionAfterHold1') {
+            // 300ms transition gap, then move to exhale
+            setBreathingPhase('exhale');
+            return 1; // Start exhale at 1
           } else if (breathingPhase === 'exhale') {
-            // EXHALE: 4→0 (exactly 4 seconds: 4s,3s,2s,1s,0s)
-            if (prevTimer > 0) {
-              phaseHoldRef.current = false; // Reset hold flag
-              return prevTimer - 1;
-            } else if (prevTimer === 0 && !phaseHoldRef.current) {
-              // Hold at 0 for one extra interval to complete animation
-              phaseHoldRef.current = true;
-              return 0;
-            } else {
-              // Animation complete, transition to next phase
-              phaseHoldRef.current = false;
-              setBreathingPhase('hold2');
-              return 0; // Start HOLD2 at 0
-            }
-          } else if (breathingPhase === 'hold2') {
-            // HOLD2: 0→4 (exactly 4 seconds)
+            // EXHALE: 1→2→3→4 (4 seconds total, 4 counts × 1000ms)
             if (prevTimer < 4) {
               return prevTimer + 1;
             } else {
-              // Cycle completed, check if we should continue
+              // Timer reached 4, transition to hold2 with 300ms gap
+              setBreathingPhase('transitionAfterExhale');
+              return 4; // Keep showing 4 during transition
+            }
+          } else if (breathingPhase === 'transitionAfterExhale') {
+            // 300ms transition gap, then move to hold2
+            setBreathingPhase('hold2');
+            return 1; // Start hold2 at 1
+          } else if (breathingPhase === 'hold2') {
+            // HOLD2: 1→2→3→4 (4 seconds total, 4 counts × 1000ms)
+            if (prevTimer < 4) {
+              return prevTimer + 1;
+            } else {
+              // Timer reached 4, check if cycle completed
               const nextCycle = currentCycle + 1;
               if (nextCycle >= selectedCycles) {
                 // Reached target cycles, show completion screen
@@ -722,16 +750,18 @@ export default function Home() {
                 setExerciseCompleted(true);
                 setCurrentCycle(0);
                 setBreathingPhase('inhale');
-                phaseHoldRef.current = false;
-                return 0;
+                return 1;
               } else {
-                // Continue to next cycle
-                setCurrentCycle(nextCycle);
-                setBreathingPhase('inhale');
-                phaseHoldRef.current = false;
-                return 0;
+                // Continue to next cycle with 300ms transition gap
+                setBreathingPhase('transitionAfterHold2');
+                return 4; // Keep showing 4 during transition
               }
             }
+          } else if (breathingPhase === 'transitionAfterHold2') {
+            // 300ms transition gap, then move to next cycle's inhale
+            setCurrentCycle(currentCycle + 1);
+            setBreathingPhase('inhale');
+            return 1; // Start next inhale at 1
           }
         }
         return prevTimer;
@@ -794,22 +824,22 @@ export default function Home() {
   // Get number of circles to display based on phase and timer
   const getVisibleCircleCount = () => {
     if (breathingPhase === 'inhale') {
-      // INHALE: timer 0→4, circles 0→4 (expanding)
-      return timer === 0 ? 0 : timer;
-    } else if (breathingPhase === 'hold1') {
+      // INHALE: timer 1→4, circles 1→4 (expanding)
+      return timer;
+    } else if (breathingPhase === 'hold1' || breathingPhase === 'transitionAfterInhale' || breathingPhase === 'transitionAfterHold1') {
       return 4; // HOLD after INHALE: Keep all 4 circles at max size
     } else if (breathingPhase === 'exhale') {
-      // EXHALE: timer 4→0, circles 4→0 (contracting from max)
-      return timer;
-    } else if (breathingPhase === 'hold2') {
-      return 0; // HOLD after EXHALE: No circles
+      // EXHALE: timer 1→4, circles 4→1 (contracting)
+      return 5 - timer; // Invert: when timer=1, show 4 circles; when timer=4, show 1 circle
+    } else if (breathingPhase === 'hold2' || breathingPhase === 'transitionAfterExhale' || breathingPhase === 'transitionAfterHold2') {
+      return 1; // HOLD after EXHALE: Show 1 circle (minimum)
     }
-    return 0;
+    return 1;
   };
 
   // Get visible circle count for 4-7-8 breathing
   const getVisibleCircleCount478 = () => {
-    if (!isExercising) return 0;
+    if (!isExercising || !animationReady) return 0;
 
     if (breathingPhase === 'inhale') {
       // INHALE: Add 2 circles per second (timer 0→4 shows 0,2,4,6,8 circles)
@@ -829,17 +859,17 @@ export default function Home() {
   const getCirclesData478 = () => {
     const circleCount = getVisibleCircleCount478();
 
-    // 8 circles with 10% opacity decrements - adjusted sizes to fit container
+    // 8 circles with opacity decrements - app color scheme from darkest to lightest
     const sizes = [100, 140, 180, 220, 260, 300, 340, 360];
     const colors = [
-      'rgba(5, 104, 166, 1.0)',   // 100% opacity (darkest - innermost) - 15% darker base
-      'rgba(5, 104, 166, 0.9)',   // 90% opacity
-      'rgba(5, 104, 166, 0.8)',   // 80% opacity
-      'rgba(5, 104, 166, 0.7)',   // 70% opacity
-      'rgba(5, 104, 166, 0.6)',   // 60% opacity
-      'rgba(5, 104, 166, 0.5)',   // 50% opacity
-      'rgba(5, 104, 166, 0.4)',   // 40% opacity
-      'rgba(5, 104, 166, 0.3)'    // 30% opacity (lightest - outermost)
+      'rgba(116, 105, 182, 1.0)',   // 100% opacity - Blue-Violet (darkest - innermost)
+      'rgba(116, 105, 182, 0.9)',   // 90% opacity - Blue-Violet
+      'rgba(173, 136, 198, 0.8)',   // 80% opacity - African Violet
+      'rgba(173, 136, 198, 0.7)',   // 70% opacity - African Violet
+      'rgba(225, 175, 209, 0.6)',   // 60% opacity - Light Orchid
+      'rgba(225, 175, 209, 0.5)',   // 50% opacity - Light Orchid
+      'rgba(246, 208, 234, 0.4)',   // 40% opacity - Pale Orchid (lighter)
+      'rgba(246, 208, 234, 0.3)'    // 30% opacity - Pale Orchid (lightest - outermost)
     ];
     const blurs = [20, 21, 22, 23, 24, 25, 26, 27];
 
@@ -1005,9 +1035,9 @@ export default function Home() {
 
   // Get smooth circle size for 4-7-8 Breathing
   const get478CircleSize = () => {
-    if (!isExercising) return 100;
+    if (!isExercising || !animationReady) return 0;
 
-    const minSize = 100;
+    const minSize = 0;
     const maxSize = 340;
 
     if (breathingPhase === 'inhale') {
@@ -1147,49 +1177,45 @@ export default function Home() {
     return { x: centerOffset, y: centerOffset };
   };
 
-  // Get smooth circle data for Physiological Sigh
-  const getPhysiologicalCircleSize = () => {
-    if (!isExercising || exerciseCompleted) return 0;
-
-    const minSize = 0; // Start and end at 0 (no circle)
-    const maxSize = 340;
+  // Get circular progress data for Physiological Sigh (clock-based animation)
+  const getPhysiologicalCircleProgress = () => {
+    if (!isExercising || exerciseCompleted) return { progress1: 0, progress2: 0 };
 
     if (breathingPhase === 'inhale') {
-      // INHALE: timer goes from 0-39 (4 seconds total)
-      // First 3 seconds (0-29): Blue expands (long breath)
-      // Last 1 second (30-39): Blue stays at max, green flash (quick short breath)
+      // INHALE: timer goes from 0-39 (4 seconds total) - smooth and linear
+      // First 3 seconds (0-29): Fill 75% of circle with Part 1 gradient
+      // Last 1 second (30-39): Fill remaining 25% with Part 2 gradient
       if (timer <= 29) {
-        const progress = timer / 29; // 0 to 1 over 3 seconds
-
-        // Calculate current size with smooth easing
-        const easeProgress = progress < 0.5
-          ? 2 * progress * progress
-          : 1 - Math.pow(-2 * progress + 2, 2) / 2;
-
-        return minSize + (maxSize - minSize) * easeProgress;
+        // 0-3 seconds: progress from 0% to 75% (linear)
+        const progress = ((timer + 1) / 30) * 0.75; // 0.025 to 0.75
+        return { progress1: progress, progress2: 0 };
       } else {
-        // Last second (30-39): Stay at max for quick short breath
-        return maxSize;
+        // 3-4 seconds: progress from 75% to 100% (linear)
+        const progress = ((timer - 29) / 10) * 0.25; // 0.025 to 0.25
+        return { progress1: 0.75, progress2: progress };
       }
     } else if (breathingPhase === 'hold1') {
-      // HOLD1: Stay at max size after INHALE completes
-      return maxSize;
+      // HOLD1: Stay at 100%
+      return { progress1: 0.75, progress2: 0.25 };
     } else if (breathingPhase === 'exhale') {
-      // EXHALE: timer goes from 79-0 (8 seconds) - shrinks from max to 0
-      const progress = timer / 79; // 1 to 0
-
-      // Calculate current size with smooth easing
-      const easeProgress = progress < 0.5
-        ? 2 * progress * progress
-        : 1 - Math.pow(-2 * progress + 2, 2) / 2;
-
-      return minSize + (maxSize - minSize) * easeProgress;
+      // EXHALE: timer goes from 79-0 (8 seconds) - exact reverse of inhale
+      // First 2 seconds (79-60): Empty Part 2 from 25% to 0% (last 25% from breathe in)
+      // Next 6 seconds (59-0): Empty Part 1 from 75% to 0% (remaining 75%)
+      if (timer > 59) {
+        // First 2 seconds of exhale: Empty Part 2 (linear decrement)
+        const progress2 = ((timer - 59) / 20) * 0.25; // 0.25 to 0.0125
+        return { progress1: 0.75, progress2: progress2 };
+      } else {
+        // Last 6 seconds of exhale: Empty Part 1 (linear decrement)
+        const progress1 = ((timer + 1) / 60) * 0.75; // 0.75 to 0.0125
+        return { progress1: progress1, progress2: 0 };
+      }
     } else if (breathingPhase === 'hold2') {
-      // HOLD2: Stay at min size after EXHALE completes - now returns 0
-      return 0;
+      // HOLD2: Stay at 0%
+      return { progress1: 0, progress2: 0 };
     }
 
-    return 0;
+    return { progress1: 0, progress2: 0 };
   };
 
   const handleLogout = async () => {
@@ -1412,6 +1438,14 @@ export default function Home() {
           }
           50% {
             transform: scale(1.15);
+          }
+        }
+        @keyframes magnify-compress {
+          0%, 100% {
+            transform: scale(1);
+          }
+          50% {
+            transform: scale(1.2);
           }
         }
       `}</style>
@@ -1668,11 +1702,15 @@ export default function Home() {
                   {/* Profile Section */}
                   <div className="flex items-center gap-3 mb-4">
                     <div className="w-16 h-16 rounded-full bg-gray-200 flex items-center justify-center overflow-hidden flex-shrink-0">
-                      {currentUser?.photoURL ? (
+                      {currentUser?.photoURL && !profileImageError ? (
                         <img
+                          key={currentUser.photoURL}
                           src={currentUser.photoURL}
                           alt="Profile"
                           className="w-full h-full object-cover"
+                          onError={() => {
+                            setProfileImageError(true);
+                          }}
                         />
                       ) : (
                         <svg className="w-8 h-8 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -1765,7 +1803,7 @@ export default function Home() {
                           onClick={() => setCarouselIndex(index)}
                           className="w-2 h-2 rounded-full transition-all"
                           style={{
-                            backgroundColor: index === carouselIndex ? ['#7469B6', '#AD88C6', '#E1AFD1', '#F7D6EC', '#FFE6E6'][index] : '#D1D5DB',
+                            backgroundColor: index === carouselIndex ? ['#7469B6', '#AD88C6', '#E1AFD1', '#F6D0EA', '#FFE6E6'][index] : '#D1D5DB',
                             transform: index === carouselIndex ? 'scale(1.2)' : 'scale(1)'
                           }}
                           aria-label={`Go to card ${index + 1}`}
@@ -2004,9 +2042,8 @@ export default function Home() {
                     <div className="px-2 pb-4">
                       <button
                         onClick={() => {
+                          // Start the exercise by hiding the info screen
                           setShowingInfo(false);
-                          setCountdown(3); // Start countdown
-                          phaseHoldRef.current = false; // Reset phase hold flag
                         }}
                         className="w-full py-3 bg-black text-white text-base font-bold rounded-xl hover:bg-gray-800 transition-colors"
                       >
@@ -2444,8 +2481,8 @@ export default function Home() {
                                       : `${Math.ceil(timer / 10)}s`)  // EXHALE: alternateNostrilBreathTime to 0s (e.g., 4s-0s)
                                   : selectedExercise?.name === 'Physiological Sigh'
                                     ? (breathingPhase === 'inhale'
-                                        ? `${Math.ceil((timer + 1) / 10)}s`  // INHALE: 0-39 → 1s-4s
-                                        : `${Math.ceil(timer / 10)}s`)       // EXHALE: 79-0 → 8s-0s
+                                        ? `${Math.round(timer / 10)}s`  // INHALE: 0-39 → 0s-4s
+                                        : `${Math.ceil(timer / 10)}s`)  // EXHALE: 79-0 → 8s-0s
                                     : selectedExercise?.name === '4-7-8 Breathing'
                                       ? (breathingPhase === 'inhale'
                                           ? `${Math.floor(timer / 10)}s`  // INHALE: 0-40 → 0s-4s
@@ -2492,7 +2529,8 @@ export default function Home() {
                               onClick={() => {
                                 setExerciseCompleted(false);
                                 setCurrentCycle(0);
-                                setTimer(selectedExercise?.name === 'Physiological Sigh' ? 0 : 0);
+                                // Box Breathing starts at timer 1, all other exercises start at 0
+                                setTimer(selectedExercise?.name === 'Box Breathing (4-4-4-4)' ? 1 : 0);
                                 setBreathingPhase('inhale');
                                 setIsExercising(true);
                               }}
@@ -2507,197 +2545,97 @@ export default function Home() {
                       {/* Conditional Animation based on exercise */}
                       {selectedExercise?.name === 'Box Breathing (4-4-4-4)' ? (
                         <>
-                          {/* Breathing Square Illustration - Box Breathing Only */}
-                          <div className="flex-1 flex flex-col items-center justify-center w-full">
-                            <div className="relative" style={{ width: '363px', height: '363px' }}>
-                            {/* Gray Border Square */}
-                            <svg
-                              className="absolute top-0 left-0"
-                              width="363"
-                              height="363"
-                            >
-                              <rect
-                                x="4"
-                                y="4"
-                                width="355"
-                                height="355"
-                                rx="15"
-                                fill="none"
-                                stroke="#E5E7EB"
-                                strokeWidth="4"
-                              />
-                            </svg>
-
-                            {/* Secondary Colors Gradient Background - Vertical from bottom to top */}
-                            <div
-                              className="absolute"
-                              style={{
-                                top: '4px',
-                                left: '4px',
-                                width: '355px',
-                                height: '355px',
-                                background: 'linear-gradient(to bottom, rgba(255, 230, 247, 0.8) 0%, rgba(246, 208, 234, 0.75) 50%, rgba(225, 175, 209, 0.7) 100%)',
-                                borderRadius: '15px'
-                              }}
-                            />
-
-                            {/* Mountain Wave Animation */}
-                            {(() => {
-                              // Calculate mountain height based on phase and timer
-                              let mountainHeight = 0;
-
-                              if (breathingPhase === 'inhale') {
-                                // Rise from 0% to 100% over 4 seconds (timer: 0→4)
-                                mountainHeight = (timer / 4) * 100;
-                              } else if (breathingPhase === 'hold1') {
-                                // Hold at 100% (top) after inhale
-                                mountainHeight = 100;
-                              } else if (breathingPhase === 'exhale') {
-                                // Fall from 100% to 0% over 4 seconds (timer: 4→0, counts down)
-                                mountainHeight = (timer / 4) * 100;
-                              } else if (breathingPhase === 'hold2') {
-                                // Hold at 0% (bottom) after exhale
-                                mountainHeight = 0;
-                              }
-
-                              const peakHeight = 355 - (mountainHeight * 3.55);
-                              const baseHeight = 355;
-
-                              return (
-                                <svg
-                                  className="absolute"
-                                  width="355"
-                                  height="355"
-                                  viewBox="0 0 355 355"
-                                  style={{ top: '4px', left: '4px', overflow: 'visible' }}
+                          {/* Phase Indicator - 4 Boxes in Square Pattern (Clockwise) */}
+                          <div className="flex-1 flex items-center justify-center w-full relative px-4">
+                            <div className="flex flex-col items-center justify-center gap-1" style={{ maxWidth: '90vw', width: '100%', maxHeight: '80vh' }}>
+                              {/* Top Row - Breathe In and Hold 1 */}
+                              <div className="flex justify-center gap-1 w-full">
+                                {/* Breathe In - Top Left */}
+                                <div
+                                  className="flex flex-col items-center justify-center rounded-2xl transition-all duration-300 flex-1 aspect-square max-w-[45vw]"
+                                  style={{
+                                    backgroundColor: (isExercising && countdown === null && breathingPhase === 'inhale') ? '#746996' : '#E5E7EB',
+                                    minWidth: '178px',
+                                    minHeight: '178px'
+                                  }}
                                 >
-                                  <defs>
-                                    {/* Primary colors gradient for mountain - top to bottom with equal weightage */}
-                                    <linearGradient id="mountainGradient" x1="0%" y1="0%" x2="0%" y2="100%">
-                                      <stop offset="0%" stopColor="#AD88C6" stopOpacity="1" />
-                                      <stop offset="50%" stopColor="#7469B6" stopOpacity="1" />
-                                      <stop offset="100%" stopColor="#AD88C6" stopOpacity="1" />
-                                    </linearGradient>
-                                    {/* Radial gradient overlay for depth */}
-                                    <radialGradient id="mountainOverlay" cx="50%" cy="30%">
-                                      <stop offset="0%" stopColor="#C8AAD6" stopOpacity="0.6" />
-                                      <stop offset="50%" stopColor="#AD88C6" stopOpacity="0.3" />
-                                      <stop offset="100%" stopColor="#7469B6" stopOpacity="0" />
-                                    </radialGradient>
-                                  </defs>
+                                  <div className={`text-base font-semibold mb-2 text-center leading-tight ${(isExercising && countdown === null && breathingPhase === 'inhale') ? 'text-white' : 'text-gray-600'}`}>
+                                    Breathe In
+                                  </div>
+                                  <div className={`text-2xl text-center ${(isExercising && countdown === null && breathingPhase === 'inhale') ? 'text-white' : 'text-gray-400'}`}>
+                                    ↑
+                                  </div>
+                                </div>
 
-                                  {/* Bell curve mountain shape using cubic bezier for smooth, rounded curve */}
-                                  <path
-                                    d={`
-                                      M 0,${baseHeight}
-                                      C 59,${baseHeight - (mountainHeight * 3.55 * 0.15)}, 89,${peakHeight + (mountainHeight * 3.55 * 0.05)}, 177.5,${peakHeight}
-                                      C 266,${peakHeight + (mountainHeight * 3.55 * 0.05)}, 296,${baseHeight - (mountainHeight * 3.55 * 0.15)}, 355,${baseHeight}
-                                      Z
-                                    `}
-                                    fill="url(#mountainGradient)"
-                                    style={{
-                                      transition: 'all 1000ms ease-out'
-                                    }}
-                                  />
-                                  {/* Overlay gradient for depth effect */}
-                                  <path
-                                    d={`
-                                      M 0,${baseHeight}
-                                      C 59,${baseHeight - (mountainHeight * 3.55 * 0.15)}, 89,${peakHeight + (mountainHeight * 3.55 * 0.05)}, 177.5,${peakHeight}
-                                      C 266,${peakHeight + (mountainHeight * 3.55 * 0.05)}, 296,${baseHeight - (mountainHeight * 3.55 * 0.15)}, 355,${baseHeight}
-                                      Z
-                                    `}
-                                    fill="url(#mountainOverlay)"
-                                    style={{
-                                      transition: 'all 1000ms ease-out'
-                                    }}
-                                  />
+                                {/* Hold 1 - Top Right */}
+                                <div
+                                  className="flex flex-col items-center justify-center rounded-2xl transition-all duration-300 flex-1 aspect-square max-w-[45vw]"
+                                  style={{
+                                    backgroundColor: (isExercising && countdown === null && breathingPhase === 'hold1') ? '#F6D0EA' : '#E5E7EB',
+                                    minWidth: '178px',
+                                    minHeight: '178px'
+                                  }}
+                                >
+                                  <div className={`text-base font-semibold mb-2 text-center ${(isExercising && countdown === null && breathingPhase === 'hold1') ? 'text-gray-800' : 'text-gray-600'}`}>
+                                    Hold Breath
+                                  </div>
+                                  <svg
+                                    className={`${(isExercising && countdown === null && breathingPhase === 'hold1') ? 'text-gray-800' : 'text-gray-400'}`}
+                                    width="24"
+                                    height="24"
+                                    viewBox="0 0 24 24"
+                                    fill="currentColor"
+                                  >
+                                    <rect x="6" y="4" width="4" height="16" rx="1"/>
+                                    <rect x="14" y="4" width="4" height="16" rx="1"/>
+                                  </svg>
+                                </div>
+                              </div>
 
-                                  {/* Star effect at peak when maximum height reached */}
-                                  {mountainHeight >= 95 && (
-                                    <g transform={`translate(${177.5 + 30}, ${peakHeight + 15})`}>
-                                      {/* Sparkle/Star effect */}
-                                      <circle cx="0" cy="0" r="3" fill="#FFE6F7" opacity="0.9">
-                                        <animate attributeName="opacity" values="0.9;0.3;0.9" dur="1s" repeatCount="indefinite" />
-                                      </circle>
-                                      <circle cx="0" cy="0" r="6" fill="#F6D0EA" opacity="0.5">
-                                        <animate attributeName="opacity" values="0.5;0.1;0.5" dur="1s" repeatCount="indefinite" />
-                                        <animate attributeName="r" values="6;8;6" dur="1s" repeatCount="indefinite" />
-                                      </circle>
-                                      {/* Star rays */}
-                                      <line x1="-8" y1="0" x2="8" y2="0" stroke="#FFE6F7" strokeWidth="1.5" opacity="0.8">
-                                        <animate attributeName="opacity" values="0.8;0.3;0.8" dur="1s" repeatCount="indefinite" />
-                                      </line>
-                                      <line x1="0" y1="-8" x2="0" y2="8" stroke="#FFE6F7" strokeWidth="1.5" opacity="0.8">
-                                        <animate attributeName="opacity" values="0.8;0.3;0.8" dur="1s" repeatCount="indefinite" />
-                                      </line>
-                                      <line x1="-6" y1="-6" x2="6" y2="6" stroke="#F6D0EA" strokeWidth="1" opacity="0.6">
-                                        <animate attributeName="opacity" values="0.6;0.2;0.6" dur="1s" repeatCount="indefinite" />
-                                      </line>
-                                      <line x1="6" y1="-6" x2="-6" y2="6" stroke="#F6D0EA" strokeWidth="1" opacity="0.6">
-                                        <animate attributeName="opacity" values="0.6;0.2;0.6" dur="1s" repeatCount="indefinite" />
-                                      </line>
-                                    </g>
-                                  )}
-                                </svg>
-                              );
-                            })()}
+                              {/* Bottom Row - Hold 2 and Breathe Out */}
+                              <div className="flex justify-center gap-1 w-full">
+                                {/* Hold 2 - Bottom Left */}
+                                <div
+                                  className="flex flex-col items-center justify-center rounded-2xl transition-all duration-300 flex-1 aspect-square max-w-[45vw]"
+                                  style={{
+                                    backgroundColor: (isExercising && countdown === null && breathingPhase === 'hold2') ? '#F6D0EA' : '#E5E7EB',
+                                    minWidth: '178px',
+                                    minHeight: '178px'
+                                  }}
+                                >
+                                  <div className={`text-base font-semibold mb-2 text-center ${(isExercising && countdown === null && breathingPhase === 'hold2') ? 'text-gray-800' : 'text-gray-600'}`}>
+                                    Hold Breath
+                                  </div>
+                                  <svg
+                                    className={`${(isExercising && countdown === null && breathingPhase === 'hold2') ? 'text-gray-800' : 'text-gray-400'}`}
+                                    width="24"
+                                    height="24"
+                                    viewBox="0 0 24 24"
+                                    fill="currentColor"
+                                  >
+                                    <rect x="6" y="4" width="4" height="16" rx="1"/>
+                                    <rect x="14" y="4" width="4" height="16" rx="1"/>
+                                  </svg>
+                                </div>
 
-                            {/* Phase Text - At Center of Square */}
-                            <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 text-center">
-                              <div
-                                className="text-lg font-semibold text-gray-700 uppercase tracking-wider"
-                                style={{
-                                  animation: 'text-breathe 4s ease-in-out infinite'
-                                }}
-                              >
-                                {breathingPhase === 'inhale' && countdown === null && 'Breathe In'}
-                                {breathingPhase === 'hold1' && 'HOLD'}
-                                {breathingPhase === 'exhale' && 'Breathe Out'}
-                                {breathingPhase === 'hold2' && 'HOLD'}
+                                {/* Breathe Out - Bottom Right */}
+                                <div
+                                  className="flex flex-col items-center justify-center rounded-2xl transition-all duration-300 flex-1 aspect-square max-w-[45vw]"
+                                  style={{
+                                    backgroundColor: (isExercising && countdown === null && breathingPhase === 'exhale') ? '#AD8FC6' : '#E5E7EB',
+                                    minWidth: '178px',
+                                    minHeight: '178px'
+                                  }}
+                                >
+                                  <div className={`text-base font-semibold mb-2 text-center ${(isExercising && countdown === null && breathingPhase === 'exhale') ? 'text-white' : 'text-gray-600'}`}>
+                                    Breathe Out
+                                  </div>
+                                  <div className={`text-2xl text-center ${(isExercising && countdown === null && breathingPhase === 'exhale') ? 'text-white' : 'text-gray-400'}`}>
+                                    ↓
+                                  </div>
+                                </div>
                               </div>
                             </div>
-                          </div>
-
-                          {/* Phase Tabs - Below animation with spacing */}
-                          <div className="flex justify-center gap-2 mt-8">
-                            <div
-                              className={`px-6 py-2 rounded-lg font-medium transition-all ${
-                                breathingPhase === 'inhale'
-                                  ? 'bg-white text-black shadow-md'
-                                  : 'bg-transparent text-gray-400'
-                              }`}
-                            >
-                              In 4s
-                            </div>
-                            <div
-                              className={`px-6 py-2 rounded-lg font-medium transition-all ${
-                                breathingPhase === 'hold1'
-                                  ? 'bg-white text-black shadow-md'
-                                  : 'bg-transparent text-gray-400'
-                              }`}
-                            >
-                              Hold 4s
-                            </div>
-                            <div
-                              className={`px-6 py-2 rounded-lg font-medium transition-all ${
-                                breathingPhase === 'exhale'
-                                  ? 'bg-white text-black shadow-md'
-                                  : 'bg-transparent text-gray-400'
-                              }`}
-                            >
-                              Out 4s
-                            </div>
-                            <div
-                              className={`px-6 py-2 rounded-lg font-medium transition-all ${
-                                breathingPhase === 'hold2'
-                                  ? 'bg-white text-black shadow-md'
-                                  : 'bg-transparent text-gray-400'
-                              }`}
-                            >
-                              Hold 4s
-                            </div>
-                          </div>
                           </div>
                         </>
                       ) : selectedExercise?.name === '4-7-8 Breathing' ? (
@@ -2722,8 +2660,8 @@ export default function Home() {
                               />
                             </svg>
 
-                            {/* Blue Progress Circle - Shows during HOLD phase (7 seconds) */}
-                            {breathingPhase === 'hold1' && (
+                            {/* Blue-Violet Progress Circle - Shows during HOLD phase (7 seconds) */}
+                            {breathingPhase === 'hold1' && animationReady && (
                               <svg
                                 className="absolute"
                                 width="363"
@@ -2735,7 +2673,7 @@ export default function Home() {
                                   cy="181.5"
                                   r="180"
                                   fill="none"
-                                  stroke="#067AC3"
+                                  stroke="#7469BB"
                                   strokeWidth="4"
                                   strokeDasharray="1131"
                                   strokeDashoffset={1131 - (1131 * (timer / 10) / 7)}
@@ -2746,27 +2684,29 @@ export default function Home() {
                             )}
 
                             {/* Single Expanding/Compressing Circle with Radial Gradient */}
-                            <div
-                              className="rounded-full absolute"
-                              style={{
-                                width: `${get478CircleSize()}px`,
-                                height: `${get478CircleSize()}px`,
-                                background: 'radial-gradient(circle, rgba(6, 122, 195, 1) 0%, rgba(6, 122, 195, 0.6) 50%, rgba(6, 122, 195, 0.2) 100%)',
-                                boxShadow: '0 0 30px rgba(6, 122, 195, 0.5)',
-                                transition: 'all 100ms linear'
-                              }}
-                            />
+                            {animationReady && !(breathingPhase === 'inhale' && timer === 0) && !(breathingPhase === 'exhale' && timer === 0) && (
+                              <div
+                                className="rounded-full absolute"
+                                style={{
+                                  width: `${get478CircleSize()}px`,
+                                  height: `${get478CircleSize()}px`,
+                                  background: 'radial-gradient(circle, rgba(116, 105, 187, 1) 0%, rgba(116, 105, 187, 0.6) 50%, rgba(116, 105, 187, 0.2) 100%)',
+                                  boxShadow: '0 0 30px rgba(116, 105, 187, 0.5)',
+                                  transition: 'all 100ms linear'
+                                }}
+                              />
+                            )}
 
                             {/* Phase Text - At Center of Circles */}
                             <div className="absolute text-center">
                               <div
-                                className={`text-lg font-semibold text-gray-800 uppercase tracking-wider bg-gradient-to-b from-white/85 to-gray-100/80 backdrop-blur-sm px-6 py-3 rounded-xl inline-block ${
-                                  breathingPhase === 'hold1' ? 'pulse-hold' : ''
+                                className={`text-lg font-semibold text-gray-800 uppercase tracking-wider ${
+                                  breathingPhase === 'hold1' && animationReady ? 'pulse-hold' : ''
                                 }`}
                               >
-                                {breathingPhase === 'inhale' && 'Breathe In'}
-                                {breathingPhase === 'hold1' && 'HOLD'}
-                                {breathingPhase === 'exhale' && 'Breathe Out'}
+                                {breathingPhase === 'inhale' && animationReady && 'Breathe In'}
+                                {breathingPhase === 'hold1' && animationReady && 'HOLD'}
+                                {breathingPhase === 'exhale' && animationReady && 'Breathe Out'}
                               </div>
                             </div>
                           </div>
@@ -2800,8 +2740,87 @@ export default function Home() {
                               style={{
                                 width: `${getCoherentCircleSize()}px`,
                                 height: `${getCoherentCircleSize()}px`,
-                                background: 'radial-gradient(circle, rgba(6, 122, 195, 1) 0%, rgba(6, 122, 195, 0.6) 50%, rgba(6, 122, 195, 0.2) 100%)',
-                                boxShadow: '0 0 30px rgba(6, 122, 195, 0.5)',
+                                background: (() => {
+                                  const size = getCoherentCircleSize();
+                                  const intensity = size / 340; // 0 to 1, from empty to full
+
+                                  // 5-color gradient sequence using all app colors: deep purple → medium purple → light purple → pale orchid → pale pink
+                                  const colors = [
+                                    { r: 116, g: 105, b: 182 },   // Deep Purple/Blue-Violet (empty)
+                                    { r: 173, g: 136, b: 198 },   // Medium Purple/African Violet (25%)
+                                    { r: 225, g: 175, b: 209 },   // Light Purple/Light Orchid (50%)
+                                    { r: 246, g: 208, b: 234 },   // Pale Orchid (75%)
+                                    { r: 255, g: 230, b: 230 }    // Pale Pink/Misty Rose (full)
+                                  ];
+
+                                  // Calculate which color segment we're in and interpolate
+                                  let r, g, b;
+                                  if (intensity <= 0.25) {
+                                    // Interpolate between deep purple and medium purple
+                                    const t = intensity / 0.25;
+                                    r = Math.round(colors[0].r + (colors[1].r - colors[0].r) * t);
+                                    g = Math.round(colors[0].g + (colors[1].g - colors[0].g) * t);
+                                    b = Math.round(colors[0].b + (colors[1].b - colors[0].b) * t);
+                                  } else if (intensity <= 0.5) {
+                                    // Interpolate between medium purple and light purple
+                                    const t = (intensity - 0.25) / 0.25;
+                                    r = Math.round(colors[1].r + (colors[2].r - colors[1].r) * t);
+                                    g = Math.round(colors[1].g + (colors[2].g - colors[1].g) * t);
+                                    b = Math.round(colors[1].b + (colors[2].b - colors[1].b) * t);
+                                  } else if (intensity <= 0.75) {
+                                    // Interpolate between light purple and pale orchid
+                                    const t = (intensity - 0.5) / 0.25;
+                                    r = Math.round(colors[2].r + (colors[3].r - colors[2].r) * t);
+                                    g = Math.round(colors[2].g + (colors[3].g - colors[2].g) * t);
+                                    b = Math.round(colors[2].b + (colors[3].b - colors[2].b) * t);
+                                  } else {
+                                    // Interpolate between pale orchid and pale pink
+                                    const t = (intensity - 0.75) / 0.25;
+                                    r = Math.round(colors[3].r + (colors[4].r - colors[3].r) * t);
+                                    g = Math.round(colors[3].g + (colors[4].g - colors[3].g) * t);
+                                    b = Math.round(colors[3].b + (colors[4].b - colors[3].b) * t);
+                                  }
+
+                                  return `radial-gradient(circle, rgba(${r}, ${g}, ${b}, 1) 0%, rgba(${r}, ${g}, ${b}, 0.6) 50%, rgba(${r}, ${g}, ${b}, 0.2) 100%)`;
+                                })(),
+                                boxShadow: (() => {
+                                  const size = getCoherentCircleSize();
+                                  const intensity = size / 340;
+
+                                  // Use same 5-color gradient for box shadow
+                                  const colors = [
+                                    { r: 116, g: 105, b: 182 },   // Deep Purple/Blue-Violet
+                                    { r: 173, g: 136, b: 198 },   // Medium Purple/African Violet
+                                    { r: 225, g: 175, b: 209 },   // Light Purple/Light Orchid
+                                    { r: 247, g: 214, b: 236 },   // Pale Orchid
+                                    { r: 255, g: 230, b: 230 }    // Pale Pink/Rose
+                                  ];
+
+                                  let r, g, b;
+                                  if (intensity <= 0.25) {
+                                    const t = intensity / 0.25;
+                                    r = Math.round(colors[0].r + (colors[1].r - colors[0].r) * t);
+                                    g = Math.round(colors[0].g + (colors[1].g - colors[0].g) * t);
+                                    b = Math.round(colors[0].b + (colors[1].b - colors[0].b) * t);
+                                  } else if (intensity <= 0.5) {
+                                    const t = (intensity - 0.25) / 0.25;
+                                    r = Math.round(colors[1].r + (colors[2].r - colors[1].r) * t);
+                                    g = Math.round(colors[1].g + (colors[2].g - colors[1].g) * t);
+                                    b = Math.round(colors[1].b + (colors[2].b - colors[1].b) * t);
+                                  } else if (intensity <= 0.75) {
+                                    const t = (intensity - 0.5) / 0.25;
+                                    r = Math.round(colors[2].r + (colors[3].r - colors[2].r) * t);
+                                    g = Math.round(colors[2].g + (colors[3].g - colors[2].g) * t);
+                                    b = Math.round(colors[2].b + (colors[3].b - colors[2].b) * t);
+                                  } else {
+                                    const t = (intensity - 0.75) / 0.25;
+                                    r = Math.round(colors[3].r + (colors[4].r - colors[3].r) * t);
+                                    g = Math.round(colors[3].g + (colors[4].g - colors[3].g) * t);
+                                    b = Math.round(colors[3].b + (colors[4].b - colors[3].b) * t);
+                                  }
+
+                                  return `0 0 30px rgba(${r}, ${g}, ${b}, 0.5)`;
+                                })(),
                                 transition: 'all 100ms linear'
                               }}
                             />
@@ -2811,24 +2830,40 @@ export default function Home() {
                               <div
                                 className={`text-lg font-semibold text-black uppercase tracking-wider`}
                               >
-                                {breathingPhase === 'inhale' && 'Breathe In'}
-                                {breathingPhase === 'exhale' && 'Breathe Out'}
+                                {breathingPhase === 'inhale' && animationReady && 'Breathe In'}
+                                {breathingPhase === 'exhale' && animationReady && 'Breathe Out'}
                               </div>
                             </div>
                           </div>
                         </>
                       ) : selectedExercise?.name === 'Physiological Sigh' ? (
-                        /* Physiological Sigh Animation - Coherent Style */
+                        /* Physiological Sigh Animation - Filled circular progress */
                         <>
                           {/* Breathing Circle Illustration - Physiological Sigh */}
                           <div className="flex-1 flex items-center justify-center w-full relative">
-                            {/* Gray Background Circle - Flashes green during last 1 second of INHALE */}
                             <svg
                               className="absolute"
                               width="363"
                               height="363"
-                              style={{ transform: 'rotate(-90deg)' }}
+                              viewBox="0 0 363 363"
                             >
+                              {/* Define gradients */}
+                              <defs>
+                                {/* Part 1 Gradient: Misty Rose, Pale Orchid, Light Orchid */}
+                                <linearGradient id="physiological-gradient-1" x1="0%" y1="0%" x2="100%" y2="100%">
+                                  <stop offset="0%" stopColor="#FFE6E6" /> {/* Misty Rose */}
+                                  <stop offset="50%" stopColor="#F6D0EA" /> {/* Pale Orchid */}
+                                  <stop offset="100%" stopColor="#E1AFD1" /> {/* Light Orchid */}
+                                </linearGradient>
+                                {/* Part 2 Gradient: African Violet, Blue Violet */}
+                                <linearGradient id="physiological-gradient-2" x1="0%" y1="100%" x2="100%" y2="0%">
+                                  <stop offset="0%" stopColor="#AD88C6" /> {/* African Violet */}
+                                  <stop offset="50%" stopColor="#9179BE" /> {/* Blend of African Violet and Blue Violet */}
+                                  <stop offset="100%" stopColor="#7469B6" /> {/* Blue Violet */}
+                                </linearGradient>
+                              </defs>
+
+                              {/* Gray Border Circle */}
                               <circle
                                 cx="181.5"
                                 cy="181.5"
@@ -2836,30 +2871,67 @@ export default function Home() {
                                 fill="none"
                                 stroke="#E5E7EB"
                                 strokeWidth="4"
-                                className={breathingPhase === 'inhale' && timer === 30 ? 'flash-green' : ''}
-                                key={breathingPhase === 'inhale' && timer === 30 ? 'green' : 'gray'}
                               />
-                            </svg>
 
-                            {/* Single Expanding/Compressing Circle with Radial Gradient */}
-                            <div
-                              className="rounded-full absolute"
-                              style={{
-                                width: `${getPhysiologicalCircleSize()}px`,
-                                height: `${getPhysiologicalCircleSize()}px`,
-                                background: 'radial-gradient(circle, rgba(6, 122, 195, 1) 0%, rgba(6, 122, 195, 0.6) 50%, rgba(6, 122, 195, 0.2) 100%)',
-                                boxShadow: '0 0 30px rgba(6, 122, 195, 0.5)',
-                                transition: 'all 100ms linear'
-                              }}
-                            />
+                              {/* Progress Circle (filled) */}
+                              {(() => {
+                                const { progress1, progress2 } = getPhysiologicalCircleProgress();
+                                const totalProgress = progress1 + progress2;
+
+                                if (totalProgress === 0) return null;
+
+                                // Helper function to create arc path
+                                const createArcPath = (startAngle, endAngle) => {
+                                  const cx = 181.5;
+                                  const cy = 181.5;
+                                  const r = 175;
+
+                                  // Convert to radians
+                                  const startRad = (startAngle - 90) * Math.PI / 180;
+                                  const endRad = (endAngle - 90) * Math.PI / 180;
+
+                                  // Calculate start and end points
+                                  const x1 = cx + r * Math.cos(startRad);
+                                  const y1 = cy + r * Math.sin(startRad);
+                                  const x2 = cx + r * Math.cos(endRad);
+                                  const y2 = cy + r * Math.sin(endRad);
+
+                                  // Determine if large arc
+                                  const largeArc = (endAngle - startAngle) > 180 ? 1 : 0;
+
+                                  // Create path: Move to center, line to start, arc to end, close back to center
+                                  return `M ${cx},${cy} L ${x1},${y1} A ${r},${r} 0 ${largeArc},1 ${x2},${y2} Z`;
+                                };
+
+                                return (
+                                  <>
+                                    {/* Part 1 Progress (0-75% of circle) */}
+                                    {progress1 > 0 && (
+                                      <path
+                                        d={createArcPath(0, progress1 * 360)}
+                                        fill="url(#physiological-gradient-1)"
+                                      />
+                                    )}
+
+                                    {/* Part 2 Progress (75-100% of circle) */}
+                                    {progress2 > 0 && (
+                                      <path
+                                        d={createArcPath(270, 270 + progress2 * 360)}
+                                        fill="url(#physiological-gradient-2)"
+                                      />
+                                    )}
+                                  </>
+                                );
+                              })()}
+                            </svg>
 
                             {/* Phase Text - At Center of Circle */}
                             <div className="absolute text-center">
                               <div
                                 className={`text-lg font-semibold text-black uppercase tracking-wider`}
                               >
-                                {breathingPhase === 'inhale' && 'Breathe In'}
-                                {breathingPhase === 'exhale' && 'Breathe Out'}
+                                {breathingPhase === 'inhale' && animationReady && 'Breathe In'}
+                                {breathingPhase === 'exhale' && animationReady && 'Breathe Out'}
                               </div>
                             </div>
                           </div>
@@ -3047,7 +3119,7 @@ export default function Home() {
                       {countdown !== null && countdown > 0 && !exerciseCompleted && (
                         <div className="w-full max-w-xs px-4">
                           <span className="text-sm text-gray-600 font-medium mb-2 block text-center">
-                            Exercise starting
+                            Exercise starting...
                           </span>
                           {/* Progress Bar Container */}
                           <div className="w-full h-2 bg-gray-200 rounded-full overflow-hidden">
@@ -3058,7 +3130,7 @@ export default function Home() {
                                 <div
                                   key={index}
                                   className={`flex-1 transition-all duration-300 ${
-                                    index >= (3 - countdown) ? 'bg-black' : 'bg-transparent'
+                                    index >= (3 - countdown) ? 'bg-[#9370DB]' : 'bg-transparent'
                                   }`}
                                 />
                               ))}
@@ -3070,15 +3142,15 @@ export default function Home() {
                       {/* Legend for Physiological Sigh - Show after countdown completes with 150ms delay */}
                       {selectedExercise?.name === 'Physiological Sigh' && showLegend && (
                         <div className="flex items-center justify-center gap-6">
-                          {/* Blue Legend */}
+                          {/* Part 1 Gradient Legend (75% - First 3 seconds) */}
                           <div className="flex items-center gap-2">
-                            <div className="w-4 h-4 rounded-full" style={{ backgroundColor: 'rgba(6, 122, 195, 1)' }}></div>
-                            <span className="text-sm text-gray-700 font-medium">Long breath</span>
+                            <div className="w-4 h-4 rounded-full" style={{ background: 'linear-gradient(135deg, #FFE6E6 0%, #F6D0EA 50%, #E1AFD1 100%)' }}></div>
+                            <span className="text-sm text-gray-700 font-medium">Long breath (0-3s)</span>
                           </div>
-                          {/* Green Legend */}
+                          {/* Part 2 Gradient Legend (25% - Last 1 second) */}
                           <div className="flex items-center gap-2">
-                            <div className="w-4 h-4 rounded-full" style={{ backgroundColor: '#6EE7B7' }}></div>
-                            <span className="text-sm text-gray-700 font-medium">Quick short breath</span>
+                            <div className="w-4 h-4 rounded-full" style={{ background: 'linear-gradient(135deg, #AD88C6 0%, #9179BE 50%, #7469B6 100%)' }}></div>
+                            <span className="text-sm text-gray-700 font-medium">Quick short breath (1s)</span>
                           </div>
                         </div>
                       )}
@@ -3113,7 +3185,7 @@ export default function Home() {
                             setIsPaused(true);
                           }
                         }}
-                        className={`px-8 py-3 rounded-full hover:opacity-90 transition-opacity font-medium text-sm border-2 ${
+                        className={`w-20 h-20 rounded-full hover:opacity-90 transition-opacity font-medium text-sm border-2 flex items-center justify-center ${
                           isPaused || exerciseCompleted
                             ? 'bg-black text-white border-black'
                             : 'bg-transparent text-black border-black'
@@ -3136,7 +3208,7 @@ export default function Home() {
                     {selectedOption === 'breathe' && (
                       <div className="mt-1 mb-4 flex-shrink-0">
                         <h3 className="font-semibold text-2xl text-black">
-                          Select from 6 proven techniques
+                          Select a breathing technique
                         </h3>
                       </div>
                     )}
