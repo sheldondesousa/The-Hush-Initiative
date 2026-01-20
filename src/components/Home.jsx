@@ -2179,7 +2179,7 @@ export default function Home() {
                                       style={{
                                         width: `${circle2Size}px`,
                                         height: `${circle2Size}px`,
-                                        background: 'radial-gradient(circle, rgba(255, 230, 230, 1) 0%, rgba(246, 208, 234, 0.7) 50%, rgba(246, 208, 234, 0.3) 100%)',
+                                        background: 'linear-gradient(135deg, #FFE6E6 0%, #F6D0EA 100%)',
                                         boxShadow: '0 0 30px rgba(246, 208, 234, 0.5)',
                                         transition: 'all 100ms linear',
                                         zIndex: 1
@@ -2194,7 +2194,7 @@ export default function Home() {
                                       style={{
                                         width: `${circle1Size}px`,
                                         height: `${circle1Size}px`,
-                                        background: 'radial-gradient(circle, rgba(173, 136, 198, 1) 0%, rgba(116, 105, 182, 0.8) 50%, rgba(116, 105, 182, 0.4) 100%)',
+                                        background: 'linear-gradient(135deg, #AD88C6 0%, #7469B6 100%)',
                                         boxShadow: '0 0 30px rgba(116, 105, 182, 0.5)',
                                         transition: 'all 100ms linear',
                                         zIndex: 2
@@ -2221,8 +2221,8 @@ export default function Home() {
                         <>
                           {/* Breathing Container Illustration - Alternate Nostril */}
                           <div className="flex-1 flex items-center justify-center w-full relative px-4">
-                            {/* Split square markers (50:50 left/right) with 8px gap */}
-                            <div className="relative flex" style={{ gap: '8px' }}>
+                            {/* Split square markers (50:50 left/right) with 4px gap (same as Box Breathing) */}
+                            <div className="relative flex" style={{ gap: '4px' }}>
                               {/* Left Container */}
                               <div className="relative" style={{ width: '181.5px', height: '363px' }}>
                                 {/* Gray outline */}
@@ -2231,7 +2231,7 @@ export default function Home() {
                                     fill="none" stroke="#E5E7EB" strokeWidth="4" />
                                 </svg>
 
-                                {/* Blue gradient fill - Left Nostril (even cycles: 0, 2, 4...) */}
+                                {/* App color spectrum fill - Left Nostril (even cycles: 0, 2, 4...) */}
                                 {currentCycle % 2 === 0 && (() => {
                                   let heightPercent;
                                   if (breathingPhase === 'inhale') {
@@ -2250,7 +2250,7 @@ export default function Home() {
                                       left: '4px',
                                       width: '173.5px',
                                       height: `${heightPx}px`,
-                                      background: 'linear-gradient(to top, rgba(6, 122, 195, 1) 0%, rgba(6, 122, 195, 0.6) 50%, rgba(6, 122, 195, 0.2) 100%)',
+                                      background: 'linear-gradient(to top, #7469B6 0%, #AD88C6 25%, #E1AFD1 50%, #F6D0EA 75%, #FFE6E6 100%)',
                                       borderRadius: isFull ? '15px' : '0 0 15px 15px',
                                       transition: 'height 100ms linear'
                                     }} />
@@ -2279,7 +2279,7 @@ export default function Home() {
                                     fill="none" stroke="#E5E7EB" strokeWidth="4" />
                                 </svg>
 
-                                {/* Blue gradient fill - Right Nostril (odd cycles: 1, 3, 5...) */}
+                                {/* App color spectrum fill - Right Nostril (odd cycles: 1, 3, 5...) */}
                                 {currentCycle % 2 === 1 && (() => {
                                   let heightPercent;
                                   if (breathingPhase === 'inhale') {
@@ -2298,7 +2298,7 @@ export default function Home() {
                                       left: '4px',
                                       width: '173.5px',
                                       height: `${heightPx}px`,
-                                      background: 'linear-gradient(to top, rgba(6, 122, 195, 1) 0%, rgba(6, 122, 195, 0.6) 50%, rgba(6, 122, 195, 0.2) 100%)',
+                                      background: 'linear-gradient(to top, #7469B6 0%, #AD88C6 25%, #E1AFD1 50%, #F6D0EA 75%, #FFE6E6 100%)',
                                       borderRadius: isFull ? '15px' : '0 0 15px 15px',
                                       transition: 'height 100ms linear'
                                     }} />
@@ -2422,14 +2422,14 @@ export default function Home() {
                       {/* Legend for Physiological Sigh - Show after countdown completes with 150ms delay */}
                       {selectedExercise?.name === 'Physiological Sigh' && showLegend && (
                         <div className="flex items-center justify-center gap-6">
-                          {/* Part 1 Gradient Legend (75% - First 3 seconds) */}
+                          {/* Circle 2 Legend - Lighter gradient (Misty Rose to Pale Pink) */}
                           <div className="flex items-center gap-2">
-                            <div className="w-4 h-4 rounded-full" style={{ background: 'linear-gradient(135deg, #FFE6E6 0%, #F6D0EA 50%, #E1AFD1 100%)' }}></div>
+                            <div className="w-4 h-4 rounded-full" style={{ background: 'linear-gradient(135deg, #FFE6E6 0%, #F6D0EA 100%)' }}></div>
                             <span className="text-sm text-gray-700 font-medium">Long breath (0-3s)</span>
                           </div>
-                          {/* Part 2 Gradient Legend (25% - Last 1 second) */}
+                          {/* Circle 1 Legend - Darker gradient (African Violet to Blue Violet) */}
                           <div className="flex items-center gap-2">
-                            <div className="w-4 h-4 rounded-full" style={{ background: 'linear-gradient(135deg, #AD88C6 0%, #9179BE 50%, #7469B6 100%)' }}></div>
+                            <div className="w-4 h-4 rounded-full" style={{ background: 'linear-gradient(135deg, #AD88C6 0%, #7469B6 100%)' }}></div>
                             <span className="text-sm text-gray-700 font-medium">Quick short breath (1s)</span>
                           </div>
                         </div>

@@ -313,13 +313,13 @@ export const useBreathingAnimation = ({
       // EXHALE: 8 seconds total (timer 79-0, decrementing)
       const seconds = timer / 10; // Convert to seconds (7.9 to 0)
 
-      if (seconds > 5) {
-        // First ~3 seconds: Circle 2 decrements to Circle 1 size
+      if (seconds >= 5) {
+        // First 3 seconds: Circle 2 decrements to Circle 1 size (timer 79-50)
         const progress = (8 - seconds) / 3; // 0 to 1
         const circle2Size = maxSize - (maxSize - circle1MaxSize) * progress;
         return { circle1Size: circle1MaxSize, circle2Size: circle2Size };
       } else {
-        // Last 5 seconds: Both circles decrement together to empty
+        // Last 5 seconds: Both circles decrement together to empty (timer 49-0)
         const progress = seconds / 5; // 1 to 0
         const currentSize = circle1MaxSize * progress;
         return { circle1Size: currentSize, circle2Size: currentSize };
