@@ -7,11 +7,15 @@ export const useCarousel = (maxIndex = 4) => {
 
   const handleTouchStart = (e) => {
     setTouchEnd(null);
-    setTouchStart(e.targetTouches[0].clientX);
+    // Support both touch and mouse events
+    const clientX = e.targetTouches ? e.targetTouches[0].clientX : e.clientX;
+    setTouchStart(clientX);
   };
 
   const handleTouchMove = (e) => {
-    setTouchEnd(e.targetTouches[0].clientX);
+    // Support both touch and mouse events
+    const clientX = e.targetTouches ? e.targetTouches[0].clientX : e.clientX;
+    setTouchEnd(clientX);
   };
 
   const handleTouchEnd = () => {
