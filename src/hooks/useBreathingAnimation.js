@@ -152,19 +152,21 @@ export const useBreathingAnimation = ({
 
   // Get smooth circle size for Humming Bee
   const getHummingBeeCircleSize = () => {
-    if (!isExercising) return 100;
+    if (!isExercising) return 0;
 
-    const minSize = 100;
-    const maxSize = 340;
+    const minSize = 0;
+    const maxSize = 280; // Match Coherent Breathing container size
 
     if (breathingPhase === 'inhale') {
+      // INHALE: 4 seconds - expand from 0 to maxSize (timer 0-39)
       const seconds = timer / 10;
-      const progress = seconds / 4;
+      const progress = seconds / 4; // 0 to 1
       return minSize + (maxSize - minSize) * progress;
     } else if (breathingPhase === 'exhale') {
+      // EXHALE: 8 seconds - contract from maxSize to 0 (timer 79-0, decrementing)
       const seconds = timer / 10;
-      const progress = seconds / 8;
-      return minSize + (maxSize - minSize) * progress;
+      const progress = seconds / 8; // 1 to 0
+      return maxSize * progress;
     }
 
     return minSize;
@@ -288,7 +290,7 @@ export const useBreathingAnimation = ({
   const getPhysiologicalSighCircleSizes = () => {
     if (!isExercising || exerciseCompleted) return { circle1Size: 0, circle2Size: 0 };
 
-    const maxSize = 340; // Full size to fill gray border
+    const maxSize = 280; // Match Coherent Breathing container size
     const circle1MaxSize = maxSize * 0.75; // Circle 1 stops at 75% (3 seconds out of 4)
 
     if (breathingPhase === 'inhale') {

@@ -5,8 +5,7 @@ export const getDifficultyLevel = (exerciseName) => {
     'Coherent Breathing': 3,
     'Physiological Sigh': 2.5,
     'Alternate Nostril': 3,
-    'Humming Bee': 2,
-    'Neumorphism Trial': 3
+    'Humming Bee': 2
   };
   return difficultyMap[exerciseName] || 0;
 };

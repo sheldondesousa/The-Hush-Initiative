@@ -21,9 +21,11 @@ export default function Home() {
   const [selectedExercise, setSelectedExercise] = useState(null);
   const [currentView, setCurrentView] = useState('interactive'); // 'interactive', 'about', 'support', 'faqs', 'privacy', 'terms', 'breathing-info'
   const [profileImageError, setProfileImageError] = useState(false);
+  const [showCarousel, setShowCarousel] = useState(false);
   const completionTrackedRef = useRef(false);
   const phaseHoldRef = useRef(false); // Track if we've held at final timer value for animation completion
   const nextPhaseRef = useRef(null); // Track target phase for Box Breathing transitions
+  const audioRef = useRef(null); // Reference to audio element
 
   // Carousel hook
   const carousel = useCarousel(4); // max index = 4 (5 cards: 0-4)
@@ -85,13 +87,15 @@ export default function Home() {
   const [animationReady, setAnimationReady] = useState(false); // Track when animation should start (after 300ms delay)
   const [alternateNostrilCycles, setAlternateNostrilCycles] = useState(6); // Total cycles for Alternate Nostril (default 6)
   const [alternateNostrilBreathTime, setAlternateNostrilBreathTime] = useState(5); // Breath time for Alternate Nostril (default 5s)
+  const [showMusicSheet, setShowMusicSheet] = useState(false); // Track music selection bottom sheet visibility
+  const [selectedMusic, setSelectedMusic] = useState(null); // Track selected music track (null = no music)
 
   // Track exercise completion (only once per completion)
   useEffect(() => {
     if (exerciseCompleted && selectedExercise && !completionTrackedRef.current) {
       completionTrackedRef.current = true;
       const userId = currentUser?.uid;
-      const totalCycles = (selectedExercise?.name === 'Coherent Breathing' || selectedExercise?.name === 'Neumorphism Trial') ? coherentCycles :
+      const totalCycles = selectedExercise?.name === 'Coherent Breathing' ? coherentCycles :
                           selectedExercise?.name === 'Alternate Nostril' ? alternateNostrilCycles :
                           selectedCycles;
       trackBreathingExercise(selectedExercise?.name || selectedExercise, 'complete', userId, {
@@ -126,7 +130,6 @@ export default function Home() {
           setSelectedCycles(4);
           break;
         case 'Coherent Breathing':
-        case 'Neumorphism Trial':
           setSelectedCycles(6);
           setCoherentCycles(6);
           setCoherentBreathTime(5); // Reset to default 5s
@@ -183,12 +186,13 @@ export default function Home() {
     }
   }, [isExercising, countdown, exerciseCompleted]);
 
-  // Show animation with 300ms delay after countdown completes for 4-7-8 Breathing, Coherent Breathing, and Neumorphism Trial
+  // Show animation with 300ms delay after countdown completes for 4-7-8 Breathing, Coherent Breathing, Physiological Sigh, and Humming Bee
   useEffect(() => {
     const is478 = selectedExercise?.name === '4-7-8 Breathing';
-    const isCoherent = selectedExercise?.name === 'Coherent Breathing' || selectedExercise?.name === 'Neumorphism Trial';
+    const isCoherent = selectedExercise?.name === 'Coherent Breathing';
     const isPhysiological = selectedExercise?.name === 'Physiological Sigh';
-    if ((is478 || isCoherent || isPhysiological) && isExercising && countdown === null && !exerciseCompleted) {
+    const isHummingBee = selectedExercise?.name === 'Humming Bee';
+    if ((is478 || isCoherent || isPhysiological || isHummingBee) && isExercising && countdown === null && !exerciseCompleted) {
       const timer = setTimeout(() => {
         setAnimationReady(true);
       }, 300);
@@ -204,7 +208,7 @@ export default function Home() {
 
     // Exercise-specific timing configurations
     const is478 = selectedExercise?.name === '4-7-8 Breathing';
-    const isCoherent = selectedExercise?.name === 'Coherent Breathing' || selectedExercise?.name === 'Neumorphism Trial';
+    const isCoherent = selectedExercise?.name === 'Coherent Breathing';
     const isPhysiological = selectedExercise?.name === 'Physiological Sigh';
     const isAlternateNostril = selectedExercise?.name === 'Alternate Nostril';
     const isHummingBee = selectedExercise?.name === 'Humming Bee';
@@ -520,6 +524,49 @@ export default function Home() {
     return () => clearInterval(interval);
   }, [isExercising, isPaused, breathingPhase, currentCycle, selectedCycles, selectedExercise, exerciseCompleted, coherentCycles, coherentBreathTime, alternateNostrilCycles, alternateNostrilBreathTime]);
 
+  // Audio playback effect - sync music with exercise
+  useEffect(() => {
+    // Music track URLs mapping (placeholder paths - update with actual audio file paths)
+    const musicTracks = {
+      nature: '/audio/nature-sounds.mp3',
+      ambient: '/audio/ambient-music.mp3',
+      binaural: '/audio/binaural-beats.mp3',
+      ocean: '/audio/ocean-waves.mp3'
+    };
+
+    // Create or update audio element when music selection changes
+    if (selectedMusic && musicTracks[selectedMusic]) {
+      if (!audioRef.current) {
+        audioRef.current = new Audio(musicTracks[selectedMusic]);
+        audioRef.current.loop = true;
+        audioRef.current.volume = 0.5;
+      } else if (audioRef.current.src !== musicTracks[selectedMusic]) {
+        audioRef.current.pause();
+        audioRef.current.src = musicTracks[selectedMusic];
+      }
+    } else if (!selectedMusic && audioRef.current) {
+      // Stop and clear audio if no music selected
+      audioRef.current.pause();
+      audioRef.current = null;
+    }
+
+    // Control playback based on exercise state
+    if (audioRef.current) {
+      if (isExercising && !isPaused && countdown === null) {
+        audioRef.current.play().catch(err => console.log('Audio play failed:', err));
+      } else {
+        audioRef.current.pause();
+      }
+    }
+
+    // Cleanup on unmount
+    return () => {
+      if (audioRef.current) {
+        audioRef.current.pause();
+      }
+    };
+  }, [selectedMusic, isExercising, isPaused, countdown]);
+
   // Track data for each option
   // Tracks imported from constants
 
@@ -569,7 +616,7 @@ export default function Home() {
   const DifficultyIndicator = ({ level }) => {
     return (
       <div className="flex items-center gap-2">
-        <span className="font-bold text-gray-500" style={{ fontSize: '13px' }}>Effort</span>
+        <span className="font-bold text-gray-300" style={{ fontSize: '13px' }}>Effort</span>
         <div className="flex gap-1">
           {[1, 2, 3, 4, 5].map((circle) => {
             const isFilled = circle <= Math.floor(level);
@@ -580,14 +627,14 @@ export default function Home() {
                 key={circle}
                 className="w-2 h-2 rounded-full relative overflow-hidden"
                 style={{
-                  backgroundColor: isFilled ? '#000000' : 'transparent',
-                  border: !isFilled && !isHalf ? '1px solid #D1D5DB' : 'none'
+                  backgroundColor: isFilled ? '#FFFFFF' : 'transparent',
+                  border: !isFilled && !isHalf ? '1px solid #9CA3AF' : 'none'
                 }}
               >
                 {isHalf && (
                   <>
-                    <div className="absolute inset-0 w-1/2 bg-black" />
-                    <div className="absolute inset-0 w-full h-full border border-gray-300 rounded-full" />
+                    <div className="absolute inset-0 w-1/2 bg-white" />
+                    <div className="absolute inset-0 w-full h-full border border-gray-400 rounded-full" />
                   </>
                 )}
               </div>
@@ -931,11 +978,7 @@ export default function Home() {
                   </div>
 
                   <p className="text-base">
-                    I love electronic dance music. I love the energy, the rhythm, the escape it offers. But I realized something: even my escape had become noise. Another layer on top of everything else. Another thing demanding my attention.
-                  </p>
-
-                  <p className="text-base">
-                    I didn't need more content. I didn't need another course, another process, another seven-step journey to inner peace. I didn't need a meditation app that felt like homework or a wellness subscription that made me feel guilty for not "keeping up."
+                    I didn't need another course, another process, another seven-step journey to inner peace. I didn't need a meditation app that felt like homework or a wellness subscription that made me feel guilty for not "keeping up."
                   </p>
 
                   <p className="text-base">
@@ -945,7 +988,7 @@ export default function Home() {
                   <div>
                     <h3 className="font-bold text-lg mb-3">What I Couldn't Find</h3>
                     <p className="text-base">
-                      So I went looking. And what I found were apps that were visually overwhelming, full of upsells, cluttered with features I didn't want. Apps that promised calm but delivered complexity. Apps that felt like they were designed to keep me engaged rather than let me disconnect.
+                      I found were apps that were visually overwhelming, full of upsells, cluttered with features I didn't want. Apps that promised calm but delivered complexity. Apps that felt like they were designed to keep me engaged rather than let me disconnect.
                     </p>
                   </div>
 
@@ -956,12 +999,12 @@ export default function Home() {
                   <div>
                     <h3 className="font-bold text-lg mb-3">The 'Aha' Moment</h3>
                     <p className="text-base">
-                      It happened when I started experimenting with sound. Not music, not guided meditations—just sound. Pure, intentional, evidence-based frequencies designed to help the brain do what it naturally wants to do: settle. No voice telling me how to breathe. No subscription gate. No achievement badges or streaks.
+                      It happened when I started experimenting with breathing and sound. Not guided meditations, just breathing and sound. Pure, intentional, evidence-based exercises and frequencies designed to help the brain do what it naturally wants to do: settle. No voice telling me how to breathe. No subscription gate. No achievement badges or streaks.
                     </p>
                   </div>
 
                   <p className="text-base">
-                    Just sound, space, and choice. That's when I realized: this is what I'd been looking for. And if I was searching for it, maybe others were too.
+                    That's when I realized: this is what I'd been looking for. And if I was searching for it, maybe others were too.
                   </p>
 
                   <div>
@@ -1000,23 +1043,19 @@ export default function Home() {
               /* Music Player - iPhone 17 Pro Max dimensions on desktop */
               <div
                 className="music-player-desktop music-player-frame border-2 border-white rounded-3xl p-6 flex flex-col w-full lg:flex-shrink-0 relative overflow-hidden"
-                style={
-                  selectedOption === 'breathe' && selectedExercise
-                    ? {
-                        backgroundColor: '#36393B',
-                        backgroundImage: selectedExercise?.name === 'Neumorphism Trial'
-                          ? `url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)' opacity='0.05'/%3E%3C/svg%3E")`
-                          : 'none'
-                      }
-                    : { backgroundColor: 'white' }
-                }
+                style={{
+                  backgroundColor: '#36393B',
+                  backgroundImage: selectedOption === 'breathe' && selectedExercise?.name === 'Coherent Breathing'
+                    ? `url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)' opacity='0.05'/%3E%3C/svg%3E")`
+                    : 'none'
+                }}
               >
               {/* Profile & Metrics Section - Show when on breathing exercises listing */}
               {!(selectedOption === 'breathe' && selectedExercise) && selectedOption === 'breathe' && (
                 <div className="mb-6 flex-shrink-0">
                   {/* Profile Section */}
                   <div className="flex items-center gap-3 mb-4">
-                    <div className="w-16 h-16 rounded-full bg-gray-200 flex items-center justify-center overflow-hidden flex-shrink-0">
+                    <div className="w-12 h-12 rounded-full bg-gray-200 flex items-center justify-center overflow-hidden flex-shrink-0">
                       {currentUser?.photoURL && !profileImageError ? (
                         <img
                           key={currentUser.photoURL}
@@ -1034,46 +1073,56 @@ export default function Home() {
                       )}
                     </div>
                     <div className="flex-1 min-w-0">
-                      <h2 className="text-lg font-semibold text-black truncate">
+                      <h2 className="text-lg font-semibold text-white truncate">
                         Hello {currentUser?.displayName?.split(' ')[0] || 'User'}!
                       </h2>
                     </div>
                   </div>
 
                   {/* Motivational Text */}
-                  <h1 className="text-4xl font-bold text-black mb-8" style={{ fontFamily: "'SF Pro Display', sans-serif" }}>
+                  <h1 className="text-4xl font-bold text-white mb-4" style={{ fontFamily: "'SF Pro Display', sans-serif" }}>
                     Take a deep breath<br />and relax
                   </h1>
 
+                  {/* Gradient Separator */}
+                  <div
+                    className="w-full h-1 mb-4 rounded-full"
+                    style={{
+                      background: 'linear-gradient(to right, #7469B6, #AD88C6, #E1AFD1, #F6D0EA, #FFE6E6)'
+                    }}
+                  />
+
                   {/* Why Breathing Helps - Working Carousel */}
+                  {showCarousel && (
                   <div className="mb-6">
                     <div
                       onTouchStart={handleTouchStart}
                       onTouchMove={handleTouchMove}
                       onTouchEnd={handleTouchEnd}
-                      className="w-full rounded-2xl p-6 text-left relative overflow-hidden transition-all duration-300"
+                      onMouseDown={handleTouchStart}
+                      onMouseMove={handleTouchMove}
+                      onMouseUp={handleTouchEnd}
+                      onMouseLeave={handleTouchEnd}
+                      className="w-full rounded-2xl p-6 text-left relative overflow-hidden transition-all duration-300 cursor-grab active:cursor-grabbing select-none"
                       style={{
                         backgroundColor: carouselCards[carouselIndex].backgroundColor,
                         color: carouselCards[carouselIndex].textColor,
                         height: '240px'
                       }}
                     >
-                      {/* Left Chevron - Show on cards 2-5 */}
-                      {carouselIndex > 0 && (
-                        <button
-                          onClick={goToPrevCard}
-                          className="absolute left-2 top-1/2 -translate-y-1/2 z-10 p-2 rounded-full transition-all"
-                          style={{
-                            backgroundColor: carouselCards[carouselIndex].textColor === '#FFFFFF' ? 'rgba(255,255,255,0.2)' : 'rgba(0,0,0,0.1)',
-                            color: carouselCards[carouselIndex].textColor
-                          }}
-                          aria-label="Previous card"
-                        >
-                          <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
-                          </svg>
-                        </button>
-                      )}
+                      {/* Close X Button - Top Right */}
+                      <button
+                        onClick={() => setShowCarousel(false)}
+                        className="absolute top-3 right-3 z-20 p-2 transition-all hover:scale-110 active:scale-95"
+                        style={{
+                          color: carouselCards[carouselIndex].textColor
+                        }}
+                        aria-label="Close carousel"
+                      >
+                        <svg className="w-5 h-5" fill="none" stroke="currentColor" strokeWidth="2.5" viewBox="0 0 24 24">
+                          <path strokeLinecap="round" strokeLinejoin="round" d="M6 18L18 6M6 6l12 12"/>
+                        </svg>
+                      </button>
 
                       {/* Card Content */}
                       <div className="flex items-center h-full">
@@ -1091,23 +1140,6 @@ export default function Home() {
                           </p>
                         </div>
                       </div>
-
-                      {/* Right Chevron - Show on cards 1-4 */}
-                      {carouselIndex < 4 && (
-                        <button
-                          onClick={goToNextCard}
-                          className="absolute right-2 top-1/2 -translate-y-1/2 z-10 p-2 rounded-full transition-all"
-                          style={{
-                            backgroundColor: carouselCards[carouselIndex].textColor === '#FFFFFF' ? 'rgba(255,255,255,0.2)' : 'rgba(0,0,0,0.1)',
-                            color: carouselCards[carouselIndex].textColor
-                          }}
-                          aria-label="Next card"
-                        >
-                          <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
-                          </svg>
-                        </button>
-                      )}
                     </div>
 
                     {/* Interactive Carousel Indicators */}
@@ -1126,18 +1158,19 @@ export default function Home() {
                       ))}
                     </div>
                   </div>
+                  )}
                 </div>
               )}
 
               {/* Album Art & Info - Show for other options (focus/calm) */}
               {!(selectedOption === 'breathe' && selectedExercise) && selectedOption !== 'breathe' && (
                 <div className="mb-6 flex-shrink-0">
-                  <div className="w-full aspect-square bg-gray-200 rounded-lg mb-4 overflow-hidden">
+                  <div className="w-full aspect-square bg-gray-700 rounded-lg mb-4 overflow-hidden">
                   </div>
-                  <h3 className="font-semibold text-xl text-black mb-1 capitalize">
+                  <h3 className="font-semibold text-xl text-white mb-1 capitalize">
                     {selectedOption ? `${selectedOption} Collection` : 'Select Your Path'}
                   </h3>
-                  <p className="text-sm text-gray-600">
+                  <p className="text-sm text-gray-300">
                     {selectedOption
                       ? `${currentTracks.length} Track${currentTracks.length !== 1 ? 's' : ''}`
                       : 'Choose Focus, Calm, or Breathe'}
@@ -1152,10 +1185,10 @@ export default function Home() {
                   <div
                     className="flex flex-col h-full w-full"
                     style={{
-                      background: selectedExercise?.name === 'Neumorphism Trial'
+                      background: selectedExercise?.name === 'Coherent Breathing'
                         ? '#36393B'
                         : '#36393B',
-                      backgroundImage: selectedExercise?.name === 'Neumorphism Trial'
+                      backgroundImage: selectedExercise?.name === 'Coherent Breathing'
                         ? `url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)' opacity='0.05'/%3E%3C/svg%3E")`
                         : 'none'
                     }}
@@ -1179,11 +1212,11 @@ export default function Home() {
                     </div>
 
                     {/* Scrollable Content with Flexbox Gap - All Exercises */}
-                    <div className="flex-1 overflow-y-auto px-2 hide-scrollbar">
-                      <div className="flex flex-col gap-6 min-h-full">
+                    <div className="flex-1 px-2 flex flex-col">
+                      <div className="flex flex-col gap-4 flex-1">
                         {/* Title */}
                         <h1
-                          className="text-4xl font-bold"
+                          className="text-3xl font-bold"
                           style={{ color: '#FFFFFF' }}
                         >
                           {selectedExercise.name.replace(/\s*\([^)]*\)/, '')}
@@ -1207,119 +1240,139 @@ export default function Home() {
                         </p>
 
                         {/* 2x2 Grid Layout */}
-                        <div className="grid grid-cols-2 gap-4 px-4">
+                        <div className="grid grid-cols-2 gap-3 px-4">
                             {/* Tips Tile */}
                             <button
                               onClick={() => setShowTipsSheet(true)}
-                              className="flex flex-col items-center justify-center gap-2 p-4 transition-all hover:brightness-110 active:brightness-90 aspect-square"
+                              className="flex flex-col items-center justify-center gap-1 p-3 transition-all hover:brightness-110 active:brightness-90 aspect-square"
                               style={{
                                 borderRadius: '13px',
                                 background: '#333',
                                 boxShadow: '-10px -10px 20px 0 #3C3C3C, 10px 10px 20px 0 #1E1E1E, -4px -4px 8px 0 rgba(77, 77, 77, 0.25) inset, 4px 4px 8px 0 #1E1E1E inset'
                               }}
                             >
-                              <svg className="w-8 h-8 text-white" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
+                              <svg className="w-6 h-6 text-white" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
                                 <path strokeLinecap="round" strokeLinejoin="round" d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z" />
                               </svg>
-                              <span className="text-sm font-semibold text-white text-center">Tips</span>
+                              <span className="text-xs font-semibold text-white text-center">Tips</span>
                             </button>
 
                             {/* Preparation Tile */}
                             <button
                               onClick={() => setShowPreparationSheet(true)}
-                              className="flex flex-col items-center justify-center gap-2 p-4 transition-all hover:brightness-110 active:brightness-90 aspect-square"
+                              className="flex flex-col items-center justify-center gap-1 p-3 transition-all hover:brightness-110 active:brightness-90 aspect-square"
                               style={{
                                 borderRadius: '13px',
                                 background: '#333',
                                 boxShadow: '-10px -10px 20px 0 #3C3C3C, 10px 10px 20px 0 #1E1E1E, -4px -4px 8px 0 rgba(77, 77, 77, 0.25) inset, 4px 4px 8px 0 #1E1E1E inset'
                               }}
                             >
-                              <svg className="w-8 h-8 text-white" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
+                              <svg className="w-6 h-6 text-white" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
                                 <path strokeLinecap="round" strokeLinejoin="round" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-3 7h3m-3 4h3m-6-4h.01M9 16h.01" />
                               </svg>
-                              <span className="text-sm font-semibold text-white text-center">Preparation</span>
+                              <span className="text-xs font-semibold text-white text-center">Preparation</span>
                             </button>
 
                             {/* Try this when Tile */}
                             <button
                               onClick={() => setShowWhenToUseSheet(true)}
-                              className="flex flex-col items-center justify-center gap-2 p-4 transition-all hover:brightness-110 active:brightness-90 aspect-square"
+                              className="flex flex-col items-center justify-center gap-1 p-3 transition-all hover:brightness-110 active:brightness-90 aspect-square"
                               style={{
                                 borderRadius: '13px',
                                 background: '#333',
                                 boxShadow: '-10px -10px 20px 0 #3C3C3C, 10px 10px 20px 0 #1E1E1E, -4px -4px 8px 0 rgba(77, 77, 77, 0.25) inset, 4px 4px 8px 0 #1E1E1E inset'
                               }}
                             >
-                              <svg className="w-8 h-8 text-white" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
+                              <svg className="w-6 h-6 text-white" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
                                 <path strokeLinecap="round" strokeLinejoin="round" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
                               </svg>
-                              <span className="text-sm font-semibold text-white text-center">Try this when</span>
+                              <span className="text-xs font-semibold text-white text-center">Try this when</span>
                             </button>
 
                             {/* Precautions Tile */}
                             <button
                               onClick={() => setShowSafetySheet(true)}
-                              className="flex flex-col items-center justify-center gap-2 p-4 transition-all hover:brightness-110 active:brightness-90 aspect-square"
+                              className="flex flex-col items-center justify-center gap-1 p-3 transition-all hover:brightness-110 active:brightness-90 aspect-square"
                               style={{
                                 borderRadius: '13px',
                                 background: '#333',
                                 boxShadow: '-10px -10px 20px 0 #3C3C3C, 10px 10px 20px 0 #1E1E1E, -4px -4px 8px 0 rgba(77, 77, 77, 0.25) inset, 4px 4px 8px 0 #1E1E1E inset'
                               }}
                             >
-                              <svg className="w-8 h-8 text-white" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
+                              <svg className="w-6 h-6 text-white" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
                                 <path strokeLinecap="round" strokeLinejoin="round" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
                               </svg>
-                              <span className="text-sm font-semibold text-white text-center">Precautions</span>
+                              <span className="text-xs font-semibold text-white text-center">Precautions</span>
                             </button>
                           </div>
 
                         {/* Spacer to push buttons to bottom */}
                         <div className="flex-grow"></div>
 
-                        {/* Customization Button + Start Exercise Button (same line) */}
-                        <div className="flex items-center gap-3 pb-4 px-4">
-                          {/* Customization Button - Only show when applicable */}
-                          {selectedExercise?.name !== 'Physiological Sigh' && (
-                            <button
-                              onClick={() => setShowCustomizationSheet(true)}
-                              className="rounded-full flex items-center justify-center transition-all hover:brightness-110 active:brightness-90 flex-shrink-0"
-                              style={{
-                                width: '50px',
-                                height: '50px',
-                                background: '#36393B',
-                                boxShadow: '-6px -6px 12px 0 rgba(255, 255, 255, 0.15)'
-                              }}
-                            >
-                              <svg
-                                className="w-5 h-5"
-                                fill="none"
-                                stroke="currentColor"
-                                strokeWidth="2"
-                                viewBox="0 0 24 24"
-                                style={{ color: '#FFFFFF' }}
-                              >
-                                <path strokeLinecap="round" strokeLinejoin="round" d="M12 6V4m0 2a2 2 0 100 4m0-4a2 2 0 110 4m-6 8a2 2 0 100-4m0 4a2 2 0 110-4m0 4v2m0-6V4m6 6v10m6-2a2 2 0 100-4m0 4a2 2 0 110-4m0 4v2m0-6V4" />
-                              </svg>
-                            </button>
-                          )}
+                        {/* Start Exercise Button with Customization and Sound buttons - Static position */}
+                        <div className="pb-6 flex justify-center items-center" style={{ gap: '34px' }}>
+                          {/* Customization Button - Left */}
+                          <button
+                            onClick={() => {
+                              setShowCustomizationSheet(true);
+                            }}
+                            className="rounded-full font-medium text-sm flex items-center justify-center transition-all hover:brightness-110 active:brightness-90"
+                            style={{
+                              width: '56px',
+                              height: '56px',
+                              background: '#36393B',
+                              color: '#FFFFFF',
+                              boxShadow: '6px 6px 15px 0 #000'
+                            }}
+                          >
+                            <svg width="24" height="24" viewBox="0 0 118 118" fill="none">
+                              <path d="M19.6667 24.5845L49.1667 24.5833" stroke="currentColor" strokeWidth="8.5" strokeLinecap="round"/>
+                              <path d="M63.9167 24.5833H98.3334" stroke="currentColor" strokeWidth="8.5" strokeLinecap="round"/>
+                              <path d="M78.6667 44.25V73.75" stroke="currentColor" strokeWidth="8.5" strokeLinecap="round"/>
+                              <path d="M49.1667 9.83333V39.3333" stroke="currentColor" strokeWidth="8.5" strokeLinecap="round"/>
+                              <path d="M59 78.6667V108.167" stroke="currentColor" strokeWidth="8.5" strokeLinecap="round"/>
+                              <path d="M78.6667 59L98.3334 59.001" stroke="currentColor" strokeWidth="8.5" strokeLinecap="round"/>
+                              <path d="M19.6667 59.001L63.9167 59" stroke="currentColor" strokeWidth="8.5" strokeLinecap="round"/>
+                              <path d="M59 93.4167H98.3333" stroke="currentColor" strokeWidth="8.5" strokeLinecap="round"/>
+                              <path d="M19.6667 93.4176L44.2501 93.4167" stroke="currentColor" strokeWidth="8.5" strokeLinecap="round"/>
+                            </svg>
+                          </button>
 
-                          {/* Start Exercise Button - Takes remaining space or centered when no customization */}
+                          {/* Start Button - Center */}
                           <button
                             onClick={() => {
                               // Start the exercise by hiding the info screen
                               setShowingInfo(false);
                             }}
-                            className="text-white text-base font-bold transition-all hover:brightness-110 active:brightness-90"
+                            className="rounded-full font-medium text-sm flex items-center justify-center transition-all hover:brightness-110 active:brightness-90"
                             style={{
-                              flex: selectedExercise?.name !== 'Physiological Sigh' ? '1' : 'none',
-                              width: selectedExercise?.name === 'Physiological Sigh' ? '100%' : 'auto',
-                              height: '50px',
-                              borderRadius: '25px',
+                              width: '80px',
+                              height: '80px',
                               background: '#36393B',
-                              boxShadow: '-6px -6px 12px 0 rgba(255, 255, 255, 0.15)'
+                              color: '#FFFFFF',
+                              boxShadow: '-6px -6px 12px 0 rgba(255, 255, 255, 0.15), 6px 6px 15px 0 #000'
                             }}
                           >
-                            Start Exercise
+                            Start
+                          </button>
+
+                          {/* Sound Button - Right */}
+                          <button
+                            onClick={() => {
+                              setShowMusicSheet(true);
+                            }}
+                            className="rounded-full font-medium text-sm flex items-center justify-center transition-all hover:brightness-110 active:brightness-90"
+                            style={{
+                              width: '56px',
+                              height: '56px',
+                              background: selectedMusic ? '#746996' : '#36393B',
+                              color: '#FFFFFF',
+                              boxShadow: '6px 6px 15px 0 #000'
+                            }}
+                          >
+                            <svg width="18" height="18" viewBox="0 0 18 18" fill="none">
+                              <path d="M17.1884 9.09605C17.1884 8.98559 17.1884 8.87994 17.1836 8.76948C17.1355 7.29029 16.7513 5.89755 16.1078 4.67769C14.6382 1.88741 11.8287 0 8.59658 0C5.36446 0 2.55016 1.88741 1.08058 4.67769C0.437033 5.90235 0.0528329 7.29029 0.00480725 8.76948C4.69011e-06 8.87994 0 8.98559 0 9.09605V13.6201C0 15.6035 1.39754 17.2556 3.26574 17.6542C3.46744 17.8607 3.77482 18 4.12061 18C4.46639 18 4.77375 17.8655 4.97546 17.6542L4.98987 17.6398V9.60032H4.98506C4.78816 9.3842 4.47119 9.24013 4.1158 9.24013C3.76041 9.24013 3.44344 9.3842 3.24654 9.60032H3.24173C2.59819 9.73479 2.01228 10.0277 1.52242 10.4264C1.484 10.46 1.17182 10.7385 1.07577 10.8538V9.01441C1.07577 8.88474 1.18143 8.77428 1.3159 8.77428H1.32551H1.42155C1.58004 4.73052 4.73053 1.5032 8.58698 1.5032C12.4434 1.5032 15.5891 4.73052 15.7476 8.77428H15.8581C15.9925 8.77428 16.0982 8.88474 16.0982 9.01441V10.8538C16.0021 10.7385 15.8917 10.6281 15.7764 10.5368C15.7764 10.5368 15.69 10.46 15.6515 10.4264C15.1617 10.0277 14.5758 9.73959 13.9322 9.60032C13.7305 9.3842 13.4136 9.24013 13.0582 9.24013C12.7028 9.24013 12.3954 9.3746 12.1889 9.59552V17.6494C12.1889 17.6494 12.1937 17.6542 12.1985 17.6542C12.4002 17.8607 12.7124 18 13.0534 18C13.3943 18 13.7065 17.8655 13.9082 17.6542C15.7764 17.2556 17.174 15.6035 17.174 13.6201C17.174 13.3031 17.1355 12.9909 17.0683 12.6932C17.1355 12.9909 17.174 13.2983 17.174 13.6201V9.09605H17.1884Z" fill="currentColor"/>
+                            </svg>
                           </button>
                         </div>
                       </div>
@@ -1379,7 +1432,17 @@ export default function Home() {
                             {/* Close Button */}
                             <button
                               onClick={() => setShowTipsSheet(false)}
-                              className="w-full py-3 bg-gray-100 text-black text-base font-bold rounded-xl hover:bg-gray-200 transition-colors"
+                              className="w-full text-base font-bold transition-all hover:brightness-110 active:brightness-90"
+                              style={{
+                                display: 'flex',
+                                height: '59px',
+                                padding: '12px 32px 11px 32px',
+                                justifyContent: 'center',
+                                alignItems: 'center',
+                                borderRadius: '27px',
+                                background: 'rgba(255, 255, 255, 0.7)',
+                                color: '#333'
+                              }}
                             >
                               Close
                             </button>
@@ -1428,7 +1491,17 @@ export default function Home() {
                             {/* Close Button */}
                             <button
                               onClick={() => setShowPreparationSheet(false)}
-                              className="w-full py-3 bg-gray-100 text-black text-base font-bold rounded-xl hover:bg-gray-200 transition-colors"
+                              className="w-full text-base font-bold transition-all hover:brightness-110 active:brightness-90"
+                              style={{
+                                display: 'flex',
+                                height: '59px',
+                                padding: '12px 32px 11px 32px',
+                                justifyContent: 'center',
+                                alignItems: 'center',
+                                borderRadius: '27px',
+                                background: 'rgba(255, 255, 255, 0.7)',
+                                color: '#333'
+                              }}
                             >
                               Close
                             </button>
@@ -1477,7 +1550,17 @@ export default function Home() {
                             {/* Close Button */}
                             <button
                               onClick={() => setShowWhenToUseSheet(false)}
-                              className="w-full py-3 bg-gray-100 text-black text-base font-bold rounded-xl hover:bg-gray-200 transition-colors"
+                              className="w-full text-base font-bold transition-all hover:brightness-110 active:brightness-90"
+                              style={{
+                                display: 'flex',
+                                height: '59px',
+                                padding: '12px 32px 11px 32px',
+                                justifyContent: 'center',
+                                alignItems: 'center',
+                                borderRadius: '27px',
+                                background: 'rgba(255, 255, 255, 0.7)',
+                                color: '#333'
+                              }}
                             >
                               Close
                             </button>
@@ -1530,7 +1613,17 @@ export default function Home() {
                             {/* Close Button */}
                             <button
                               onClick={() => setShowSafetySheet(false)}
-                              className="w-full py-3 bg-gray-100 text-black text-base font-bold rounded-xl hover:bg-gray-200 transition-colors"
+                              className="w-full text-base font-bold transition-all hover:brightness-110 active:brightness-90"
+                              style={{
+                                display: 'flex',
+                                height: '59px',
+                                padding: '12px 32px 11px 32px',
+                                justifyContent: 'center',
+                                alignItems: 'center',
+                                borderRadius: '27px',
+                                background: 'rgba(255, 255, 255, 0.7)',
+                                color: '#333'
+                              }}
                             >
                               Close
                             </button>
@@ -1539,84 +1632,8 @@ export default function Home() {
                       </div>
                     )}
 
-                    {/* Customization Bottom Sheet - For Coherent Breathing */}
-                    {showCustomizationSheet && selectedExercise?.name === 'Coherent Breathing' && (
-                      <div
-                        className="absolute inset-0 bg-black bg-opacity-50 z-50 flex items-end"
-                        onClick={() => setShowCustomizationSheet(false)}
-                      >
-                        <div
-                          className="bg-white rounded-t-3xl w-full max-h-[70vh] overflow-y-auto animate-slide-up"
-                          onClick={(e) => e.stopPropagation()}
-                        >
-                          <div className="p-6">
-                            {/* Sheet Handle */}
-                            <div className="w-12 h-1 bg-gray-300 rounded-full mx-auto mb-6"></div>
-
-                            {/* Section Title */}
-                            <h2 className="text-2xl font-bold mb-6 text-black">Personalize</h2>
-
-                            {/* Cycles Selector */}
-                            <div className="mb-6">
-                              <label className="text-base font-semibold text-black mb-3 block">Cycles</label>
-                              <div className="grid grid-cols-4 gap-2">
-                                {[12, 18, 24, 30].map((cycles) => (
-                                  <button
-                                    key={cycles}
-                                    onClick={() => {
-                                      setCoherentCycles(cycles);
-                                      const userId = currentUser?.uid;
-                                      trackEvent('cycle_selected', {
-                                        exercise: 'Coherent Breathing',
-                                        cycles
-                                      }, userId);
-                                    }}
-                                    className={`py-2 px-4 rounded-lg text-sm font-semibold transition-all ${
-                                      coherentCycles === cycles
-                                        ? 'bg-black text-white'
-                                        : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
-                                    }`}
-                                  >
-                                    {cycles}
-                                  </button>
-                                ))}
-                              </div>
-                            </div>
-
-                            {/* Inhale-Exhale Timer Selector */}
-                            <div className="mb-6">
-                              <label className="text-base font-semibold text-black mb-3 block">Inhale-Exhale Timer</label>
-                              <div className="grid grid-cols-3 gap-2">
-                                {[4, 5, 6].map((seconds) => (
-                                  <button
-                                    key={seconds}
-                                    onClick={() => setCoherentBreathTime(seconds)}
-                                    className={`py-2 px-4 rounded-lg text-sm font-semibold transition-all ${
-                                      coherentBreathTime === seconds
-                                        ? 'bg-black text-white'
-                                        : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
-                                    }`}
-                                  >
-                                    {seconds}s
-                                  </button>
-                                ))}
-                              </div>
-                            </div>
-
-                            {/* Close Button */}
-                            <button
-                              onClick={() => setShowCustomizationSheet(false)}
-                              className="w-full py-3 bg-gray-100 text-black text-base font-bold rounded-xl hover:bg-gray-200 transition-colors"
-                            >
-                              Done
-                            </button>
-                          </div>
-                        </div>
-                      </div>
-                    )}
-
-                    {/* Customization Bottom Sheet - For Neumorphism Trial */}
-                    {showCustomizationSheet && selectedExercise?.name === 'Neumorphism Trial' && (
+                    {/* Customization Bottom Sheet - Universal for all exercises */}
+                    {showCustomizationSheet && selectedExercise && (
                       <div
                         className="absolute inset-0 bg-black bg-opacity-50 z-50 flex items-end"
                         onClick={() => setShowCustomizationSheet(false)}
@@ -1647,12 +1664,61 @@ export default function Home() {
                                     boxShadow: '6px 6px 15px 0 #000 inset, -6px -6px 12px 0 rgba(255, 255, 255, 0.15) inset'
                                   }}
                                 >
-                                  {coherentCycles}
+                                  {(() => {
+                                    if (selectedExercise.name === 'Coherent Breathing') return coherentCycles;
+                                    if (selectedExercise.name === 'Alternate Nostril') return alternateNostrilCycles;
+                                    return selectedCycles;
+                                  })()}
                                 </div>
+
+                                {/* Time Display */}
+                                <div className="text-white text-base font-medium">
+                                  <span className="text-gray-400">Exercise Time: </span>
+                                  {(() => {
+                                    let cycleDuration = 0;
+                                    let currentCycles = 0;
+
+                                    switch(selectedExercise.name) {
+                                      case 'Box Breathing (4-4-4-4)':
+                                        cycleDuration = 16; // 4+4+4+4 seconds
+                                        currentCycles = selectedCycles;
+                                        break;
+                                      case '4-7-8 Breathing':
+                                        cycleDuration = 19; // 4+7+8 seconds
+                                        currentCycles = selectedCycles;
+                                        break;
+                                      case 'Coherent Breathing':
+                                        cycleDuration = coherentBreathTime * 2; // inhale + exhale
+                                        currentCycles = coherentCycles;
+                                        break;
+                                      case 'Physiological Sigh':
+                                        cycleDuration = 9; // 4s inhale + 5s exhale
+                                        currentCycles = selectedCycles;
+                                        break;
+                                      case 'Alternate Nostril':
+                                        cycleDuration = alternateNostrilBreathTime * 4; // 4 breaths per cycle
+                                        currentCycles = alternateNostrilCycles;
+                                        break;
+                                      case 'Humming Bee':
+                                        cycleDuration = 14; // 4s inhale + 10s exhale with hum
+                                        currentCycles = selectedCycles;
+                                        break;
+                                      default:
+                                        cycleDuration = 16;
+                                        currentCycles = selectedCycles;
+                                    }
+
+                                    const totalSeconds = cycleDuration * currentCycles;
+                                    const minutes = Math.floor(totalSeconds / 60);
+                                    const seconds = totalSeconds % 60;
+                                    return `${minutes}:${seconds.toString().padStart(2, '0')} min`;
+                                  })()}
+                                </div>
+
                                 {/* Slider Track */}
                                 <div className="w-full px-4">
                                   <div
-                                    className="relative h-3 rounded-full mb-3"
+                                    className="relative h-3 rounded-full mb-10"
                                     style={{
                                       background: '#36393B',
                                       boxShadow: '4px 4px 10px 0 #000 inset, -4px -4px 8px 0 rgba(255, 255, 255, 0.15) inset'
@@ -1662,16 +1728,52 @@ export default function Home() {
                                     <input
                                       type="range"
                                       min="3"
-                                      max="24"
+                                      max={(() => {
+                                        let cycleDuration = 0;
+                                        switch(selectedExercise.name) {
+                                          case 'Box Breathing (4-4-4-4)':
+                                            cycleDuration = 16;
+                                            break;
+                                          case '4-7-8 Breathing':
+                                            cycleDuration = 19;
+                                            break;
+                                          case 'Coherent Breathing':
+                                            cycleDuration = coherentBreathTime * 2;
+                                            break;
+                                          case 'Physiological Sigh':
+                                            cycleDuration = 9;
+                                            break;
+                                          case 'Alternate Nostril':
+                                            cycleDuration = alternateNostrilBreathTime * 4;
+                                            break;
+                                          case 'Humming Bee':
+                                            cycleDuration = 14;
+                                            break;
+                                          default:
+                                            cycleDuration = 16;
+                                        }
+                                        // Max 20 minutes = 1200 seconds
+                                        return Math.floor(1200 / cycleDuration);
+                                      })()}
                                       step="3"
-                                      value={coherentCycles}
+                                      value={(() => {
+                                        if (selectedExercise.name === 'Coherent Breathing') return coherentCycles;
+                                        if (selectedExercise.name === 'Alternate Nostril') return alternateNostrilCycles;
+                                        return selectedCycles;
+                                      })()}
                                       onChange={(e) => {
                                         const newValue = parseInt(e.target.value);
-                                        setCoherentCycles(newValue);
-                                        setSelectedCycles(newValue);
+                                        if (selectedExercise.name === 'Coherent Breathing') {
+                                          setCoherentCycles(newValue);
+                                          setSelectedCycles(newValue);
+                                        } else if (selectedExercise.name === 'Alternate Nostril') {
+                                          setAlternateNostrilCycles(newValue);
+                                        } else {
+                                          setSelectedCycles(newValue);
+                                        }
                                         const userId = currentUser?.uid;
                                         trackEvent('cycle_selected', {
-                                          exercise: 'Neumorphism Trial',
+                                          exercise: selectedExercise.name,
                                           cycles: newValue
                                         }, userId);
                                       }}
@@ -1685,104 +1787,175 @@ export default function Home() {
                                         width: '38px',
                                         height: '38px',
                                         top: '50%',
-                                        left: `calc(${((coherentCycles - 3) / (24 - 3)) * 100}% - 19px)`,
+                                        left: `calc(${(() => {
+                                          let currentValue, minValue = 3, maxValue;
+                                          let cycleDuration = 0;
+
+                                          if (selectedExercise.name === 'Coherent Breathing') {
+                                            currentValue = coherentCycles;
+                                            cycleDuration = coherentBreathTime * 2;
+                                          } else if (selectedExercise.name === 'Alternate Nostril') {
+                                            currentValue = alternateNostrilCycles;
+                                            cycleDuration = alternateNostrilBreathTime * 4;
+                                          } else {
+                                            currentValue = selectedCycles;
+                                            switch(selectedExercise.name) {
+                                              case 'Box Breathing (4-4-4-4)':
+                                                cycleDuration = 16;
+                                                break;
+                                              case '4-7-8 Breathing':
+                                                cycleDuration = 19;
+                                                break;
+                                              case 'Physiological Sigh':
+                                                cycleDuration = 9;
+                                                break;
+                                              case 'Humming Bee':
+                                                cycleDuration = 14;
+                                                break;
+                                              default:
+                                                cycleDuration = 16;
+                                            }
+                                          }
+
+                                          maxValue = Math.floor(1200 / cycleDuration);
+                                          return ((currentValue - minValue) / (maxValue - minValue)) * 100;
+                                        })()}% - 19px)`,
                                         transform: 'translateY(-50%)',
-                                        background: '#36393B',
+                                        background: '#7469B6',
                                         boxShadow: '-6px -6px 12px 0 rgba(255, 255, 255, 0.15), 6px 6px 15px 0 #000'
                                       }}
                                     />
                                   </div>
-                                  {/* Tick Marks with Labels */}
+                                  {/* Tick Marks with Labels - Min and Max only */}
                                   <div className="flex justify-between px-1">
-                                    {[3, 6, 9, 12, 15, 18, 21, 24].map((value) => (
-                                      <div key={value} className="flex flex-col items-center" style={{ width: '1px' }}>
-                                        <span className="text-xs font-medium" style={{ color: coherentCycles === value ? '#FFFFFF' : '#6B7280' }}>
-                                          {value}
-                                        </span>
-                                      </div>
-                                    ))}
+                                    {(() => {
+                                      let cycleDuration = 0;
+                                      switch(selectedExercise.name) {
+                                        case 'Box Breathing (4-4-4-4)':
+                                          cycleDuration = 16;
+                                          break;
+                                        case '4-7-8 Breathing':
+                                          cycleDuration = 19;
+                                          break;
+                                        case 'Coherent Breathing':
+                                          cycleDuration = coherentBreathTime * 2;
+                                          break;
+                                        case 'Physiological Sigh':
+                                          cycleDuration = 9;
+                                          break;
+                                        case 'Alternate Nostril':
+                                          cycleDuration = alternateNostrilBreathTime * 4;
+                                          break;
+                                        case 'Humming Bee':
+                                          cycleDuration = 14;
+                                          break;
+                                        default:
+                                          cycleDuration = 16;
+                                      }
+                                      const minCycles = 3;
+                                      const maxCycles = Math.floor(1200 / cycleDuration);
+
+                                      return (
+                                        <>
+                                          <span className="text-xs font-medium text-gray-400">{minCycles}</span>
+                                          <span className="text-xs font-medium text-gray-400">{maxCycles}</span>
+                                        </>
+                                      );
+                                    })()}
                                   </div>
                                 </div>
                               </div>
                             </div>
 
-                            {/* Inhale-Exhale Timer Slider */}
-                            <div style={{ marginBottom: '50px' }}>
-                              <label className="text-base font-semibold text-white mb-4 block">Inhale-Exhale Timer</label>
-                              <div className="flex flex-col items-center gap-4">
-                                {/* Numeric Display */}
-                                <div
-                                  className="text-white text-3xl font-bold flex items-center justify-center rounded-full"
-                                  style={{
-                                    width: '80px',
-                                    height: '80px',
-                                    background: '#36393B',
-                                    boxShadow: '6px 6px 15px 0 #000 inset, -6px -6px 12px 0 rgba(255, 255, 255, 0.15) inset'
-                                  }}
-                                >
-                                  {coherentBreathTime}s
-                                </div>
-                                {/* Slider Track */}
-                                <div className="w-full px-4">
+                            {/* Inhale-Exhale Timer Slider - Only for Coherent Breathing and Alternate Nostril */}
+                            {(selectedExercise.name === 'Coherent Breathing' || selectedExercise.name === 'Alternate Nostril') && (
+                              <div style={{ marginBottom: '50px' }}>
+                                <label className="text-base font-semibold text-white mb-4 block">Inhale-Exhale Timer</label>
+                                <div className="flex flex-col items-center gap-4">
+                                  {/* Numeric Display */}
                                   <div
-                                    className="relative h-3 rounded-full mb-3"
+                                    className="text-white text-3xl font-bold flex items-center justify-center rounded-full"
                                     style={{
+                                      width: '80px',
+                                      height: '80px',
                                       background: '#36393B',
-                                      boxShadow: '4px 4px 10px 0 #000 inset, -4px -4px 8px 0 rgba(255, 255, 255, 0.15) inset'
+                                      boxShadow: '6px 6px 15px 0 #000 inset, -6px -6px 12px 0 rgba(255, 255, 255, 0.15) inset'
                                     }}
                                   >
-                                    {/* Slider Input */}
-                                    <input
-                                      type="range"
-                                      min="4"
-                                      max="6"
-                                      step="1"
-                                      value={coherentBreathTime}
-                                      onChange={(e) => {
-                                        const newValue = parseInt(e.target.value);
-                                        setCoherentBreathTime(newValue);
-                                      }}
-                                      className="absolute w-full h-full opacity-0 cursor-pointer"
-                                      style={{ top: 0, left: 0, zIndex: 10 }}
-                                    />
-                                    {/* Slider Thumb */}
-                                    <div
-                                      className="absolute rounded-full pointer-events-none transition-all duration-200 ease-out"
-                                      style={{
-                                        width: '38px',
-                                        height: '38px',
-                                        top: '50%',
-                                        left: `calc(${((coherentBreathTime - 4) / (6 - 4)) * 100}% - 19px)`,
-                                        transform: 'translateY(-50%)',
-                                        background: '#36393B',
-                                        boxShadow: '-6px -6px 12px 0 rgba(255, 255, 255, 0.15), 6px 6px 15px 0 #000'
-                                      }}
-                                    />
+                                    {selectedExercise.name === 'Coherent Breathing' ? coherentBreathTime : alternateNostrilBreathTime}s
                                   </div>
-                                  {/* Tick Marks with Labels */}
-                                  <div className="flex justify-between px-1">
-                                    {[4, 5, 6].map((value) => (
-                                      <div key={value} className="flex flex-col items-center" style={{ width: '1px' }}>
-                                        <span className="text-xs font-medium" style={{ color: coherentBreathTime === value ? '#FFFFFF' : '#6B7280' }}>
-                                          {value}s
-                                        </span>
-                                      </div>
-                                    ))}
+                                  {/* Slider Track */}
+                                  <div className="w-full px-4">
+                                    <div
+                                      className="relative h-3 rounded-full mb-3"
+                                      style={{
+                                        background: '#36393B',
+                                        boxShadow: '4px 4px 10px 0 #000 inset, -4px -4px 8px 0 rgba(255, 255, 255, 0.15) inset'
+                                      }}
+                                    >
+                                      {/* Slider Input */}
+                                      <input
+                                        type="range"
+                                        min="4"
+                                        max="6"
+                                        step="1"
+                                        value={selectedExercise.name === 'Coherent Breathing' ? coherentBreathTime : alternateNostrilBreathTime}
+                                        onChange={(e) => {
+                                          const newValue = parseInt(e.target.value);
+                                          if (selectedExercise.name === 'Coherent Breathing') {
+                                            setCoherentBreathTime(newValue);
+                                          } else {
+                                            setAlternateNostrilBreathTime(newValue);
+                                          }
+                                        }}
+                                        className="absolute w-full h-full opacity-0 cursor-pointer"
+                                        style={{ top: 0, left: 0, zIndex: 10 }}
+                                      />
+                                      {/* Slider Thumb */}
+                                      <div
+                                        className="absolute rounded-full pointer-events-none transition-all duration-200 ease-out"
+                                        style={{
+                                          width: '38px',
+                                          height: '38px',
+                                          top: '50%',
+                                          left: `calc(${((selectedExercise.name === 'Coherent Breathing' ? coherentBreathTime : alternateNostrilBreathTime) - 4) / (6 - 4) * 100}% - 19px)`,
+                                          transform: 'translateY(-50%)',
+                                          background: '#36393B',
+                                          boxShadow: '-6px -6px 12px 0 rgba(255, 255, 255, 0.15), 6px 6px 15px 0 #000'
+                                        }}
+                                      />
+                                    </div>
+                                    {/* Tick Marks with Labels */}
+                                    <div className="flex justify-between px-1">
+                                      {[4, 5, 6].map((value) => (
+                                        <div key={value} className="flex flex-col items-center" style={{ width: '1px' }}>
+                                          <span className="text-xs font-medium" style={{
+                                            color: (selectedExercise.name === 'Coherent Breathing' ? coherentBreathTime : alternateNostrilBreathTime) === value ? '#FFFFFF' : '#6B7280'
+                                          }}>
+                                            {value}s
+                                          </span>
+                                        </div>
+                                      ))}
+                                    </div>
                                   </div>
                                 </div>
                               </div>
-                            </div>
+                            )}
 
                             {/* Close Button */}
                             <button
                               onClick={() => setShowCustomizationSheet(false)}
-                              className="text-white font-semibold transition-all hover:brightness-110 active:brightness-90 flex items-center justify-center mx-auto"
+                              className="w-full text-base font-bold transition-all hover:brightness-110 active:brightness-90"
                               style={{
-                                width: '80%',
-                                height: '50px',
-                                borderRadius: '25px',
-                                background: '#36393B',
-                                boxShadow: '-6px -6px 12px 0 rgba(255, 255, 255, 0.15), 6px 6px 15px 0 #000'
+                                display: 'flex',
+                                height: '59px',
+                                padding: '12px 32px 11px 32px',
+                                justifyContent: 'center',
+                                alignItems: 'center',
+                                borderRadius: '27px',
+                                background: '#333',
+                                boxShadow: '-12px -12px 24px 0 #3E3E3E, 12px 12px 24px 0 #1E1E1E',
+                                color: '#fff'
                               }}
                             >
                               Done
@@ -1792,120 +1965,11 @@ export default function Home() {
                       </div>
                     )}
 
-                    {/* Customization Bottom Sheet - For Box Breathing */}
-                    {showCustomizationSheet && selectedExercise?.name === 'Box Breathing (4-4-4-4)' && (
+                    {/* Music Selection Bottom Sheet */}
+                    {showMusicSheet && (
                       <div
                         className="absolute inset-0 bg-black bg-opacity-50 z-50 flex items-end"
-                        onClick={() => setShowCustomizationSheet(false)}
-                      >
-                        <div
-                          className="rounded-t-3xl w-full max-h-[70vh] overflow-y-auto animate-slide-up"
-                          style={{ background: '#36393B' }}
-                          onClick={(e) => e.stopPropagation()}
-                        >
-                          <div className="p-6">
-                            {/* Sheet Handle */}
-                            <div className="w-12 h-1 rounded-full mx-auto mb-6" style={{ background: '#4B5563' }}></div>
-
-                            {/* Section Title */}
-                            <h2 className="text-2xl font-bold mb-6 text-white">Personalize</h2>
-
-                            {/* Cycles Slider */}
-                            <div style={{ marginBottom: '50px' }}>
-                              <label className="text-base font-semibold text-white mb-4 block">Cycles</label>
-                              <div className="flex flex-col items-center gap-4">
-                                {/* Numeric Display */}
-                                <div
-                                  className="text-white text-3xl font-bold flex items-center justify-center rounded-full"
-                                  style={{
-                                    width: '80px',
-                                    height: '80px',
-                                    background: '#36393B',
-                                    boxShadow: '6px 6px 15px 0 #000 inset, -6px -6px 12px 0 rgba(255, 255, 255, 0.15) inset'
-                                  }}
-                                >
-                                  {selectedCycles}
-                                </div>
-                                {/* Slider Track */}
-                                <div className="w-full px-4">
-                                  <div
-                                    className="relative h-3 rounded-full mb-3"
-                                    style={{
-                                      background: '#36393B',
-                                      boxShadow: '4px 4px 10px 0 #000 inset, -4px -4px 8px 0 rgba(255, 255, 255, 0.15) inset'
-                                    }}
-                                  >
-                                    {/* Slider Input */}
-                                    <input
-                                      type="range"
-                                      min="4"
-                                      max="12"
-                                      step="4"
-                                      value={selectedCycles}
-                                      onChange={(e) => {
-                                        const newValue = parseInt(e.target.value);
-                                        setSelectedCycles(newValue);
-                                        const userId = currentUser?.uid;
-                                        trackEvent('cycle_selected', {
-                                          exercise: 'Box Breathing (4-4-4-4)',
-                                          cycles: newValue
-                                        }, userId);
-                                      }}
-                                      className="absolute w-full h-full opacity-0 cursor-pointer"
-                                      style={{ top: 0, left: 0, zIndex: 10 }}
-                                    />
-                                    {/* Slider Thumb */}
-                                    <div
-                                      className="absolute rounded-full pointer-events-none transition-all duration-200 ease-out"
-                                      style={{
-                                        width: '38px',
-                                        height: '38px',
-                                        top: '50%',
-                                        left: `calc(${((selectedCycles - 4) / (12 - 4)) * 100}% - 19px)`,
-                                        transform: 'translateY(-50%)',
-                                        background: '#36393B',
-                                        boxShadow: '-6px -6px 12px 0 rgba(255, 255, 255, 0.15), 6px 6px 15px 0 #000'
-                                      }}
-                                    />
-                                  </div>
-                                  {/* Tick Marks with Labels */}
-                                  <div className="flex justify-between px-1">
-                                    {[4, 8, 12].map((value) => (
-                                      <div key={value} className="flex flex-col items-center" style={{ width: '1px' }}>
-                                        <span className="text-xs font-medium" style={{ color: selectedCycles === value ? '#FFFFFF' : '#6B7280' }}>
-                                          {value}
-                                        </span>
-                                      </div>
-                                    ))}
-                                  </div>
-                                </div>
-                              </div>
-                            </div>
-
-                            {/* Close Button */}
-                            <button
-                              onClick={() => setShowCustomizationSheet(false)}
-                              className="text-white font-semibold transition-all hover:brightness-110 active:brightness-90 flex items-center justify-center mx-auto"
-                              style={{
-                                width: '80%',
-                                height: '50px',
-                                borderRadius: '25px',
-                                background: '#36393B',
-                                boxShadow: '-6px -6px 12px 0 rgba(255, 255, 255, 0.15), 6px 6px 15px 0 #000'
-                              }}
-                            >
-                              Done
-                            </button>
-                          </div>
-                        </div>
-                      </div>
-                    )}
-
-                    {/* Customization Bottom Sheet - Only for Alternate Nostril */}
-                    {showCustomizationSheet && selectedExercise?.name === 'Alternate Nostril' && (
-                      <div
-                        className="absolute inset-0 bg-black bg-opacity-50 z-50 flex items-end"
-                        onClick={() => setShowCustomizationSheet(false)}
+                        onClick={() => setShowMusicSheet(false)}
                       >
                         <div
                           className="bg-white rounded-t-3xl w-full max-h-[70vh] overflow-y-auto animate-slide-up"
@@ -1915,62 +1979,155 @@ export default function Home() {
                             {/* Sheet Handle */}
                             <div className="w-12 h-1 bg-gray-300 rounded-full mx-auto mb-6"></div>
 
-                            {/* Section Title */}
-                            <h2 className="text-2xl font-bold mb-6 text-black">Personalize</h2>
+                            {/* Title */}
+                            <h2 className="text-2xl font-bold mb-4 text-black">
+                              Select Music
+                            </h2>
 
-                            {/* Cycles Selector */}
-                            <div className="mb-6">
-                              <label className="text-base font-semibold text-black mb-3 block">Cycles</label>
-                              <div className="grid grid-cols-4 gap-2">
-                                {[12, 18, 24, 30].map((cycles) => (
-                                  <button
-                                    key={cycles}
-                                    onClick={() => {
-                                      setAlternateNostrilCycles(cycles);
-                                      const userId = currentUser?.uid;
-                                      trackEvent('cycle_selected', {
-                                        exercise: 'Alternate Nostril',
-                                        cycles
-                                      }, userId);
-                                    }}
-                                    className={`py-2 px-4 rounded-lg text-sm font-semibold transition-all ${
-                                      alternateNostrilCycles === cycles
-                                        ? 'bg-black text-white'
-                                        : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
-                                    }`}
-                                  >
-                                    {cycles}
-                                  </button>
-                                ))}
-                              </div>
-                            </div>
+                            {/* Music Options */}
+                            <div className="space-y-3 mb-6">
+                              {/* No Music Option */}
+                              <button
+                                onClick={() => {
+                                  setSelectedMusic(null);
+                                  setShowMusicSheet(false);
+                                }}
+                                className={`w-full p-4 rounded-xl text-left transition-all ${
+                                  selectedMusic === null
+                                    ? 'bg-gray-800 text-white'
+                                    : 'bg-gray-100 text-gray-800 hover:bg-gray-200'
+                                }`}
+                              >
+                                <div className="flex items-center justify-between">
+                                  <div>
+                                    <p className="font-semibold">No Music</p>
+                                    <p className="text-sm opacity-70">Exercise in silence</p>
+                                  </div>
+                                  {selectedMusic === null && (
+                                    <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
+                                      <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd"/>
+                                    </svg>
+                                  )}
+                                </div>
+                              </button>
 
-                            {/* Inhale-Exhale Timer Selector */}
-                            <div className="mb-6">
-                              <label className="text-base font-semibold text-black mb-3 block">Inhale-Exhale Timer</label>
-                              <div className="grid grid-cols-3 gap-2">
-                                {[4, 5, 6].map((seconds) => (
-                                  <button
-                                    key={seconds}
-                                    onClick={() => setAlternateNostrilBreathTime(seconds)}
-                                    className={`py-2 px-4 rounded-lg text-sm font-semibold transition-all ${
-                                      alternateNostrilBreathTime === seconds
-                                        ? 'bg-black text-white'
-                                        : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
-                                    }`}
-                                  >
-                                    {seconds}s
-                                  </button>
-                                ))}
-                              </div>
+                              {/* Nature Sounds */}
+                              <button
+                                onClick={() => {
+                                  setSelectedMusic('nature');
+                                  setShowMusicSheet(false);
+                                }}
+                                className={`w-full p-4 rounded-xl text-left transition-all ${
+                                  selectedMusic === 'nature'
+                                    ? 'bg-gray-800 text-white'
+                                    : 'bg-gray-100 text-gray-800 hover:bg-gray-200'
+                                }`}
+                              >
+                                <div className="flex items-center justify-between">
+                                  <div>
+                                    <p className="font-semibold">Nature Sounds</p>
+                                    <p className="text-sm opacity-70">Calm forest ambience</p>
+                                  </div>
+                                  {selectedMusic === 'nature' && (
+                                    <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
+                                      <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd"/>
+                                    </svg>
+                                  )}
+                                </div>
+                              </button>
+
+                              {/* Ambient Music */}
+                              <button
+                                onClick={() => {
+                                  setSelectedMusic('ambient');
+                                  setShowMusicSheet(false);
+                                }}
+                                className={`w-full p-4 rounded-xl text-left transition-all ${
+                                  selectedMusic === 'ambient'
+                                    ? 'bg-gray-800 text-white'
+                                    : 'bg-gray-100 text-gray-800 hover:bg-gray-200'
+                                }`}
+                              >
+                                <div className="flex items-center justify-between">
+                                  <div>
+                                    <p className="font-semibold">Ambient Music</p>
+                                    <p className="text-sm opacity-70">Peaceful meditation tones</p>
+                                  </div>
+                                  {selectedMusic === 'ambient' && (
+                                    <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
+                                      <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd"/>
+                                    </svg>
+                                  )}
+                                </div>
+                              </button>
+
+                              {/* Binaural Beats */}
+                              <button
+                                onClick={() => {
+                                  setSelectedMusic('binaural');
+                                  setShowMusicSheet(false);
+                                }}
+                                className={`w-full p-4 rounded-xl text-left transition-all ${
+                                  selectedMusic === 'binaural'
+                                    ? 'bg-gray-800 text-white'
+                                    : 'bg-gray-100 text-gray-800 hover:bg-gray-200'
+                                }`}
+                              >
+                                <div className="flex items-center justify-between">
+                                  <div>
+                                    <p className="font-semibold">Binaural Beats</p>
+                                    <p className="text-sm opacity-70">Focus and relaxation</p>
+                                  </div>
+                                  {selectedMusic === 'binaural' && (
+                                    <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
+                                      <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd"/>
+                                    </svg>
+                                  )}
+                                </div>
+                              </button>
+
+                              {/* Ocean Waves */}
+                              <button
+                                onClick={() => {
+                                  setSelectedMusic('ocean');
+                                  setShowMusicSheet(false);
+                                }}
+                                className={`w-full p-4 rounded-xl text-left transition-all ${
+                                  selectedMusic === 'ocean'
+                                    ? 'bg-gray-800 text-white'
+                                    : 'bg-gray-100 text-gray-800 hover:bg-gray-200'
+                                }`}
+                              >
+                                <div className="flex items-center justify-between">
+                                  <div>
+                                    <p className="font-semibold">Ocean Waves</p>
+                                    <p className="text-sm opacity-70">Rhythmic wave sounds</p>
+                                  </div>
+                                  {selectedMusic === 'ocean' && (
+                                    <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
+                                      <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd"/>
+                                    </svg>
+                                  )}
+                                </div>
+                              </button>
                             </div>
 
                             {/* Close Button */}
                             <button
-                              onClick={() => setShowCustomizationSheet(false)}
-                              className="w-full py-3 bg-gray-100 text-black text-base font-bold rounded-xl hover:bg-gray-200 transition-colors"
+                              onClick={() => setShowMusicSheet(false)}
+                              className="w-full text-base font-bold transition-all hover:brightness-110 active:brightness-90"
+                              style={{
+                                display: 'flex',
+                                height: '59px',
+                                padding: '12px 32px 11px 32px',
+                                justifyContent: 'center',
+                                alignItems: 'center',
+                                borderRadius: '27px',
+                                background: 'rgba(255, 255, 255, 0.7)',
+                                color: '#333'
+                              }}
                             >
-                              Done
+                              Close
                             </button>
                           </div>
                         </div>
@@ -1988,15 +2145,16 @@ export default function Home() {
                       <div className="flex items-center justify-between w-full max-w-md">
                       <button
                         onClick={() => {
-                          // Reset all exercise state when going back
-                          setSelectedExercise(null);
+                          // Go back to exercise info screen
+                          setShowingInfo(true);
+                          // Reset exercise state
                           setIsExercising(false);
-                          setShowingInfo(false);
                           setCountdown(null);
                           setIsPaused(false);
                           setBreathingPhase('inhale');
                           setTimer(0);
                           setCurrentCycle(0);
+                          setExerciseCompleted(false);
                           // Reset Coherent breathing customization to defaults
                           setCoherentCycles(6);
                           setCoherentBreathTime(5);
@@ -2026,9 +2184,9 @@ export default function Home() {
                     </div>
 
                     {/* Timer Section - 15% */}
-                    <div className="flex-[0.15] flex items-center justify-center">
+                    <div className="flex-[0.15] flex items-center justify-center" style={{ minHeight: '0' }}>
                       {/* Timer Display - Show during all phases for Box Breathing, INHALE and EXHALE for others */}
-                      {!exerciseCompleted && isExercising && countdown === null && (
+                      {!exerciseCompleted && isExercising && countdown === null ? (
                         selectedExercise?.name === 'Box Breathing (4-4-4-4)' ? (
                           /* Box Breathing: Show timer for ALL phases including HOLD */
                           <div className="text-center">
@@ -2052,7 +2210,7 @@ export default function Home() {
                                 color: '#FFFFFF'
                               }}
                             >
-                              {selectedExercise?.name === 'Coherent Breathing' || selectedExercise?.name === 'Neumorphism Trial'
+                              {selectedExercise?.name === 'Coherent Breathing'
                                 ? (breathingPhase === 'inhale'
                                     ? `${Math.ceil(timer / 10)}s`  // INHALE: 0s to coherentBreathTime (e.g., 0s-5s)
                                     : `${Math.ceil(timer / 10)}s`)  // EXHALE: coherentBreathTime to 0s (e.g., 5s-0s)
@@ -2077,7 +2235,7 @@ export default function Home() {
                             </div>
                           </div>
                         ) : null
-                      )}
+                      ) : null}
                     </div>
 
                     {/* Breathing Circles Area - 40% */}
@@ -2110,10 +2268,10 @@ export default function Home() {
                                 setAlternateNostrilCycles(3);
                                 setAlternateNostrilBreathTime(5);
                               }}
-                              className={(selectedExercise?.name === 'Neumorphism Trial' || selectedExercise?.name === 'Box Breathing (4-4-4-4)')
+                              className={(selectedExercise?.name === 'Coherent Breathing' || selectedExercise?.name === 'Box Breathing (4-4-4-4)')
                                 ? "text-white font-semibold transition-all hover:brightness-110 active:brightness-90 flex items-center justify-center"
                                 : "bg-black text-white py-3 px-6 rounded-lg font-semibold hover:opacity-90 transition-opacity"}
-                              style={(selectedExercise?.name === 'Neumorphism Trial' || selectedExercise?.name === 'Box Breathing (4-4-4-4)')
+                              style={(selectedExercise?.name === 'Coherent Breathing' || selectedExercise?.name === 'Box Breathing (4-4-4-4)')
                                 ? {
                                     width: '100%',
                                     height: '56px',
@@ -2135,10 +2293,10 @@ export default function Home() {
                                 setBreathingPhase('inhale');
                                 setIsExercising(true);
                               }}
-                              className={(selectedExercise?.name === 'Neumorphism Trial' || selectedExercise?.name === 'Box Breathing (4-4-4-4)')
+                              className={(selectedExercise?.name === 'Coherent Breathing' || selectedExercise?.name === 'Box Breathing (4-4-4-4)')
                                 ? "text-white font-semibold transition-all hover:brightness-110 active:brightness-90 flex items-center justify-center"
                                 : "bg-white border-2 border-black text-black py-3 px-6 rounded-lg font-semibold hover:bg-gray-50 transition-colors"}
-                              style={(selectedExercise?.name === 'Neumorphism Trial' || selectedExercise?.name === 'Box Breathing (4-4-4-4)')
+                              style={(selectedExercise?.name === 'Coherent Breathing' || selectedExercise?.name === 'Box Breathing (4-4-4-4)')
                                 ? {
                                     width: '100%',
                                     height: '56px',
@@ -2489,12 +2647,12 @@ export default function Home() {
                             </div>
                           </div>
                         </>
-                      ) : selectedExercise?.name === 'Neumorphism Trial' ? (
-                        /* Neumorphism Trial Animation - Same as Coherent Breathing */
+                      ) : selectedExercise?.name === 'Physiological Sigh' ? (
+                        /* Physiological Sigh Animation - Two-circle expanding effect */
                         <>
-                          {/* Breathing Circle Illustration - Neumorphism Trial */}
-                          <div className="flex-1 flex items-center justify-center w-full relative px-4">
-                            {/* Circular Container with Inset Shadow */}
+                          {/* Breathing Circle Illustration - Physiological Sigh */}
+                          <div className="flex-1 flex items-center justify-center w-full relative">
+                            {/* Neumorphic Circular Container */}
                             <div
                               className="rounded-full flex items-center justify-center relative aspect-square"
                               style={{
@@ -2505,7 +2663,7 @@ export default function Home() {
                                 boxShadow: '-6px -6px 24px 0 rgba(255, 255, 255, 0.30) inset, 12px 12px 30px 0 #000 inset'
                               }}
                             >
-                              {/* Background Circle - Darker stroke for visibility on dark background */}
+                              {/* Gray Background Circle */}
                               <svg
                                 className="absolute"
                                 width="300"
@@ -2518,181 +2676,57 @@ export default function Home() {
                                   r="145"
                                   fill="none"
                                   stroke="#4B5563"
-                                  strokeWidth="3"
-                                  className={timer === (coherentBreathTime * 10) || (timer === 0 && currentCycle > 0) ? 'blink-purple' : ''}
+                                  strokeWidth="4"
                                 />
                               </svg>
 
-                              {/* Single Expanding/Compressing Circle with Radial Gradient */}
-                              <div
-                                className="rounded-full absolute"
-                                style={{
-                                  width: `${getCoherentCircleSize()}px`,
-                                  height: `${getCoherentCircleSize()}px`,
-                                background: (() => {
-                                  const size = getCoherentCircleSize();
-                                  const intensity = size / 280; // 0 to 1, from empty to full (updated for smaller container)
+                              {(() => {
+                                const { circle1Size, circle2Size } = getPhysiologicalSighCircleSizes();
 
-                                  // 5-color gradient sequence using all app colors: deep purple → medium purple → light purple → pale orchid → pale pink
-                                  const colors = [
-                                    { r: 116, g: 105, b: 182 },   // Deep Purple/Blue-Violet (empty)
-                                    { r: 173, g: 136, b: 198 },   // Medium Purple/African Violet (25%)
-                                    { r: 225, g: 175, b: 209 },   // Light Purple/Light Orchid (50%)
-                                    { r: 246, g: 208, b: 234 },   // Pale Orchid (75%)
-                                    { r: 255, g: 230, b: 230 }    // Pale Pink/Misty Rose (full)
-                                  ];
+                                return (
+                                  <>
+                                    {/* Circle 2 - Lighter gradient (behind, larger) - Misty Rose to Pale Pink */}
+                                    {circle2Size > 0 && (
+                                      <div
+                                        className="rounded-full absolute"
+                                        style={{
+                                          width: `${circle2Size}px`,
+                                          height: `${circle2Size}px`,
+                                          background: 'linear-gradient(135deg, #FFE6E6 0%, #F6D0EA 100%)',
+                                          boxShadow: '0 0 30px rgba(246, 208, 234, 0.5)',
+                                          transition: 'all 100ms linear',
+                                          zIndex: 1
+                                        }}
+                                      />
+                                    )}
 
-                                  // Calculate which color segment we're in and interpolate
-                                  let r, g, b;
-                                  if (intensity <= 0.25) {
-                                    // Interpolate between deep purple and medium purple
-                                    const t = intensity / 0.25;
-                                    r = Math.round(colors[0].r + (colors[1].r - colors[0].r) * t);
-                                    g = Math.round(colors[0].g + (colors[1].g - colors[0].g) * t);
-                                    b = Math.round(colors[0].b + (colors[1].b - colors[0].b) * t);
-                                  } else if (intensity <= 0.5) {
-                                    // Interpolate between medium purple and light purple
-                                    const t = (intensity - 0.25) / 0.25;
-                                    r = Math.round(colors[1].r + (colors[2].r - colors[1].r) * t);
-                                    g = Math.round(colors[1].g + (colors[2].g - colors[1].g) * t);
-                                    b = Math.round(colors[1].b + (colors[2].b - colors[1].b) * t);
-                                  } else if (intensity <= 0.75) {
-                                    // Interpolate between light purple and pale orchid
-                                    const t = (intensity - 0.5) / 0.25;
-                                    r = Math.round(colors[2].r + (colors[3].r - colors[2].r) * t);
-                                    g = Math.round(colors[2].g + (colors[3].g - colors[2].g) * t);
-                                    b = Math.round(colors[2].b + (colors[3].b - colors[2].b) * t);
-                                  } else {
-                                    // Interpolate between pale orchid and pale pink
-                                    const t = (intensity - 0.75) / 0.25;
-                                    r = Math.round(colors[3].r + (colors[4].r - colors[3].r) * t);
-                                    g = Math.round(colors[3].g + (colors[4].g - colors[3].g) * t);
-                                    b = Math.round(colors[3].b + (colors[4].b - colors[3].b) * t);
-                                  }
-
-                                  return `radial-gradient(circle, rgba(${r}, ${g}, ${b}, 1) 0%, rgba(${r}, ${g}, ${b}, 0.6) 50%, rgba(${r}, ${g}, ${b}, 0.2) 100%)`;
-                                })(),
-                                boxShadow: (() => {
-                                  const size = getCoherentCircleSize();
-                                  const intensity = size / 340;
-
-                                  // Use same 5-color gradient for box shadow
-                                  const colors = [
-                                    { r: 116, g: 105, b: 182 },   // Deep Purple/Blue-Violet
-                                    { r: 173, g: 136, b: 198 },   // Medium Purple/African Violet
-                                    { r: 225, g: 175, b: 209 },   // Light Purple/Light Orchid
-                                    { r: 247, g: 214, b: 236 },   // Pale Orchid
-                                    { r: 255, g: 230, b: 230 }    // Pale Pink/Rose
-                                  ];
-
-                                  let r, g, b;
-                                  if (intensity <= 0.25) {
-                                    const t = intensity / 0.25;
-                                    r = Math.round(colors[0].r + (colors[1].r - colors[0].r) * t);
-                                    g = Math.round(colors[0].g + (colors[1].g - colors[0].g) * t);
-                                    b = Math.round(colors[0].b + (colors[1].b - colors[0].b) * t);
-                                  } else if (intensity <= 0.5) {
-                                    const t = (intensity - 0.25) / 0.25;
-                                    r = Math.round(colors[1].r + (colors[2].r - colors[1].r) * t);
-                                    g = Math.round(colors[1].g + (colors[2].g - colors[1].g) * t);
-                                    b = Math.round(colors[1].b + (colors[2].b - colors[1].b) * t);
-                                  } else if (intensity <= 0.75) {
-                                    const t = (intensity - 0.5) / 0.25;
-                                    r = Math.round(colors[2].r + (colors[3].r - colors[2].r) * t);
-                                    g = Math.round(colors[2].g + (colors[3].g - colors[2].g) * t);
-                                    b = Math.round(colors[2].b + (colors[3].b - colors[2].b) * t);
-                                  } else {
-                                    const t = (intensity - 0.75) / 0.25;
-                                    r = Math.round(colors[3].r + (colors[4].r - colors[3].r) * t);
-                                    g = Math.round(colors[3].g + (colors[4].g - colors[3].g) * t);
-                                    b = Math.round(colors[3].b + (colors[4].b - colors[3].b) * t);
-                                  }
-
-                                  return `0 0 30px rgba(${r}, ${g}, ${b}, 0.5)`;
-                                })(),
-                                transition: 'all 100ms linear'
-                              }}
-                            />
+                                    {/* Circle 1 - Darker gradient (front, smaller) - African Violet to Blue Violet */}
+                                    {circle1Size > 0 && (
+                                      <div
+                                        className="rounded-full absolute"
+                                        style={{
+                                          width: `${circle1Size}px`,
+                                          height: `${circle1Size}px`,
+                                          background: 'linear-gradient(135deg, #AD88C6 0%, #7469B6 100%)',
+                                          boxShadow: '0 0 30px rgba(116, 105, 182, 0.5)',
+                                          transition: 'all 100ms linear',
+                                          zIndex: 2
+                                        }}
+                                      />
+                                    )}
+                                  </>
+                                );
+                              })()}
 
                               {/* Phase Text - At Center of Circle */}
-                              <div className="absolute text-center">
+                              <div className="absolute text-center" style={{ zIndex: 3 }}>
                                 <div
-                                  className={`text-lg font-semibold text-white uppercase tracking-wider`}
+                                  className={`text-lg font-semibold uppercase tracking-wider`}
+                                  style={{ color: '#FFFFFF' }}
                                 >
                                   {breathingPhase === 'inhale' && animationReady && 'Breathe In'}
                                   {breathingPhase === 'exhale' && animationReady && 'Breathe Out'}
                                 </div>
-                              </div>
-                            </div>
-                          </div>
-                        </>
-                      ) : selectedExercise?.name === 'Physiological Sigh' ? (
-                        /* Physiological Sigh Animation - Two-circle expanding effect */
-                        <>
-                          {/* Breathing Circle Illustration - Physiological Sigh */}
-                          <div className="flex-1 flex items-center justify-center w-full relative">
-                            {/* Gray Background Circle */}
-                            <svg
-                              className="absolute"
-                              width="363"
-                              height="363"
-                              style={{ transform: 'rotate(-90deg)' }}
-                            >
-                              <circle
-                                cx="181.5"
-                                cy="181.5"
-                                r="175"
-                                fill="none"
-                                stroke="#E5E7EB"
-                                strokeWidth="4"
-                              />
-                            </svg>
-
-                            {(() => {
-                              const { circle1Size, circle2Size } = getPhysiologicalSighCircleSizes();
-
-                              return (
-                                <>
-                                  {/* Circle 2 - Lighter gradient (behind, larger) - Misty Rose to Pale Pink */}
-                                  {circle2Size > 0 && (
-                                    <div
-                                      className="rounded-full absolute"
-                                      style={{
-                                        width: `${circle2Size}px`,
-                                        height: `${circle2Size}px`,
-                                        background: 'linear-gradient(135deg, #FFE6E6 0%, #F6D0EA 100%)',
-                                        boxShadow: '0 0 30px rgba(246, 208, 234, 0.5)',
-                                        transition: 'all 100ms linear',
-                                        zIndex: 1
-                                      }}
-                                    />
-                                  )}
-
-                                  {/* Circle 1 - Darker gradient (front, smaller) - African Violet to Blue Violet */}
-                                  {circle1Size > 0 && (
-                                    <div
-                                      className="rounded-full absolute"
-                                      style={{
-                                        width: `${circle1Size}px`,
-                                        height: `${circle1Size}px`,
-                                        background: 'linear-gradient(135deg, #AD88C6 0%, #7469B6 100%)',
-                                        boxShadow: '0 0 30px rgba(116, 105, 182, 0.5)',
-                                        transition: 'all 100ms linear',
-                                        zIndex: 2
-                                      }}
-                                    />
-                                  )}
-                                </>
-                              );
-                            })()}
-
-                            {/* Phase Text - At Center of Circle */}
-                            <div className="absolute text-center" style={{ zIndex: 3 }}>
-                              <div
-                                className={`text-lg font-semibold text-black uppercase tracking-wider`}
-                              >
-                                {breathingPhase === 'inhale' && animationReady && 'Breathe In'}
-                                {breathingPhase === 'exhale' && animationReady && 'Breathe Out'}
                               </div>
                             </div>
                           </div>
@@ -2819,51 +2853,116 @@ export default function Home() {
                         <>
                           {/* Breathing Circle Illustration - Humming Bee */}
                           <div className="flex-1 flex items-center justify-center w-full relative">
-                            {/* Gray Background Circle */}
-                            <svg
-                              className="absolute"
-                              width="363"
-                              height="363"
-                              style={{ transform: 'rotate(-90deg)' }}
-                            >
-                              <circle
-                                cx="181.5"
-                                cy="181.5"
-                                r="175"
-                                fill="none"
-                                stroke="#E5E7EB"
-                                strokeWidth="4"
-                              />
-                            </svg>
-
-                            {/* Single Expanding/Compressing Circle with Radial Gradient */}
+                            {/* Neumorphic Circular Container */}
                             <div
-                              className="rounded-full absolute"
+                              className="rounded-full flex items-center justify-center relative aspect-square"
                               style={{
-                                width: `${getHummingBeeCircleSize()}px`,
-                                height: `${getHummingBeeCircleSize()}px`,
-                                background: 'radial-gradient(circle, rgba(6, 122, 195, 1) 0%, rgba(6, 122, 195, 0.6) 50%, rgba(6, 122, 195, 0.2) 100%)',
-                                boxShadow: '0 0 30px rgba(6, 122, 195, 0.5)',
-                                transition: 'all 100ms linear'
+                                width: '100%',
+                                maxWidth: '340px',
+                                maxHeight: '340px',
+                                background: '#36393B',
+                                boxShadow: '-6px -6px 24px 0 rgba(255, 255, 255, 0.30) inset, 12px 12px 30px 0 #000 inset'
                               }}
-                            />
+                            >
+                              {/* Gray Background Circle */}
+                              <svg
+                                className="absolute"
+                                width="300"
+                                height="300"
+                                style={{ transform: 'rotate(-90deg)' }}
+                              >
+                                <circle
+                                  cx="150"
+                                  cy="150"
+                                  r="145"
+                                  fill="none"
+                                  stroke="#4B5563"
+                                  strokeWidth="4"
+                                />
+                              </svg>
 
-                            {/* Phase Text - At Center of Circle */}
-                            <div className="absolute text-center">
-                              {breathingPhase === 'inhale' ? (
-                                <div className="text-lg font-semibold text-white uppercase tracking-wider">
-                                  Breathe In
-                                </div>
-                              ) : (
-                                <div>
-                                  <div className="text-lg font-semibold text-white uppercase tracking-wider">
-                                    Breathe Out
-                                  </div>
-                                  <div className="text-sm text-white mt-1">
-                                    With Hum
-                                  </div>
-                                </div>
+                              {/* Single Expanding/Compressing Circle - Only show after countdown */}
+                              {animationReady && getHummingBeeCircleSize() > 0 && (
+                                <div
+                                  className="rounded-full absolute"
+                                  style={{
+                                    width: `${getHummingBeeCircleSize()}px`,
+                                    height: `${getHummingBeeCircleSize()}px`,
+                                    background: breathingPhase === 'inhale'
+                                      ? '#E1AFD1'  // Light Orchid on inhale
+                                      : '#AD88C6',  // African Violet on exhale
+                                    boxShadow: breathingPhase === 'inhale'
+                                      ? '0 0 30px rgba(225, 175, 209, 0.5)'
+                                      : '0 0 30px rgba(173, 136, 198, 0.5)',
+                                    transition: 'all 100ms linear'
+                                  }}
+                                />
                               )}
+
+                              {/* Phase Text - At Center of Circle - Only show after countdown */}
+                              <div className="absolute text-center">
+                                {animationReady && (
+                                  breathingPhase === 'inhale' ? (
+                                    <div className="text-lg font-semibold uppercase tracking-wider" style={{ color: '#FFFFFF' }}>
+                                      Breathe In
+                                    </div>
+                                  ) : (
+                                    <div>
+                                      <div className="text-lg font-semibold uppercase tracking-wider" style={{ color: '#FFFFFF' }}>
+                                        Breathe Out
+                                      </div>
+                                      <div className="text-sm mt-1" style={{ color: '#FFFFFF' }}>
+                                        With Hum
+                                      </div>
+                                      {/* Sound Wave Vibration */}
+                                      <div className="mt-3 flex items-center justify-center gap-1">
+                                        <style>{`
+                                          @keyframes softVibrate {
+                                            0% { transform: scaleY(1); }
+                                            25% { transform: scaleY(1.15); }
+                                            50% { transform: scaleY(0.95); }
+                                            75% { transform: scaleY(1.08); }
+                                            100% { transform: scaleY(1); }
+                                          }
+                                        `}</style>
+                                        {[...Array(30)].map((_, i) => {
+                                          const position = i / 29; // 0 to 1
+                                          const distanceFromCenter = Math.abs(position - 0.5) * 2; // 0 at center, 1 at edges
+
+                                          // Bell curve: use Gaussian distribution for smooth falloff
+                                          const bellCurve = Math.exp(-Math.pow(distanceFromCenter * 2.5, 2));
+
+                                          // Height follows bell curve - tall in center, short at edges
+                                          const minHeight = 3;
+                                          const maxHeight = 24;
+                                          const baseHeight = minHeight + (maxHeight - minHeight) * bellCurve;
+
+                                          // Vibration intensity also follows bell curve
+                                          const centerIntensity = bellCurve;
+
+                                          // Fast, subtle vibration
+                                          const duration = 0.15 + (Math.random() * 0.05); // Random duration between 0.15-0.2s
+                                          const delay = i * 0.01; // Stagger each line slightly
+
+                                          return (
+                                            <div
+                                              key={i}
+                                              style={{
+                                                width: '2px',
+                                                height: `${baseHeight}px`,
+                                                backgroundColor: '#FFFFFF',
+                                                opacity: 0.8 + (centerIntensity * 0.2),
+                                                animation: isPaused ? 'none' : `softVibrate ${duration}s ease-in-out ${delay}s infinite`,
+                                                transformOrigin: 'center'
+                                              }}
+                                            />
+                                          );
+                                        })}
+                                      </div>
+                                    </div>
+                                  )
+                                )}
+                              </div>
                             </div>
                           </div>
                         </>
@@ -2881,15 +2980,10 @@ export default function Home() {
                       )}
                     </div>
 
-                    {/* Pattern Info Section - 10% */}
-                    <div className="flex-[0.1] flex items-center justify-center pt-[5px]">
-                      {/* Pattern info removed - tabs now shown within the exercise animation area */}
-                    </div>
-
-                    {/* Exercise Starting Section - 5% */}
-                    <div className="flex-[0.05] flex items-center justify-center">
+                    {/* Exercise Starting Section - 15% */}
+                    <div className="flex-[0.15] flex items-center justify-center" style={{ minHeight: '0' }}>
                       {/* Countdown Progress Bar - Show during countdown (only on first start, not after completion) */}
-                      {countdown !== null && countdown > 0 && !exerciseCompleted && (
+                      {countdown !== null && countdown > 0 && !exerciseCompleted ? (
                         <div className="w-full max-w-xs px-4">
                           <span
                             className="text-sm font-medium mb-2 block text-center"
@@ -2915,6 +3009,9 @@ export default function Home() {
                             </div>
                           </div>
                         </div>
+                      ) : (
+                        /* Empty div to maintain spacing when countdown is not shown */
+                        <div></div>
                       )}
 
                       {/* Legend for Physiological Sigh - Show after countdown completes with 150ms delay */}
@@ -2937,9 +3034,38 @@ export default function Home() {
 
                     {/* Navigation Section - 15% (hide when completed) */}
                     {!exerciseCompleted && (
-                    <div className="flex-[0.15] flex flex-col items-center justify-end pb-8">
-                      <div className="flex items-center justify-center w-full max-w-md px-4">
-                      {/* Start/Pause Button - Centered */}
+                    <div className="flex-[0.15] flex flex-col items-center justify-end pb-6">
+                      <div className="flex items-center justify-center w-full max-w-md px-4" style={{ gap: '34px' }}>
+                      {/* Customization Button - Left */}
+                      <button
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          // TODO: Add customization functionality
+                          console.log('Customization clicked');
+                        }}
+                        className="rounded-full font-medium text-sm flex items-center justify-center transition-all hover:brightness-110 active:brightness-90"
+                        style={{
+                          width: '56px',
+                          height: '56px',
+                          background: '#36393B',
+                          color: '#FFFFFF',
+                          boxShadow: '6px 6px 15px 0 #000'
+                        }}
+                      >
+                        <svg width="24" height="24" viewBox="0 0 118 118" fill="none">
+                          <path d="M19.6667 24.5845L49.1667 24.5833" stroke="currentColor" strokeWidth="8.5" strokeLinecap="round"/>
+                          <path d="M63.9167 24.5833H98.3334" stroke="currentColor" strokeWidth="8.5" strokeLinecap="round"/>
+                          <path d="M78.6667 44.25V73.75" stroke="currentColor" strokeWidth="8.5" strokeLinecap="round"/>
+                          <path d="M49.1667 9.83333V39.3333" stroke="currentColor" strokeWidth="8.5" strokeLinecap="round"/>
+                          <path d="M59 78.6667V108.167" stroke="currentColor" strokeWidth="8.5" strokeLinecap="round"/>
+                          <path d="M78.6667 59L98.3334 59.001" stroke="currentColor" strokeWidth="8.5" strokeLinecap="round"/>
+                          <path d="M19.6667 59.001L63.9167 59" stroke="currentColor" strokeWidth="8.5" strokeLinecap="round"/>
+                          <path d="M59 93.4167H98.3333" stroke="currentColor" strokeWidth="8.5" strokeLinecap="round"/>
+                          <path d="M19.6667 93.4176L44.2501 93.4167" stroke="currentColor" strokeWidth="8.5" strokeLinecap="round"/>
+                        </svg>
+                      </button>
+
+                      {/* Start/Pause Button - Center */}
                       <button
                         onClick={(e) => {
                           e.stopPropagation();
@@ -2976,6 +3102,26 @@ export default function Home() {
                       >
                         {exerciseCompleted || isPaused ? 'Start' : 'Pause'}
                       </button>
+
+                      {/* Sound Button - Right */}
+                      <button
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          setShowMusicSheet(true);
+                        }}
+                        className="rounded-full font-medium text-sm flex items-center justify-center transition-all hover:brightness-110 active:brightness-90"
+                        style={{
+                          width: '56px',
+                          height: '56px',
+                          background: selectedMusic ? '#746996' : '#36393B',
+                          color: '#FFFFFF',
+                          boxShadow: '6px 6px 15px 0 #000'
+                        }}
+                      >
+                        <svg width="18" height="18" viewBox="0 0 18 18" fill="none">
+                          <path d="M17.1884 9.09605C17.1884 8.98559 17.1884 8.87994 17.1836 8.76948C17.1355 7.29029 16.7513 5.89755 16.1078 4.67769C14.6382 1.88741 11.8287 0 8.59658 0C5.36446 0 2.55016 1.88741 1.08058 4.67769C0.437033 5.90235 0.0528329 7.29029 0.00480725 8.76948C4.69011e-06 8.87994 0 8.98559 0 9.09605V13.6201C0 15.6035 1.39754 17.2556 3.26574 17.6542C3.46744 17.8607 3.77482 18 4.12061 18C4.46639 18 4.77375 17.8655 4.97546 17.6542L4.98987 17.6398V9.60032H4.98506C4.78816 9.3842 4.47119 9.24013 4.1158 9.24013C3.76041 9.24013 3.44344 9.3842 3.24654 9.60032H3.24173C2.59819 9.73479 2.01228 10.0277 1.52242 10.4264C1.484 10.46 1.17182 10.7385 1.07577 10.8538V9.01441C1.07577 8.88474 1.18143 8.77428 1.3159 8.77428H1.32551H1.42155C1.58004 4.73052 4.73053 1.5032 8.58698 1.5032C12.4434 1.5032 15.5891 4.73052 15.7476 8.77428H15.8581C15.9925 8.77428 16.0982 8.88474 16.0982 9.01441V10.8538C16.0021 10.7385 15.8917 10.6281 15.7764 10.5368C15.7764 10.5368 15.69 10.46 15.6515 10.4264C15.1617 10.0277 14.5758 9.73959 13.9322 9.60032C13.7305 9.3842 13.4136 9.24013 13.0582 9.24013C12.7028 9.24013 12.3954 9.3746 12.1889 9.59552V17.6494C12.1889 17.6494 12.1937 17.6542 12.1985 17.6542C12.4002 17.8607 12.7124 18 13.0534 18C13.3943 18 13.7065 17.8655 13.9082 17.6542C15.7764 17.2556 17.174 15.6035 17.174 13.6201C17.174 13.3031 17.1355 12.9909 17.0683 12.6932C17.1355 12.9909 17.174 13.2983 17.174 13.6201V9.09605H17.1884Z" fill="currentColor"/>
+                        </svg>
+                      </button>
                       </div>
                     </div>
                     )}
@@ -2989,60 +3135,184 @@ export default function Home() {
                   /* Track List */
                   <div className="flex flex-col flex-1 min-h-0">
                     {selectedOption === 'breathe' && (
-                      <div className="mt-1 mb-4 flex-shrink-0">
-                        <h3 className="font-semibold text-2xl text-black">
+                      <div className="mb-6 flex-shrink-0">
+                        <h3 className="font-medium text-2xl text-white">
                           Select a breathing technique
                         </h3>
                       </div>
                     )}
-                    <div className="overflow-y-auto flex-1 min-h-0 hide-scrollbar">
-                      {currentTracks.map((track, index) => (
-                      <button
-                        key={track.id}
-                        onClick={() => {
-                          if (selectedOption === 'breathe') {
-                            // Show info screen for breathing exercises
-                            setSelectedExercise(track);
-                            setShowingInfo(true);
-                          }
-                        }}
-                        className="w-full flex items-start py-4 border-b border-gray-200 hover:bg-gray-50 hover:opacity-70 transition-all group"
-                    >
-                      <div className="text-left flex-1">
-                        <p className="text-base font-semibold text-black">{track.name}</p>
-                        {selectedOption === 'breathe' && (() => {
-                          const metadata = getExerciseMetadata(track.name);
-                          return (
-                            <>
-                              <div className="text-gray-500 mt-1" style={{ fontSize: '13px' }}>
-                                <p>
-                                  <span className="font-bold">Helps with:</span> {metadata.bestFor}
-                                </p>
-                                <div className="flex items-center gap-3 mt-1">
-                                  <p>
-                                    <span className="font-bold">Ideal time:</span> {metadata.idealSession}
-                                  </p>
-                                  <DifficultyIndicator level={getDifficultyLevel(track.name)} />
-                                </div>
-                              </div>
-                            </>
-                          );
-                        })()}
-                      </div>
+                    {selectedOption === 'breathe' ? (
+                      /* Single Column List Layout for Breathing Exercises */
+                      <div className="overflow-y-auto flex-1 min-h-0 hide-scrollbar px-4">
+                        <div className="flex flex-col gap-3">
+                          {currentTracks.map((track, index) => {
+                            const metadata = getExerciseMetadata(track.name);
 
-                      {/* Right Side - Duration or Chevron */}
-                      {selectedOption === 'breathe' ? (
-                        <div className="flex items-center ml-4 self-center">
-                          <svg className="w-5 h-5 text-gray-400 group-hover:text-gray-600 transition-colors" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
-                          </svg>
+                            // Function to render exercise preview icon
+                            const renderExerciseIcon = (exerciseName) => {
+                              const iconSize = 56;
+
+                              switch(exerciseName) {
+                                case 'Box Breathing (4-4-4-4)':
+                                  return (
+                                    <svg width={iconSize} height={iconSize} viewBox="0 0 48 48" style={{ border: '1px solid #666', borderRadius: '6px' }}>
+                                      <rect x="6" y="6" width="16" height="16" rx="2" fill="#746996" />
+                                      <rect x="26" y="6" width="16" height="16" rx="2" fill="#444" />
+                                      <rect x="6" y="26" width="16" height="16" rx="2" fill="#444" />
+                                      <rect x="26" y="26" width="16" height="16" rx="2" fill="#444" />
+                                    </svg>
+                                  );
+
+                                case '4-7-8 Breathing':
+                                  return (
+                                    <svg width={iconSize} height={iconSize} viewBox="0 0 48 48" style={{ border: '1px solid #666', borderRadius: '50%' }}>
+                                      <defs>
+                                        <radialGradient id="gradient-478">
+                                          <stop offset="0%" stopColor="rgba(116, 105, 187, 1)" />
+                                          <stop offset="50%" stopColor="rgba(116, 105, 187, 0.6)" />
+                                          <stop offset="100%" stopColor="rgba(116, 105, 187, 0.2)" />
+                                        </radialGradient>
+                                      </defs>
+                                      <circle cx="24" cy="24" r="20" fill="url(#gradient-478)" />
+                                    </svg>
+                                  );
+
+                                case 'Coherent Breathing':
+                                  return (
+                                    <svg width={iconSize} height={iconSize} viewBox="0 0 48 48" style={{ border: '1px solid #666', borderRadius: '50%' }}>
+                                      <defs>
+                                        <radialGradient id="gradient-coherent">
+                                          <stop offset="0%" stopColor="rgba(255, 230, 230, 0.8)" />
+                                          <stop offset="100%" stopColor="rgba(246, 208, 234, 1)" />
+                                        </radialGradient>
+                                      </defs>
+                                      <circle cx="24" cy="24" r="20" fill="url(#gradient-coherent)" />
+                                    </svg>
+                                  );
+
+                                case 'Physiological Sigh':
+                                  return (
+                                    <svg width={iconSize} height={iconSize} viewBox="0 0 48 48" style={{ border: '1px solid #666', borderRadius: '50%' }}>
+                                      <defs>
+                                        <radialGradient id="gradient-physio-outer">
+                                          <stop offset="0%" stopColor="rgba(255, 230, 230, 0.6)" />
+                                          <stop offset="100%" stopColor="rgba(246, 208, 234, 0.8)" />
+                                        </radialGradient>
+                                        <radialGradient id="gradient-physio-inner">
+                                          <stop offset="0%" stopColor="rgba(173, 136, 198, 1)" />
+                                          <stop offset="100%" stopColor="rgba(116, 105, 182, 0.9)" />
+                                        </radialGradient>
+                                      </defs>
+                                      <circle cx="24" cy="24" r="20" fill="url(#gradient-physio-outer)" />
+                                      <circle cx="24" cy="24" r="14" fill="url(#gradient-physio-inner)" />
+                                    </svg>
+                                  );
+
+                                case 'Alternate Nostril':
+                                  return (
+                                    <svg width={iconSize} height={iconSize} viewBox="0 0 48 48" style={{ border: '1px solid #666', borderRadius: '4px' }}>
+                                      <defs>
+                                        <linearGradient id="gradient-nostril" x1="0%" y1="100%" x2="0%" y2="0%">
+                                          <stop offset="0%" stopColor="#7469B6" />
+                                          <stop offset="50%" stopColor="#AD88C6" />
+                                          <stop offset="100%" stopColor="#FFE6E6" />
+                                        </linearGradient>
+                                      </defs>
+                                      <rect x="9" y="8" width="13" height="32" rx="2" fill="url(#gradient-nostril)" stroke="#4B5563" strokeWidth="1" />
+                                      <rect x="26" y="8" width="13" height="32" rx="2" fill="none" stroke="#4B5563" strokeWidth="1" />
+                                    </svg>
+                                  );
+
+                                case 'Humming Bee':
+                                  return (
+                                    <svg width={iconSize} height={iconSize} viewBox="0 0 48 48" style={{ border: '1px solid #666', borderRadius: '50%' }}>
+                                      <defs>
+                                        <radialGradient id="gradient-humming">
+                                          <stop offset="0%" stopColor="rgba(225, 175, 209, 1)" />
+                                          <stop offset="100%" stopColor="rgba(225, 175, 209, 0.3)" />
+                                        </radialGradient>
+                                      </defs>
+                                      <circle cx="24" cy="24" r="20" fill="url(#gradient-humming)" />
+                                      {/* Vibration lines - 3 parallel vertical lines, middle longest */}
+                                      <line x1="20" y1="20" x2="20" y2="28" stroke="#7469B6" strokeWidth="2.5" opacity="1" strokeLinecap="round" />
+                                      <line x1="24" y1="17" x2="24" y2="31" stroke="#7469B6" strokeWidth="2.5" opacity="1" strokeLinecap="round" />
+                                      <line x1="28" y1="20" x2="28" y2="28" stroke="#7469B6" strokeWidth="2.5" opacity="1" strokeLinecap="round" />
+                                    </svg>
+                                  );
+
+                                default:
+                                  return null;
+                              }
+                            };
+
+                            return (
+                              <button
+                                key={track.id}
+                                onClick={() => {
+                                  setSelectedExercise(track);
+                                  setShowingInfo(true);
+                                }}
+                                className="flex flex-row items-center justify-between p-4 transition-all hover:brightness-110 active:brightness-90"
+                                style={{
+                                  borderRadius: '13px',
+                                  background: '#333',
+                                  boxShadow: '-6px -6px 16px 0 rgba(60, 60, 60, 0.5), 6px 6px 16px 0 rgba(0, 0, 0, 0.8)'
+                                }}
+                              >
+                                {/* Left Content */}
+                                <div className="flex flex-col items-start gap-2 flex-1">
+                                  {/* Exercise Name */}
+                                  <span className="text-base font-bold text-white text-left leading-tight">
+                                    {track.name}
+                                  </span>
+
+                                  {/* Difficulty Indicator */}
+                                  <DifficultyIndicator level={getDifficultyLevel(track.name)} />
+
+                                  {/* Best For */}
+                                  <p className="text-sm text-gray-300 text-left">
+                                    {metadata.bestFor}
+                                  </p>
+                                </div>
+
+                                {/* Right: Preview Icon */}
+                                <div className="ml-4 flex-shrink-0">
+                                  {renderExerciseIcon(track.name)}
+                                </div>
+                              </button>
+                            );
+                          })}
                         </div>
-                      ) : (
-                        <span className="text-sm text-gray-500">{track.duration}</span>
-                      )}
-                    </button>
-                      ))}
-                    </div>
+                      </div>
+                    ) : (
+                      /* Original List View for Focus/Calm */
+                      <div className="overflow-y-auto flex-1 min-h-0 hide-scrollbar">
+                        {currentTracks.map((track, index) => (
+                        <div
+                          key={track.id}
+                          className="w-full flex items-start py-4 border-b border-gray-600 hover:bg-gray-700 hover:opacity-70 transition-all group relative"
+                      >
+                        <button
+                          onClick={() => {
+                            if (selectedOption === 'breathe') {
+                              // Show info screen for breathing exercises
+                              setSelectedExercise(track);
+                              setShowingInfo(true);
+                            }
+                          }}
+                          className="text-left flex-1 flex items-start"
+                        >
+                          <div className="flex-1">
+                            <p className="text-base font-semibold text-white">{track.name}</p>
+                          </div>
+
+                          {/* Right Side - Duration or Chevron */}
+                          <span className="text-sm text-gray-500">{track.duration}</span>
+                        </button>
+                      </div>
+                        ))}
+                      </div>
+                    )}
                   </div>
                 )}
               </div>
@@ -3113,22 +3383,22 @@ export default function Home() {
                       <h3 className="text-lg font-bold text-black mb-4">General</h3>
 
                       <div className="mb-6">
-                        <h4 className="font-semibold text-black mb-2">What is this app?</h4>
-                        <p className="text-gray-700 text-sm leading-relaxed">
+                        <h4 className="font-bold text-lg text-black mb-3">What is this app?</h4>
+                        <p className="text-black text-base leading-relaxed">
                           This is a minimal, science-backed breathing app designed to help you detach from the noise of modern life. It offers a clean, distraction-free environment to help you reset—on your terms, in your time. No subscriptions, no gamification, no clutter.
                         </p>
                       </div>
 
                       <div className="mb-6">
-                        <h4 className="font-semibold text-black mb-2">Why did you create this app?</h4>
-                        <p className="text-gray-700 text-sm leading-relaxed">
+                        <h4 className="font-bold text-lg text-black mb-3">Why did you create this app?</h4>
+                        <p className="text-black text-base leading-relaxed">
                           We built this because we couldn't find anything like it. Most apps were too noisy, too feature-heavy, or too focused on engagement. We wanted a simple, effective space for stillness—no voiceovers, no upsells, no pressure. Just sound, breath, and choice.
                         </p>
                       </div>
 
                       <div className="mb-6">
-                        <h4 className="font-semibold text-black mb-2">Who is this app for?</h4>
-                        <p className="text-gray-700 text-sm leading-relaxed">
+                        <h4 className="font-bold text-lg text-black mb-3">Who is this app for?</h4>
+                        <p className="text-black text-base leading-relaxed">
                           This is for people who are tired of constant noise—external and internal. If you're looking for a quiet companion that doesn't demand your attention, this is for you. No achievements. No streaks. Just space to breathe.
                         </p>
                       </div>
@@ -3139,25 +3409,25 @@ export default function Home() {
                       <h3 className="text-lg font-bold text-black mb-4">Features</h3>
 
                       <div className="mb-6">
-                        <h4 className="font-semibold text-black mb-2">What breathing exercises are available?</h4>
-                        <p className="text-gray-700 text-sm leading-relaxed">
+                        <h4 className="font-bold text-lg text-black mb-3">What breathing exercises are available?</h4>
+                        <p className="text-black text-base leading-relaxed">
                           The app offers six distinct breathing exercises, each carefully curated to support different needs—whether you want to calm down, refocus, or simply pause.
                         </p>
                       </div>
 
                       <div className="mb-6">
-                        <h4 className="font-semibold text-black mb-2">Can I customize the exercises?</h4>
-                        <p className="text-gray-700 text-sm leading-relaxed">
+                        <h4 className="font-bold text-lg text-black mb-3">Can I customize the exercises?</h4>
+                        <p className="text-black text-base leading-relaxed">
                           Yes. Every breathing exercise allows you to choose how many cycles you want to complete. In the Coherent Breathing exercise, you can also adjust the inhale and exhale timer to suit your preferences.
                         </p>
                       </div>
 
                       <div className="mb-6">
-                        <h4 className="font-semibold text-black mb-2">Does the app include guidance or preparation advice?</h4>
+                        <h4 className="font-bold text-lg text-black mb-3">Does the app include guidance or preparation advice?</h4>
                         <p className="text-gray-700 text-sm leading-relaxed mb-2">
                           Absolutely. Each exercise comes with a curated list of:
                         </p>
-                        <ul className="list-disc list-inside text-gray-700 text-sm leading-relaxed ml-4">
+                        <ul className="list-disc list-inside text-black text-base leading-relaxed ml-4">
                           <li>Tips</li>
                           <li>Preparation advice</li>
                           <li>When to try it</li>
@@ -3174,15 +3444,15 @@ export default function Home() {
                       <h3 className="text-lg font-bold text-black mb-4">Accessibility & Availability</h3>
 
                       <div className="mb-6">
-                        <h4 className="font-semibold text-black mb-2">What platforms is the app available on?</h4>
-                        <p className="text-gray-700 text-sm leading-relaxed">
+                        <h4 className="font-bold text-lg text-black mb-3">What platforms is the app available on?</h4>
+                        <p className="text-black text-base leading-relaxed">
                           Currently, the app is available only on the web. If demand continues, we'll explore building native mobile apps for iOS and Android.
                         </p>
                       </div>
 
                       <div className="mb-6">
-                        <h4 className="font-semibold text-black mb-2">Do I need to create an account or sign in?</h4>
-                        <p className="text-gray-700 text-sm leading-relaxed">
+                        <h4 className="font-bold text-lg text-black mb-3">Do I need to create an account or sign in?</h4>
+                        <p className="text-black text-base leading-relaxed">
                           No account required. We intentionally keep things simple and private.
                         </p>
                       </div>
@@ -3193,22 +3463,22 @@ export default function Home() {
                       <h3 className="text-lg font-bold text-black mb-4">Cost & Monetization</h3>
 
                       <div className="mb-6">
-                        <h4 className="font-semibold text-black mb-2">Is the app free?</h4>
-                        <p className="text-gray-700 text-sm leading-relaxed">
+                        <h4 className="font-bold text-lg text-black mb-3">Is the app free?</h4>
+                        <p className="text-black text-base leading-relaxed">
                           Yes, the app is 100% free to use. No subscriptions, no hidden fees, no upsells.
                         </p>
                       </div>
 
                       <div className="mb-6">
-                        <h4 className="font-semibold text-black mb-2">Are there plans to monetize the app?</h4>
-                        <p className="text-gray-700 text-sm leading-relaxed">
+                        <h4 className="font-bold text-lg text-black mb-3">Are there plans to monetize the app?</h4>
+                        <p className="text-black text-base leading-relaxed">
                           We're considering adding an optional donation feature to help support hosting and future improvements. If implemented, it will be entirely optional—no pressure, ever.
                         </p>
                       </div>
 
                       <div className="mb-6">
-                        <h4 className="font-semibold text-black mb-2">Will there ever be badges, rewards, or streaks?</h4>
-                        <p className="text-gray-700 text-sm leading-relaxed">
+                        <h4 className="font-bold text-lg text-black mb-3">Will there ever be badges, rewards, or streaks?</h4>
+                        <p className="text-black text-base leading-relaxed">
                           No. That's not what this app is about. We don't believe rest should be gamified.
                         </p>
                       </div>
@@ -3219,8 +3489,8 @@ export default function Home() {
                       <h3 className="text-lg font-bold text-black mb-4">Philosophy & Community</h3>
 
                       <div className="mb-6">
-                        <h4 className="font-semibold text-black mb-2">What makes this app different from other wellness apps?</h4>
-                        <ul className="list-disc list-inside text-gray-700 text-sm leading-relaxed ml-4 space-y-2">
+                        <h4 className="font-bold text-lg text-black mb-3">What makes this app different from other wellness apps?</h4>
+                        <ul className="list-disc list-inside text-black text-base leading-relaxed ml-4 space-y-2">
                           <li><span className="font-semibold">No distractions:</span> No pop-ups, no guided meditations, no complex dashboards.</li>
                           <li><span className="font-semibold">Evidence-based:</span> Breathing techniques and sound design are grounded in science, not trends.</li>
                           <li><span className="font-semibold">Minimalist design:</span> Built to help you detach, not keep you engaged.</li>
@@ -3229,15 +3499,15 @@ export default function Home() {
                       </div>
 
                       <div className="mb-6">
-                        <h4 className="font-semibold text-black mb-2">Is this part of a larger movement or community?</h4>
-                        <p className="text-gray-700 text-sm leading-relaxed">
+                        <h4 className="font-bold text-lg text-black mb-3">Is this part of a larger movement or community?</h4>
+                        <p className="text-black text-base leading-relaxed">
                           It's not a movement—it's a mindset. A small collective of people who believe the most radical thing we can do is rest our minds. You're invited to use the app however and whenever you need it.
                         </p>
                       </div>
 
                       <div className="mb-6">
-                        <h4 className="font-semibold text-black mb-2">How can I support this project?</h4>
-                        <p className="text-gray-700 text-sm leading-relaxed">
+                        <h4 className="font-bold text-lg text-black mb-3">How can I support this project?</h4>
+                        <p className="text-black text-base leading-relaxed">
                           Use it. Share it if you think someone else might need it. And if a donation feature is added in the future, support us if you feel moved to.
                         </p>
                       </div>
@@ -3255,45 +3525,45 @@ export default function Home() {
                   <div className="flex flex-col py-6 text-left space-y-6 max-w-3xl mx-auto">
                     <p className="text-xs text-gray-600 italic">Last updated: January 9, 2026</p>
 
-                    <p className="text-sm text-gray-700 leading-relaxed">
+                    <p className="text-base text-black leading-relaxed">
                       We respect your privacy. This policy explains how we collect, use, and protect your data when you use our breathing app, currently available via web and powered by Firebase services.
                     </p>
 
                     {/* 1. Who We Are */}
                     <section>
-                      <h3 className="text-base font-bold text-black mb-3">1. Who We Are</h3>
-                      <p className="text-sm text-gray-700 leading-relaxed">
+                      <h3 className="text-lg font-bold text-black mb-3">1. Who We Are</h3>
+                      <p className="text-base text-black leading-relaxed">
                         This app is developed and operated by a small independent team based in India. Our mission is to offer a minimal, distraction-free space to breathe—without advertising, upsells, or pressure.
                       </p>
                     </section>
 
                     {/* 2. What Data We Collect */}
                     <section>
-                      <h3 className="text-base font-bold text-black mb-3">2. What Data We Collect</h3>
-                      <p className="text-sm text-gray-700 leading-relaxed mb-4">
+                      <h3 className="text-lg font-bold text-black mb-3">2. What Data We Collect</h3>
+                      <p className="text-base text-black leading-relaxed mb-4">
                         We do not collect or store any personal information beyond what is essential for app functionality.
                       </p>
-                      <p className="text-sm text-gray-700 leading-relaxed mb-3">We collect the following data:</p>
+                      <p className="text-base text-black leading-relaxed mb-3">We collect the following data:</p>
 
                       <div className="ml-4 mb-4">
-                        <h4 className="text-sm font-semibold text-black mb-2">Authentication Data</h4>
-                        <p className="text-sm text-gray-700 leading-relaxed">
+                        <h4 className="font-bold text-lg text-black mb-3">Authentication Data</h4>
+                        <p className="text-base text-black leading-relaxed">
                           When you log in via Google Authentication, Firebase (a Google service) verifies your identity. We do not store your email address or Google profile data in our own databases.
                         </p>
                       </div>
 
                       <div className="ml-4">
-                        <h4 className="text-sm font-semibold text-black mb-2">App Activity Data</h4>
-                        <p className="text-sm text-gray-700 leading-relaxed mb-2">
+                        <h4 className="font-bold text-lg text-black mb-3">App Activity Data</h4>
+                        <p className="text-base text-black leading-relaxed mb-2">
                           We track non-personal, anonymized usage information such as:
                         </p>
-                        <ul className="list-disc list-inside text-sm text-gray-700 leading-relaxed ml-4 mb-2">
+                        <ul className="list-disc list-inside text-base text-black leading-relaxed ml-4 mb-2">
                           <li>Exercises started</li>
                           <li>Duration of usage</li>
                           <li>Frequency and timestamps</li>
                           <li>Crashes or errors (via Crashlytics)</li>
                         </ul>
-                        <p className="text-sm text-gray-700 leading-relaxed">
+                        <p className="text-base text-black leading-relaxed">
                           This helps us improve the app and understand what features are most helpful.
                         </p>
                       </div>
@@ -3301,18 +3571,18 @@ export default function Home() {
 
                     {/* 3. How We Use Your Data */}
                     <section>
-                      <h3 className="text-base font-bold text-black mb-3">3. How We Use Your Data</h3>
-                      <p className="text-sm text-gray-700 leading-relaxed mb-2">
+                      <h3 className="text-lg font-bold text-black mb-3">3. How We Use Your Data</h3>
+                      <p className="text-base text-black leading-relaxed mb-2">
                         We use the above data only for the following purposes:
                       </p>
-                      <ul className="list-disc list-inside text-sm text-gray-700 leading-relaxed ml-4 mb-3">
+                      <ul className="list-disc list-inside text-base text-black leading-relaxed ml-4 mb-3">
                         <li>To provide and improve app functionality</li>
                         <li>To monitor app stability and fix issues</li>
                         <li>To understand overall usage patterns</li>
                         <li>To ensure login security via Google Authentication</li>
                       </ul>
-                      <p className="text-sm text-gray-700 leading-relaxed mb-2">We do not:</p>
-                      <ul className="list-disc list-inside text-sm text-gray-700 leading-relaxed ml-4">
+                      <p className="text-base text-black leading-relaxed mb-2">We do not:</p>
+                      <ul className="list-disc list-inside text-base text-black leading-relaxed ml-4">
                         <li>Sell your data</li>
                         <li>Share your data with advertisers</li>
                         <li>Track you across other sites or apps</li>
@@ -3321,16 +3591,16 @@ export default function Home() {
 
                     {/* 4. Third-Party Services */}
                     <section>
-                      <h3 className="text-base font-bold text-black mb-3">4. Third-Party Services</h3>
-                      <p className="text-sm text-gray-700 leading-relaxed mb-2">
+                      <h3 className="text-lg font-bold text-black mb-3">4. Third-Party Services</h3>
+                      <p className="text-base text-black leading-relaxed mb-2">
                         We rely on the following third-party services, which may process limited data:
                       </p>
-                      <ul className="list-disc list-inside text-sm text-gray-700 leading-relaxed ml-4 mb-3">
+                      <ul className="list-disc list-inside text-base text-black leading-relaxed ml-4 mb-3">
                         <li>Firebase Authentication (Google LLC) – for login via Google</li>
                         <li>Firebase Analytics – for anonymous usage tracking</li>
                         <li>Firebase Crashlytics – for crash/error reporting</li>
                       </ul>
-                      <p className="text-sm text-gray-700 leading-relaxed">
+                      <p className="text-base text-black leading-relaxed">
                         These services are governed by{' '}
                         <a
                           href="https://policies.google.com/privacy"
@@ -3345,12 +3615,12 @@ export default function Home() {
 
                     {/* 5. Your Rights */}
                     <section>
-                      <h3 className="text-base font-bold text-black mb-3">5. Your Rights</h3>
+                      <h3 className="text-lg font-bold text-black mb-3">5. Your Rights</h3>
 
                       <div className="mb-4">
-                        <p className="text-sm font-semibold text-black mb-2">Under GDPR (EU/EEA) and Indian law:</p>
-                        <p className="text-sm text-gray-700 leading-relaxed mb-2">You have the right to:</p>
-                        <ul className="list-disc list-inside text-sm text-gray-700 leading-relaxed ml-4">
+                        <p className="text-base font-semibold text-black mb-2">Under GDPR (EU/EEA) and Indian law:</p>
+                        <p className="text-base text-black leading-relaxed mb-2">You have the right to:</p>
+                        <ul className="list-disc list-inside text-base text-black leading-relaxed ml-4">
                           <li>Request access to the data we hold (limited to app activity logs)</li>
                           <li>Request correction or deletion of your data</li>
                           <li>Withdraw consent at any time (by stopping use of the app)</li>
@@ -3358,59 +3628,59 @@ export default function Home() {
                       </div>
 
                       <div className="mb-4">
-                        <p className="text-sm font-semibold text-black mb-2">Under California Consumer Privacy Act (CCPA):</p>
-                        <p className="text-sm text-gray-700 leading-relaxed mb-2">You have the right to:</p>
-                        <ul className="list-disc list-inside text-sm text-gray-700 leading-relaxed ml-4">
+                        <p className="text-base font-semibold text-black mb-2">Under California Consumer Privacy Act (CCPA):</p>
+                        <p className="text-base text-black leading-relaxed mb-2">You have the right to:</p>
+                        <ul className="list-disc list-inside text-base text-black leading-relaxed ml-4">
                           <li>Know what data we collect and how we use it</li>
                           <li>Request deletion of your data</li>
                           <li>Opt-out of the sale of personal data (we do not sell any data)</li>
                         </ul>
                       </div>
 
-                      <p className="text-sm text-gray-700 leading-relaxed">
+                      <p className="text-base text-black leading-relaxed">
                         To exercise your rights, contact us at: <span className="font-semibold">myemail@email.com</span>
                       </p>
                     </section>
 
                     {/* 6. Data Retention */}
                     <section>
-                      <h3 className="text-base font-bold text-black mb-3">6. Data Retention</h3>
-                      <p className="text-sm text-gray-700 leading-relaxed">
+                      <h3 className="text-lg font-bold text-black mb-3">6. Data Retention</h3>
+                      <p className="text-base text-black leading-relaxed">
                         We retain activity logs (anonymized) for up to 12 months, to monitor usage patterns and improve functionality. After this, data may be deleted or aggregated.
                       </p>
                     </section>
 
                     {/* 7. Account Deletion */}
                     <section>
-                      <h3 className="text-base font-bold text-black mb-3">7. Account Deletion</h3>
-                      <p className="text-sm text-gray-700 leading-relaxed">
+                      <h3 className="text-lg font-bold text-black mb-3">7. Account Deletion</h3>
+                      <p className="text-base text-black leading-relaxed">
                         We use Google Authentication for login but do not create standalone user accounts. Therefore, there is no separate "account" to delete. However, if you'd like us to remove your activity data, you may contact us using the email below.
                       </p>
                     </section>
 
                     {/* 8. Data Storage Location */}
                     <section>
-                      <h3 className="text-base font-bold text-black mb-3">8. Data Storage Location</h3>
-                      <p className="text-sm text-gray-700 leading-relaxed">
+                      <h3 className="text-lg font-bold text-black mb-3">8. Data Storage Location</h3>
+                      <p className="text-base text-black leading-relaxed">
                         All data is stored securely using Firebase, hosted on Google Cloud infrastructure. Data may be stored in servers located in the United States, EU, or Asia, subject to Google's data policies.
                       </p>
                     </section>
 
                     {/* 9. Changes to This Policy */}
                     <section>
-                      <h3 className="text-base font-bold text-black mb-3">9. Changes to This Policy</h3>
-                      <p className="text-sm text-gray-700 leading-relaxed">
+                      <h3 className="text-lg font-bold text-black mb-3">9. Changes to This Policy</h3>
+                      <p className="text-base text-black leading-relaxed">
                         We may update this Privacy Policy as our app evolves. We will post the updated version with a new "last updated" date. Continued use of the app implies your acceptance of any changes.
                       </p>
                     </section>
 
                     {/* 10. Contact Us */}
                     <section className="border-t border-gray-300 pt-6">
-                      <h3 className="text-base font-bold text-black mb-3">10. Contact Us</h3>
-                      <p className="text-sm text-gray-700 leading-relaxed mb-2">
+                      <h3 className="text-lg font-bold text-black mb-3">10. Contact Us</h3>
+                      <p className="text-base text-black leading-relaxed mb-2">
                         If you have any questions or concerns about your privacy, contact us at:
                       </p>
-                      <p className="text-sm text-gray-700 leading-relaxed">
+                      <p className="text-base text-black leading-relaxed">
                         📧 <span className="font-semibold">myemail@email.com</span>
                       </p>
                     </section>
@@ -3419,53 +3689,53 @@ export default function Home() {
                   <div className="flex flex-col py-6 text-left space-y-6 max-w-3xl mx-auto">
                     <p className="text-xs text-gray-600 italic">Last updated: January 9, 2026</p>
 
-                    <p className="text-sm text-gray-700 leading-relaxed">
+                    <p className="text-base text-black leading-relaxed">
                       Welcome to our breathing app. Please read these Terms and Conditions ("Terms") carefully before using the app. By accessing or using the app, you agree to be bound by these Terms.
                     </p>
 
-                    <p className="text-sm text-gray-700 leading-relaxed font-semibold">
+                    <p className="text-base text-black leading-relaxed font-semibold">
                       If you do not agree to these Terms, please do not use the app.
                     </p>
 
                     {/* 1. Who We Are */}
                     <section>
-                      <h3 className="text-base font-bold text-black mb-3">1. Who We Are</h3>
-                      <p className="text-sm text-gray-700 leading-relaxed">
+                      <h3 className="text-lg font-bold text-black mb-3">1. Who We Are</h3>
+                      <p className="text-base text-black leading-relaxed">
                         This app is developed by a small team based in India, offering a minimalist, free breathing tool. We do not serve ads, offer upsells, or sell your data.
                       </p>
                     </section>
 
                     {/* 2. Use of the App */}
                     <section>
-                      <h3 className="text-base font-bold text-black mb-3">2. Use of the App</h3>
-                      <p className="text-sm text-gray-700 leading-relaxed mb-2">
+                      <h3 className="text-lg font-bold text-black mb-3">2. Use of the App</h3>
+                      <p className="text-base text-black leading-relaxed mb-2">
                         You may use the app for personal, non-commercial purposes only. You must not:
                       </p>
-                      <ul className="list-disc list-inside text-sm text-gray-700 leading-relaxed ml-4 mb-3">
+                      <ul className="list-disc list-inside text-base text-black leading-relaxed ml-4 mb-3">
                         <li>Use the app for unlawful or harmful purposes</li>
                         <li>Attempt to reverse-engineer, copy, or distribute the app or its content</li>
                         <li>Use automated systems to access the app or collect data</li>
                       </ul>
-                      <p className="text-sm text-gray-700 leading-relaxed">
+                      <p className="text-base text-black leading-relaxed">
                         We reserve the right to suspend or terminate access if misuse is detected.
                       </p>
                     </section>
 
                     {/* 3. Google Authentication */}
                     <section>
-                      <h3 className="text-base font-bold text-black mb-3">3. Google Authentication</h3>
-                      <p className="text-sm text-gray-700 leading-relaxed">
+                      <h3 className="text-lg font-bold text-black mb-3">3. Google Authentication</h3>
+                      <p className="text-base text-black leading-relaxed">
                         The app uses Firebase Authentication for Google sign-in. We do not store your email or personal information outside of Firebase. By using the sign-in feature, you also agree to Google's terms and privacy practices.
                       </p>
                     </section>
 
                     {/* 4. Health Disclaimer */}
                     <section>
-                      <h3 className="text-base font-bold text-black mb-3">4. Health Disclaimer</h3>
-                      <p className="text-sm text-gray-700 leading-relaxed mb-2">
+                      <h3 className="text-lg font-bold text-black mb-3">4. Health Disclaimer</h3>
+                      <p className="text-base text-black leading-relaxed mb-2">
                         This app provides general breathing exercises for relaxation and focus. It is not a substitute for professional medical advice or treatment.
                       </p>
-                      <ul className="list-disc list-inside text-sm text-gray-700 leading-relaxed ml-4">
+                      <ul className="list-disc list-inside text-base text-black leading-relaxed ml-4">
                         <li>Use at your own risk.</li>
                         <li>If you have respiratory, cardiac, or neurological conditions, consult your doctor before using the app.</li>
                         <li>We are not responsible for any outcomes resulting from the use of the exercises.</li>
@@ -3474,25 +3744,25 @@ export default function Home() {
 
                     {/* 5. Intellectual Property */}
                     <section>
-                      <h3 className="text-base font-bold text-black mb-3">5. Intellectual Property</h3>
-                      <p className="text-sm text-gray-700 leading-relaxed mb-2">
+                      <h3 className="text-lg font-bold text-black mb-3">5. Intellectual Property</h3>
+                      <p className="text-base text-black leading-relaxed mb-2">
                         All content in the app—including visuals, sound design, and breathing patterns—is owned by the app creators or used with permission.
                       </p>
-                      <p className="text-sm text-gray-700 leading-relaxed">
+                      <p className="text-base text-black leading-relaxed">
                         You may not copy, reproduce, distribute, or modify any part of the app without explicit written consent.
                       </p>
                     </section>
 
                     {/* 6. Limitation of Liability */}
                     <section>
-                      <h3 className="text-base font-bold text-black mb-3">6. Limitation of Liability</h3>
-                      <p className="text-sm text-gray-700 leading-relaxed mb-2">
+                      <h3 className="text-lg font-bold text-black mb-3">6. Limitation of Liability</h3>
+                      <p className="text-base text-black leading-relaxed mb-2">
                         The app is provided "as is" and "as available" without warranties of any kind.
                       </p>
-                      <p className="text-sm text-gray-700 leading-relaxed mb-2">
+                      <p className="text-base text-black leading-relaxed mb-2">
                         To the fullest extent permitted by law, we disclaim all liability for:
                       </p>
-                      <ul className="list-disc list-inside text-sm text-gray-700 leading-relaxed ml-4">
+                      <ul className="list-disc list-inside text-base text-black leading-relaxed ml-4">
                         <li>Direct, indirect, incidental, or consequential damages</li>
                         <li>Health-related outcomes</li>
                         <li>Service interruptions or data loss</li>
@@ -3501,8 +3771,8 @@ export default function Home() {
 
                     {/* 7. Privacy */}
                     <section>
-                      <h3 className="text-base font-bold text-black mb-3">7. Privacy</h3>
-                      <p className="text-sm text-gray-700 leading-relaxed">
+                      <h3 className="text-lg font-bold text-black mb-3">7. Privacy</h3>
+                      <p className="text-base text-black leading-relaxed">
                         Your use of the app is also governed by our{' '}
                         <button
                           onClick={() => setCurrentView('privacy')}
@@ -3516,124 +3786,124 @@ export default function Home() {
 
                     {/* 8. Changes to the Terms */}
                     <section>
-                      <h3 className="text-base font-bold text-black mb-3">8. Changes to the Terms</h3>
-                      <p className="text-sm text-gray-700 leading-relaxed">
+                      <h3 className="text-lg font-bold text-black mb-3">8. Changes to the Terms</h3>
+                      <p className="text-base text-black leading-relaxed">
                         We may update these Terms occasionally. Changes will be posted with an updated effective date. Continued use of the app implies your acceptance of the revised Terms.
                       </p>
                     </section>
 
                     {/* 9. Governing Law */}
                     <section>
-                      <h3 className="text-base font-bold text-black mb-3">9. Governing Law</h3>
-                      <p className="text-sm text-gray-700 leading-relaxed mb-2">
+                      <h3 className="text-lg font-bold text-black mb-3">9. Governing Law</h3>
+                      <p className="text-base text-black leading-relaxed mb-2">
                         These Terms are governed by the laws of India, without regard to conflict of law principles.
                       </p>
-                      <p className="text-sm text-gray-700 leading-relaxed">
+                      <p className="text-base text-black leading-relaxed">
                         Any disputes shall be subject to the exclusive jurisdiction of the courts in India.
                       </p>
                     </section>
 
                     {/* 10. Contact Us */}
                     <section className="border-t border-gray-300 pt-6">
-                      <h3 className="text-base font-bold text-black mb-3">10. Contact Us</h3>
-                      <p className="text-sm text-gray-700 leading-relaxed mb-2">
+                      <h3 className="text-lg font-bold text-black mb-3">10. Contact Us</h3>
+                      <p className="text-base text-black leading-relaxed mb-2">
                         If you have any questions about these Terms, please contact us at:
                       </p>
-                      <p className="text-sm text-gray-700 leading-relaxed">
+                      <p className="text-base text-black leading-relaxed">
                         📧 <span className="font-semibold">myemail@email.com</span>
                       </p>
                     </section>
                   </div>
                 ) : currentView === 'breathing-info' ? (
                   <div className="flex flex-col py-6 text-left space-y-6 max-w-3xl mx-auto">
-                    <p className="text-sm text-gray-700 leading-relaxed">
+                    <p className="text-base text-black leading-relaxed">
                       Our breath is the fastest way to change how you feel—anytime, anywhere.
                     </p>
 
-                    <p className="text-sm text-gray-700 leading-relaxed">
+                    <p className="text-base text-black leading-relaxed">
                       Most of us breathe all day without noticing it. But when you intentionally guide your breath, something powerful happens: your nervous system listens. Heart rate slows. The mind becomes clearer. Stress loosens its grip.
                     </p>
 
-                    <p className="text-sm text-gray-700 leading-relaxed">
+                    <p className="text-base text-black leading-relaxed">
                       That's the promise behind The Hush Initiative—a calm, science-backed space where breathing becomes a daily ally, not another task on your list.
                     </p>
 
                     {/* Why breathing works */}
                     <section>
-                      <h3 className="text-base font-bold text-black mb-3">Why breathing works (and why you feel it so quickly)</h3>
-                      <p className="text-sm text-gray-700 leading-relaxed mb-3">
+                      <h3 className="text-lg font-bold text-black mb-3">Why breathing works (and why you feel it so quickly)</h3>
+                      <p className="text-base text-black leading-relaxed mb-3">
                         Slow, rhythmic breathing gently activates your body's natural "rest and restore" response. This helps:
                       </p>
-                      <ul className="list-disc list-inside text-sm text-gray-700 leading-relaxed ml-4 space-y-2">
+                      <ul className="list-disc list-inside text-base text-black leading-relaxed ml-4 space-y-2">
                         <li>Lower stress and anxiety by signalling safety to the brain</li>
                         <li>Improve focus and decision-making during busy or high-pressure moments</li>
                         <li>Support better sleep by easing your body out of fight-or-flight</li>
                         <li>Build emotional resilience over time, so stress has less staying power</li>
                       </ul>
-                      <p className="text-sm text-gray-700 leading-relaxed mt-3">
+                      <p className="text-base text-black leading-relaxed mt-3">
                         Even short sessions—just five minutes—can create noticeable shifts. With consistency, those shifts become your new baseline.
                       </p>
                     </section>
 
                     {/* Techniques */}
                     <section>
-                      <h3 className="text-base font-bold text-black mb-3">Techniques you'll experience inside the app</h3>
-                      <p className="text-sm text-gray-700 leading-relaxed mb-4">
+                      <h3 className="text-lg font-bold text-black mb-3">Techniques you'll experience inside the app</h3>
+                      <p className="text-base text-black leading-relaxed mb-4">
                         The Hush Initiative blends proven breathing techniques with calming visual animations, so your body can follow along effortlessly:
                       </p>
 
                       <div className="space-y-4">
                         <div>
-                          <h4 className="text-sm font-semibold text-black mb-1">Cyclic Sighing (for mood resets)</h4>
-                          <p className="text-sm text-gray-700 leading-relaxed">
+                          <h4 className="font-bold text-lg text-black mb-3">Cyclic Sighing (for mood resets)</h4>
+                          <p className="text-base text-black leading-relaxed">
                             A double inhale followed by a long exhale helps release tension quickly—ideal when emotions feel heavy or overwhelming.
                           </p>
                         </div>
 
                         <div>
-                          <h4 className="text-sm font-semibold text-black mb-1">Box Breathing (for focus)</h4>
-                          <p className="text-sm text-gray-700 leading-relaxed">
+                          <h4 className="font-bold text-lg text-black mb-3">Box Breathing (for focus)</h4>
+                          <p className="text-base text-black leading-relaxed">
                             Equal, steady counts guide you back to clarity before a meeting or challenging task.
                           </p>
                         </div>
 
                         <div>
-                          <h4 className="text-sm font-semibold text-black mb-1">4-7-8 Breathing (for sleep)</h4>
-                          <p className="text-sm text-gray-700 leading-relaxed">
+                          <h4 className="font-bold text-lg text-black mb-3">4-7-8 Breathing (for sleep)</h4>
+                          <p className="text-base text-black leading-relaxed">
                             Longer exhales cue deep relaxation, making it easier to fall—and stay—asleep.
                           </p>
                         </div>
 
                         <div>
-                          <h4 className="text-sm font-semibold text-black mb-1">Alternate Nostril Breathing (for balance)</h4>
-                          <p className="text-sm text-gray-700 leading-relaxed">
+                          <h4 className="font-bold text-lg text-black mb-3">Alternate Nostril Breathing (for balance)</h4>
+                          <p className="text-base text-black leading-relaxed">
                             A gentle rhythm that supports calm, centered energy throughout the day.
                           </p>
                         </div>
                       </div>
 
-                      <p className="text-sm text-gray-700 leading-relaxed mt-4">
+                      <p className="text-base text-black leading-relaxed mt-4">
                         The visuals do the counting for you. You simply breathe.
                       </p>
                     </section>
 
                     {/* Make it a habit */}
                     <section>
-                      <h3 className="text-base font-bold text-black mb-3">Make it a habit, not a chore</h3>
-                      <p className="text-sm text-gray-700 leading-relaxed">
+                      <h3 className="text-lg font-bold text-black mb-3">Make it a habit, not a chore</h3>
+                      <p className="text-base text-black leading-relaxed">
                         Use the app as a pause between moments: morning grounding, a midday reset, or a nighttime wind-down. Pair it with something you already do—coffee brewing, brushing your teeth, setting your alarm—and let repetition work its quiet magic.
                       </p>
-                      <p className="text-sm text-gray-700 leading-relaxed mt-3">
+                      <p className="text-base text-black leading-relaxed mt-3">
                         The result: fewer reactive moments, more clarity, deeper rest—and a growing sense that calm is something you can access on demand.
                       </p>
                     </section>
 
                     {/* Closing */}
                     <section className="border-t border-gray-300 pt-6">
-                      <p className="text-sm text-gray-700 leading-relaxed font-semibold mb-2">
+                      <p className="text-base text-black leading-relaxed font-semibold mb-2">
                         One breath won't change your life.
                       </p>
-                      <p className="text-sm text-gray-700 leading-relaxed">
+                      <p className="text-base text-black leading-relaxed">
                         But a few mindful breaths, practiced daily, can change how your life feels.
                       </p>
                     </section>
