@@ -3101,7 +3101,7 @@ export default function Home() {
                   /* Track List */
                   <div className="flex flex-col flex-1 min-h-0">
                     {selectedOption === 'breathe' && (
-                      <div className="mb-6 flex-shrink-0">
+                      <div className="mb-6 flex-shrink-0 px-4">
                         <h3 className="font-medium text-2xl" style={{ color: isDarkMode ? '#FFFFFF' : '#000000' }}>
                           Select a breathing technique
                         </h3>
@@ -3221,13 +3221,13 @@ export default function Home() {
                                 className="flex flex-row items-center justify-between p-4 transition-all hover:brightness-110 active:brightness-90"
                                 style={{
                                   borderRadius: '13px',
-                                  background: isDarkMode ? '#333' : '#F3F4F6'
+                                  background: isDarkMode ? '#2B2B2B' : '#F3F4F6'
                                 }}
                               >
                                 {/* Left Content */}
                                 <div className="flex flex-col items-start gap-2 flex-1">
                                   {/* Exercise Name */}
-                                  <span className="text-base font-bold text-left leading-tight" style={{ color: isDarkMode ? '#FFFFFF' : '#000000' }}>
+                                  <span className="text-base font-semibold text-left leading-tight" style={{ color: isDarkMode ? '#FFFFFF' : '#000000' }}>
                                     {track.name}
                                   </span>
 
