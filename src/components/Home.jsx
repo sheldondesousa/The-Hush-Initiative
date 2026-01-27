@@ -2135,8 +2135,42 @@ export default function Home() {
                       {/* Show completion screen when exercise is completed */}
                       {exerciseCompleted ? (
                         <div className="flex flex-col items-center justify-center text-center gap-6">
+                          {/* Checkmark Circle - Neumorphic with Outer and Inner */}
+                          {/* Outer Component */}
+                          <div
+                            style={{
+                              display: 'inline-flex',
+                              padding: '22px',
+                              alignItems: 'center',
+                              justifyContent: 'center',
+                              borderRadius: '100px',
+                              background: isDarkMode ? '#333' : '#E8E8E8',
+                              boxShadow: isDarkMode
+                                ? '-10px -10px 20px 0 #3C3C3C, 10px 10px 20px 0 #1E1E1E, -4px -4px 8px 0 rgba(77, 77, 77, 0.25) inset, 4px 4px 8px 0 #1E1E1E inset'
+                                : '-10px -10px 20px 0 rgba(255, 255, 255, 0.8), 10px 10px 20px 0 rgba(0, 0, 0, 0.15), -4px -4px 8px 0 rgba(255, 255, 255, 0.5) inset, 4px 4px 8px 0 rgba(0, 0, 0, 0.15) inset'
+                            }}
+                          >
+                            {/* Inner Component */}
+                            <div
+                              style={{
+                                display: 'flex',
+                                padding: '22px',
+                                alignItems: 'center',
+                                justifyContent: 'center',
+                                borderRadius: '100px',
+                                background: isDarkMode ? '#333' : '#E8E8E8',
+                                boxShadow: isDarkMode
+                                  ? '12px 12px 24px 0 #1E1E1E inset, -12px -12px 24px 0 #3E3E3E inset'
+                                  : '12px 12px 24px 0 rgba(0, 0, 0, 0.15) inset, -12px -12px 24px 0 rgba(255, 255, 255, 0.8) inset'
+                              }}
+                            >
+                              <svg width="54" height="54" viewBox="0 0 67 67" fill="none">
+                                <path d="M10 33.5L26.5 50L57 19.5" stroke={isDarkMode ? '#FFFFFF' : '#000000'} strokeWidth="6" strokeLinecap="round" strokeLinejoin="round"/>
+                              </svg>
+                            </div>
+                          </div>
                           <h2
-                            className="font-bold mb-6"
+                            className="font-bold"
                             style={{
                               fontSize: '1.59rem',
                               color: isDarkMode ? '#FFFFFF' : '#000000'
@@ -2144,79 +2178,6 @@ export default function Home() {
                           >
                             Completed
                           </h2>
-                          <div className="flex flex-col gap-3 w-full max-w-xs">
-                            <button
-                              onClick={() => {
-                                setExerciseCompleted(false);
-                                setIsExercising(false);
-                                setSelectedExercise(null);
-                                setTimer(0);
-                                setCurrentCycle(0);
-                                setBreathingPhase('inhale');
-                                // Reset Coherent breathing customization to defaults
-                                setCoherentCycles(6);
-                                setCoherentBreathTime(5);
-                                // Reset Alternate Nostril customization to defaults
-                                setAlternateNostrilCycles(3);
-                                setAlternateNostrilBreathTime(5);
-                              }}
-                              className={(selectedExercise?.name === 'Coherent Breathing' || selectedExercise?.name === 'Box Breathing')
-                                ? "font-semibold transition-all hover:brightness-110 active:brightness-90 flex items-center justify-center"
-                                : "py-3 px-6 rounded-lg font-semibold hover:opacity-90 transition-opacity"}
-                              style={(selectedExercise?.name === 'Coherent Breathing' || selectedExercise?.name === 'Box Breathing')
-                                ? {
-                                    width: '100%',
-                                    height: '56px',
-                                    padding: '0 24px',
-                                    borderRadius: '28px',
-                                    background: isDarkMode ? '#36393B' : '#FFFFFF',
-                                    color: isDarkMode ? '#FFFFFF' : '#000000',
-                                    boxShadow: isDarkMode
-                                      ? '-6px -6px 12px 0 rgba(255, 255, 255, 0.15), 6px 6px 15px 0 #000'
-                                      : '-6px -6px 12px 0 rgba(255, 255, 255, 0.8), 6px 6px 15px 0 rgba(0, 0, 0, 0.15)'
-                                  }
-                                : {
-                                    background: isDarkMode ? '#000000' : '#FFFFFF',
-                                    color: isDarkMode ? '#FFFFFF' : '#000000',
-                                    border: isDarkMode ? 'none' : '2px solid #000000'
-                                  }}
-                            >
-                              Return to Main Menu
-                            </button>
-                            <button
-                              onClick={() => {
-                                setExerciseCompleted(false);
-                                setCurrentCycle(0);
-                                // Box Breathing starts at timer 1, all other exercises start at 0
-                                setTimer(selectedExercise?.name === 'Box Breathing' ? 1 : 0);
-                                setBreathingPhase('inhale');
-                                setIsExercising(true);
-                              }}
-                              className={(selectedExercise?.name === 'Coherent Breathing' || selectedExercise?.name === 'Box Breathing')
-                                ? "font-semibold transition-all hover:brightness-110 active:brightness-90 flex items-center justify-center"
-                                : "py-3 px-6 rounded-lg font-semibold transition-colors"}
-                              style={(selectedExercise?.name === 'Coherent Breathing' || selectedExercise?.name === 'Box Breathing')
-                                ? {
-                                    width: '100%',
-                                    height: '56px',
-                                    padding: '0 24px',
-                                    borderRadius: '28px',
-                                    background: isDarkMode ? '#36393B' : '#FFFFFF',
-                                    color: isDarkMode ? '#FFFFFF' : '#000000',
-                                    boxShadow: isDarkMode
-                                      ? '6px 6px 15px 0 #000 inset, -6px -6px 12px 0 rgba(255, 255, 255, 0.15) inset'
-                                      : '6px 6px 15px 0 rgba(0, 0, 0, 0.15) inset, -6px -6px 12px 0 rgba(255, 255, 255, 0.8) inset'
-                                  }
-                                : {
-                                    background: isDarkMode ? '#FFFFFF' : '#000000',
-                                    color: isDarkMode ? '#000000' : '#FFFFFF',
-                                    border: isDarkMode ? '2px solid #000000' : 'none',
-                                    hover: { background: isDarkMode ? '#F3F4F6' : '#1F2937' }
-                                  }}
-                            >
-                              Restart
-                            </button>
-                          </div>
                         </div>
                       ) : (
                         <>
@@ -2940,14 +2901,14 @@ export default function Home() {
                       {/* Legend for Physiological Sigh - Show after countdown completes with 150ms delay */}
                       {selectedExercise?.name === 'Physiological Sigh' && showLegend && (
                         <div className="flex items-center justify-center gap-6">
-                          {/* Circle 2 Legend - Lighter gradient (Misty Rose to Pale Pink) */}
-                          <div className="flex items-center gap-2">
-                            <div className="w-4 h-4 rounded-full" style={{ background: 'linear-gradient(135deg, #FFE6E6 0%, #F6D0EA 100%)' }}></div>
-                            <span className="text-sm font-medium" style={{ color: isDarkMode ? '#9CA3AF' : '#374151' }}>Long breath (0-3s)</span>
-                          </div>
-                          {/* Circle 1 Legend - Darker gradient (African Violet to Blue Violet) */}
+                          {/* Circle 2 Legend - Darker gradient (African Violet to Blue Violet) */}
                           <div className="flex items-center gap-2">
                             <div className="w-4 h-4 rounded-full" style={{ background: 'linear-gradient(135deg, #AD88C6 0%, #7469B6 100%)' }}></div>
+                            <span className="text-sm font-medium" style={{ color: isDarkMode ? '#9CA3AF' : '#374151' }}>Long breath (0-3s)</span>
+                          </div>
+                          {/* Circle 1 Legend - Lighter gradient (Misty Rose to Pale Pink) */}
+                          <div className="flex items-center gap-2">
+                            <div className="w-4 h-4 rounded-full" style={{ background: 'linear-gradient(135deg, #FFE6E6 0%, #F6D0EA 100%)' }}></div>
                             <span className="text-sm font-medium" style={{ color: isDarkMode ? '#9CA3AF' : '#374151' }}>Quick short breath (1s)</span>
                           </div>
                         </div>
@@ -3111,6 +3072,73 @@ export default function Home() {
                               <path d="M17.1884 9.09605C17.1884 8.98559 17.1884 8.87994 17.1836 8.76948C17.1355 7.29029 16.7513 5.89755 16.1078 4.67769C14.6382 1.88741 11.8287 0 8.59658 0C5.36446 0 2.55016 1.88741 1.08058 4.67769C0.437033 5.90235 0.0528329 7.29029 0.00480725 8.76948C4.69011e-06 8.87994 0 8.98559 0 9.09605V13.6201C0 15.6035 1.39754 17.2556 3.26574 17.6542C3.46744 17.8607 3.77482 18 4.12061 18C4.46639 18 4.77375 17.8655 4.97546 17.6542L4.98987 17.6398V9.60032H4.98506C4.78816 9.3842 4.47119 9.24013 4.1158 9.24013C3.76041 9.24013 3.44344 9.3842 3.24654 9.60032H3.24173C2.59819 9.73479 2.01228 10.0277 1.52242 10.4264C1.484 10.46 1.17182 10.7385 1.07577 10.8538V9.01441C1.07577 8.88474 1.18143 8.77428 1.3159 8.77428H1.32551H1.42155C1.58004 4.73052 4.73053 1.5032 8.58698 1.5032C12.4434 1.5032 15.5891 4.73052 15.7476 8.77428H15.8581C15.9925 8.77428 16.0982 8.88474 16.0982 9.01441V10.8538C16.0021 10.7385 15.8917 10.6281 15.7764 10.5368C15.7764 10.5368 15.69 10.46 15.6515 10.4264C15.1617 10.0277 14.5758 9.73959 13.9322 9.60032C13.7305 9.3842 13.4136 9.24013 13.0582 9.24013C12.7028 9.24013 12.3954 9.3746 12.1889 9.59552V17.6494C12.1889 17.6494 12.1937 17.6542 12.1985 17.6542C12.4002 17.8607 12.7124 18 13.0534 18C13.3943 18 13.7065 17.8655 13.9082 17.6542C15.7764 17.2556 17.174 15.6035 17.174 13.6201C17.174 13.3031 17.1355 12.9909 17.0683 12.6932C17.1355 12.9909 17.174 13.2983 17.174 13.6201V9.09605H17.1884Z" fill="currentColor"/>
                             </svg>
                             <span className="text-xs font-medium" style={{ flexShrink: 0 }}>Sound</span>
+                          </button>
+                        </div>
+                      </div>
+                    </div>
+                    )}
+
+                    {/* Completion Buttons - Show when exercise completed */}
+                    {exerciseCompleted && (
+                    <div className="flex-[0.15] flex flex-col items-center justify-end pb-6">
+                      <div className="w-full max-w-md px-4">
+                        <div className="flex gap-3 w-full">
+                          <button
+                            onClick={() => {
+                              setExerciseCompleted(false);
+                              setCurrentCycle(0);
+                              // Box Breathing starts at timer 1, all other exercises start at 0
+                              setTimer(selectedExercise?.name === 'Box Breathing' ? 1 : 0);
+                              setBreathingPhase('inhale');
+                              setIsExercising(true);
+                            }}
+                            className="text-base font-bold transition-all hover:brightness-110 active:brightness-90"
+                            style={{
+                              display: 'flex',
+                              height: '59px',
+                              flex: 1,
+                              padding: '12px 32px 11px 32px',
+                              justifyContent: 'center',
+                              alignItems: 'center',
+                              borderRadius: '27px',
+                              background: isDarkMode ? '#4A4A4A' : '#E8E8E8',
+                              boxShadow: 'none',
+                              color: isDarkMode ? '#FFFFFF' : '#000000',
+                              opacity: 1
+                            }}
+                          >
+                            Restart
+                          </button>
+                          <button
+                            onClick={() => {
+                              setExerciseCompleted(false);
+                              setIsExercising(false);
+                              setSelectedExercise(null);
+                              setTimer(0);
+                              setCurrentCycle(0);
+                              setBreathingPhase('inhale');
+                              // Reset Coherent breathing customization to defaults
+                              setCoherentCycles(6);
+                              setCoherentBreathTime(5);
+                              // Reset Alternate Nostril customization to defaults
+                              setAlternateNostrilCycles(3);
+                              setAlternateNostrilBreathTime(5);
+                            }}
+                            className="text-base font-bold transition-all hover:brightness-110 active:brightness-90"
+                            style={{
+                              display: 'flex',
+                              height: '59px',
+                              flex: 1,
+                              padding: '12px 32px 11px 32px',
+                              justifyContent: 'center',
+                              alignItems: 'center',
+                              borderRadius: '27px',
+                              background: '#7469B6',
+                              boxShadow: 'none',
+                              color: '#FFFFFF'
+                            }}
+                          >
+                            Home
                           </button>
                         </div>
                       </div>
