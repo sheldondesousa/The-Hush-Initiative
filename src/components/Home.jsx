@@ -1554,8 +1554,8 @@ export default function Home() {
                                     {/* Checkbox with tick mark for Box Breathing */}
                                     {selectedExercise?.name === 'Box Breathing' && (
                                       <svg className="w-5 h-5 flex-shrink-0 mt-0.5" fill="none" viewBox="0 0 24 24">
-                                        {/* Blue circle */}
-                                        <circle cx="12" cy="12" r="9" stroke="#067AC3" strokeWidth="2" fill="none" />
+                                        {/* African Violet circle */}
+                                        <circle cx="12" cy="12" r="9" stroke="#AD88C6" strokeWidth="2" fill="none" />
                                         {/* Black checkmark */}
                                         <path d="M9 12l2 2 4-4" stroke="black" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
                                       </svg>
@@ -1616,8 +1616,8 @@ export default function Home() {
                                 <div key={index} className={`flex gap-3 ${index > 0 ? 'mt-4' : ''}`}>
                                   {/* Checkbox with tick mark */}
                                   <svg className="w-5 h-5 flex-shrink-0 mt-0.5" fill="none" viewBox="0 0 24 24">
-                                    {/* Blue circle */}
-                                    <circle cx="12" cy="12" r="9" stroke="#067AC3" strokeWidth="2" fill="none" />
+                                    {/* African Violet circle */}
+                                    <circle cx="12" cy="12" r="9" stroke="#AD88C6" strokeWidth="2" fill="none" />
                                     {/* Black checkmark */}
                                     <path d="M9 12l2 2 4-4" stroke="black" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
                                   </svg>
@@ -1675,8 +1675,8 @@ export default function Home() {
                                 <div key={index} className={`flex gap-3 ${index > 0 ? 'mt-4' : ''}`}>
                                   {/* Checkbox with tick mark */}
                                   <svg className="w-5 h-5 flex-shrink-0 mt-0.5" fill="none" viewBox="0 0 24 24">
-                                    {/* Blue circle */}
-                                    <circle cx="12" cy="12" r="9" stroke="#067AC3" strokeWidth="2" fill="none" />
+                                    {/* African Violet circle */}
+                                    <circle cx="12" cy="12" r="9" stroke="#AD88C6" strokeWidth="2" fill="none" />
                                     {/* Black checkmark */}
                                     <path d="M9 12l2 2 4-4" stroke="black" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
                                   </svg>
@@ -1735,8 +1735,8 @@ export default function Home() {
                                   <div key={index} className={`flex gap-3 ${index > 0 ? 'mt-4' : ''}`}>
                                     {/* Checkbox with tick mark */}
                                     <svg className="w-5 h-5 flex-shrink-0 mt-0.5" fill="none" viewBox="0 0 24 24">
-                                      {/* Blue circle */}
-                                      <circle cx="12" cy="12" r="9" stroke="#067AC3" strokeWidth="2" fill="none" />
+                                      {/* African Violet circle */}
+                                      <circle cx="12" cy="12" r="9" stroke="#AD88C6" strokeWidth="2" fill="none" />
                                       {/* Black checkmark */}
                                       <path d="M9 12l2 2 4-4" stroke="black" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
                                     </svg>

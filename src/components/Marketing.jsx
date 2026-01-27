@@ -95,73 +95,8 @@ export default function Marketing() {
                       <div className="flex justify-center mb-6">
                         <img src="/Hush-Logo.png" alt="Hush" style={{ height: '43px' }} />
                       </div>
-                      <p className="text-gray-600 text-base leading-relaxed">A simple, effective way to manage stress, centre yourself, and find your rhythm again.</p>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-
-          {/* No Distractions Section */}
-          <div className="mb-32">
-            <div className="max-w-4xl mx-auto">
-              <div className="text-center mb-12">
-                <h3 className="text-3xl font-bold text-gray-900 mb-4">Just You. Your Breath. Nothing Else.</h3>
-                <p className="text-lg text-gray-600">
-                  No distractions, no pressure, no agenda. Just a simple tool that works when you need it.
-                </p>
-              </div>
-
-              <div className="bg-gradient-to-br from-purple-50 to-blue-50 rounded-3xl p-8 md:p-12 border border-gray-200">
-                <div className="grid md:grid-cols-2 gap-6">
-                  {/* What we don't have */}
-                  <div className="space-y-4">
-                    <div className="flex items-center gap-3 text-gray-400">
-                      <svg className="w-6 h-6 flex-shrink-0" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
-                        <path strokeLinecap="round" strokeLinejoin="round" d="M6 18L18 6M6 6l12 12"/>
-                      </svg>
-                      <span className="line-through text-lg">Advertisements</span>
-                    </div>
-                    <div className="flex items-center gap-3 text-gray-400">
-                      <svg className="w-6 h-6 flex-shrink-0" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
-                        <path strokeLinecap="round" strokeLinejoin="round" d="M6 18L18 6M6 6l12 12"/>
-                      </svg>
-                      <span className="line-through text-lg">Courses to buy</span>
-                    </div>
-                    <div className="flex items-center gap-3 text-gray-400">
-                      <svg className="w-6 h-6 flex-shrink-0" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
-                        <path strokeLinecap="round" strokeLinejoin="round" d="M6 18L18 6M6 6l12 12"/>
-                      </svg>
-                      <span className="line-through text-lg">Checklists</span>
-                    </div>
-                    <div className="flex items-center gap-3 text-gray-400">
-                      <svg className="w-6 h-6 flex-shrink-0" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
-                        <path strokeLinecap="round" strokeLinejoin="round" d="M6 18L18 6M6 6l12 12"/>
-                      </svg>
-                      <span className="line-through text-lg">Timetables</span>
-                    </div>
-                  </div>
-
-                  {/* What we have */}
-                  <div className="space-y-4">
-                    <div className="flex items-center gap-3 text-[#7469B6]">
-                      <svg className="w-6 h-6 flex-shrink-0" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
-                        <path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7"/>
-                      </svg>
-                      <span className="text-lg font-medium">You</span>
-                    </div>
-                    <div className="flex items-center gap-3 text-[#7469B6]">
-                      <svg className="w-6 h-6 flex-shrink-0" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
-                        <path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7"/>
-                      </svg>
-                      <span className="text-lg font-medium">Your terms</span>
-                    </div>
-                    <div className="flex items-center gap-3 text-[#7469B6]">
-                      <svg className="w-6 h-6 flex-shrink-0" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
-                        <path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7"/>
-                      </svg>
-                      <span className="text-lg font-medium">For yourself</span>
+                      <h4 className="text-2xl font-bold text-gray-900 mb-4">Just You. Your terms. Nothing Else.</h4>
+                      <p className="text-gray-600 text-base leading-relaxed">No distractions, no ads, no timetables, no courses. Just a simple tool that works when you need it.</p>
                     </div>
                   </div>
                 </div>
@@ -395,15 +330,13 @@ export default function Marketing() {
 
                     {/* Sound Options */}
                     <div className="space-y-2">
-                      {/* No Sound - Selected */}
-                      <div className="flex items-center gap-3 p-3 bg-purple-50 rounded-xl border-2 border-purple-400">
+                      {/* No Sound */}
+                      <div className="flex items-center gap-3 p-3 bg-white rounded-xl border border-gray-200">
                         <div className="flex-1">
                           <div className="text-sm font-semibold text-gray-900">No Sound</div>
                           <div className="text-xs text-gray-600">Silent practice</div>
                         </div>
-                        <div className="w-5 h-5 rounded-full bg-purple-600 flex items-center justify-center">
-                          <div className="w-2.5 h-2.5 rounded-full bg-white"></div>
-                        </div>
+                        <div className="w-5 h-5 rounded-full border-2 border-gray-300"></div>
                       </div>
 
                       {/* Nature Sounds */}
@@ -424,13 +357,15 @@ export default function Marketing() {
                         <div className="w-5 h-5 rounded-full border-2 border-gray-300"></div>
                       </div>
 
-                      {/* Binaural Beats */}
-                      <div className="flex items-center gap-3 p-3 bg-white rounded-xl border border-gray-200">
+                      {/* Binaural Beats - Selected */}
+                      <div className="flex items-center gap-3 p-3 bg-purple-50 rounded-xl border-2 border-purple-400">
                         <div className="flex-1">
                           <div className="text-sm font-semibold text-gray-900">Binaural Beats</div>
                           <div className="text-xs text-gray-600">Focus frequencies</div>
                         </div>
-                        <div className="w-5 h-5 rounded-full border-2 border-gray-300"></div>
+                        <div className="w-5 h-5 rounded-full bg-purple-600 flex items-center justify-center">
+                          <div className="w-2.5 h-2.5 rounded-full bg-white"></div>
+                        </div>
                       </div>
 
                       {/* Ocean Waves */}
@@ -591,14 +526,12 @@ export default function Marketing() {
                       <h4 className="text-xl font-bold text-gray-900 text-center">Background Sound</h4>
                     </div>
                     <div className="p-6 space-y-2">
-                      <div className="flex items-center gap-4 p-5 bg-purple-50 rounded-2xl border-2 border-purple-400">
+                      <div className="flex items-center gap-4 p-5 bg-white hover:bg-gray-50 rounded-2xl transition-colors border border-gray-200">
                         <div className="flex-1">
                           <div className="font-semibold text-gray-900">No Sound</div>
                           <div className="text-sm text-gray-600">Silent practice</div>
                         </div>
-                        <div className="w-6 h-6 rounded-full bg-purple-600 flex items-center justify-center flex-shrink-0">
-                          <div className="w-3 h-3 rounded-full bg-white"></div>
-                        </div>
+                        <div className="w-6 h-6 rounded-full border-2 border-gray-300 flex-shrink-0"></div>
                       </div>
                       <div className="flex items-center gap-4 p-5 bg-white hover:bg-gray-50 rounded-2xl transition-colors border border-gray-200">
                         <div className="flex-1">
@@ -614,12 +547,14 @@ export default function Marketing() {
                         </div>
                         <div className="w-6 h-6 rounded-full border-2 border-gray-300 flex-shrink-0"></div>
                       </div>
-                      <div className="flex items-center gap-4 p-5 bg-white hover:bg-gray-50 rounded-2xl transition-colors border border-gray-200">
+                      <div className="flex items-center gap-4 p-5 bg-purple-50 rounded-2xl border-2 border-purple-400">
                         <div className="flex-1">
                           <div className="font-semibold text-gray-900">Binaural Beats</div>
                           <div className="text-sm text-gray-600">Focus-enhancing frequencies</div>
                         </div>
-                        <div className="w-6 h-6 rounded-full border-2 border-gray-300 flex-shrink-0"></div>
+                        <div className="w-6 h-6 rounded-full bg-purple-600 flex items-center justify-center flex-shrink-0">
+                          <div className="w-3 h-3 rounded-full bg-white"></div>
+                        </div>
                       </div>
                       <div className="flex items-center gap-4 p-5 bg-white hover:bg-gray-50 rounded-2xl transition-colors border border-gray-200">
                         <div className="flex-1">
@@ -735,10 +670,10 @@ export default function Marketing() {
       <section className="py-20 px-6 bg-gradient-to-br from-purple-50 to-blue-50">
         <div className="max-w-7xl mx-auto">
           <div className="flex items-center justify-center gap-3 mb-16">
-            <div className="w-3 h-3 rounded-full bg-[#AD88C6]"></div>
             <h2 className="text-4xl font-bold text-center text-gray-900">
-              Why Choose Hush?
+              Why choose
             </h2>
+            <img src="/Hush-Logo.png" alt="Hush" style={{ height: '43px' }} />
           </div>
           <div className="grid md:grid-cols-3 gap-8">
             <div className="bg-white rounded-2xl p-8 shadow-lg">
